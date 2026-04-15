@@ -3,10 +3,10 @@ import { defineConfig } from 'vitepress'
 export default defineConfig({
   title: 'Qore',
   description: 'AI Native Frontend Framework - 高性能、轻量级、面向未来',
-  base: '/qore/',
+  base: '/',
   
   head: [
-    ['link', { rel: 'icon', href: '/qore/favicon.ico' }],
+    ['link', { rel: 'icon', href: '/favicon.ico' }],
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1' }],
     ['meta', { name: 'theme-color', content: '#4f46e5' }],
     ['meta', { property: 'og:type', content: 'website' }],
@@ -16,7 +16,7 @@ export default defineConfig({
   ],
 
   themeConfig: {
-    logo: '/qore/logo.svg',
+    logo: '/logo.svg',
     
     // 优化导航栏 - 参考主流框架
     nav: [
