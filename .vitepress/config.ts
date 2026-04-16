@@ -163,10 +163,10 @@ export default defineConfig({
 
   markdown: {
     theme: {
-      light: 'github-light',
-      dark: 'github-dark',
+      light: 'vitesse-light',
+      dark: 'vitesse-dark',
     },
-    lineNumbers: true,
+    lineNumbers: false,
     config: (md) => {
       // 自定义 markdown 配置
       md.use((md) => {

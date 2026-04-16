@@ -759,10 +759,18 @@ const stats = [
   font-family: 'JetBrains Mono', 'Fira Code', monospace;
   font-size: 0.875rem;
   line-height: 1.8;
-  color: #e6edf3;
+  color: #a9b1d6;
   min-height: 280px;
   position: relative;
 }
+
+/* Code Syntax Highlighting - One Dark Pro inspired */
+.code-line .keyword { color: #c678dd; }
+.code-line .string { color: #98c379; }
+.code-line .comment { color: #5c6370; font-style: italic; }
+.code-line .function { color: #61afef; }
+.code-line .number { color: #d19a66; }
+.code-line .tag { color: #e06c75; }
 
 .code-lines {
   position: relative;
