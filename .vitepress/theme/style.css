@@ -1081,3 +1081,86 @@ a:focus-visible {
   outline: 2px solid var(--vp-c-brand);
   outline-offset: 2px;
 }
+
+/* ============================================
+   Mobile Sidebar Navigation Fix - P1 Task
+   ============================================ */
+
+/* Fix mobile nav screen z-index to prevent overlay issues */
+@media (max-width: 768px) {
+  .VPNavScreen {
+    z-index: 100 !important;
+    top: calc(var(--vp-nav-height) + var(--vp-layout-top-height, 0px)) !important;
+  }
+  
+  /* Ensure nav screen container is properly positioned */
+  .VPNavScreen .container {
+    padding-top: 32px !important;
+  }
+  
+  /* Fix sidebar z-index on mobile */
+  .VPSidebar {
+    z-index: 101 !important;
+  }
+  
+  /* Ensure hamburger menu is clickable */
+  .VPNavBarHamburger {
+    z-index: 102 !important;
+    position: relative;
+  }
+  
+  /* Fix nav screen menu links touch targets */
+  .VPNavScreenMenuLink,
+  .VPNavScreenMenuGroupButton {
+    min-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0.875rem 1.5rem !important;
+  }
+  
+  /* Prevent content from overlapping nav screen */
+  .VPNav {
+    z-index: 99 !important;
+  }
+  
+  /* Ensure backdrop is behind nav screen */
+  .VPBackdrop {
+    z-index: 98 !important;
+  }
+  
+  /* Fix local nav on mobile */
+  .VPLocalNav {
+    z-index: 97 !important;
+  }
+}
+
+/* Additional mobile navigation improvements */
+@media (max-width: 640px) {
+  .VPNavScreen {
+    padding: 0 24px !important;
+  }
+  
+  .VPNavScreen .container {
+    max-width: 100% !important;
+    padding: 24px 0 80px !important;
+  }
+  
+  /* Improve touch targets for smaller screens */
+  .VPNavScreenMenuLink,
+  .VPNavScreenMenuGroupButton,
+  .VPNavScreenMenuGroup .button {
+    min-height: 56px !important;
+    font-size: 1.0625rem !important;
+  }
+}
+
+/* Dark mode mobile nav optimization */
+@media (max-width: 768px) {
+  .dark .VPNavScreen {
+    background-color: var(--vp-c-bg-soft) !important;
+  }
+  
+  .dark .VPNavScreenMenuLink {
+    color: var(--vp-c-text-1) !important;
+  }
+}

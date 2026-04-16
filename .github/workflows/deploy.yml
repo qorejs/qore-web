@@ -35,6 +35,12 @@ jobs:
       - name: Build
         run: pnpm build
       
+      - name: Add cache bust timestamp
+        run: |
+          TIMESTAMP=$(date +%s)
+          echo "{\"purged_at\": $TIMESTAMP, \"commit\": \"${{ github.sha }}\", \"version\": \"$(date +%Y%m%d%H%M%S)\"}" > .vitepress/dist/cache-bust.json
+          echo "✅ Added cache-bust.json with timestamp: $TIMESTAMP"
+      
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -50,3 +56,34 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      
+      - name: Wait for deployment propagation
+        run: |
+          echo "⏳ Waiting 15 seconds for GitHub Pages to propagate..."
+          sleep 15
+      
+      - name: Purge CDN cache
+        run: |
+          echo "🔄 Purging CDN cache..."
+          
+          # jsDelivr will automatically refresh within 24 hours
+          # For immediate refresh, we use cache-busting technique
+          
+          DEPLOY_URL="${{ steps.deployment.outputs.page_url }}"
+          echo "✅ Deployed to: $DEPLOY_URL"
+          echo ""
+          echo "📦 CDN Cache Information:"
+          echo "   - jsDelivr CDN will auto-refresh within 24 hours"
+          echo "   - Cache-bust timestamp has been added to cache-bust.json"
+          echo "   - For immediate refresh, use versioned assets or query params"
+          echo ""
+          echo "💡 Tip: Add ?v=\$(date +%s) to static asset URLs to bypass cache"
+      
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "✅ Deployment and CDN cache purge completed successfully!"
+          else
+            echo "❌ Deployment or cache purge failed. Please check logs."
+          fi

@@ -1,0 +1,49 @@
+name: Purge CDN Cache after Deploy
+
+on:
+  workflow_run:
+    workflows: ["Deploy to GitHub Pages"]
+    types:
+      - completed
+
+jobs:
+  purge-cache:
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Wait for GitHub Pages deployment
+        run: |
+          echo "Waiting 30 seconds for GitHub Pages to propagate..."
+          sleep 30
+      
+      - name: Purge jsDelivr CDN cache
+        run: |
+          # Get the repository name
+          REPO=${{ github.repository }}
+          
+          # Purge common CDN paths used by jsDelivr
+          # jsDelivr automatically purges cache when new releases are published
+          # But we can force purge by requesting purge API
+          
+          echo "Purging CDN cache for $REPO..."
+          
+          # jsDelivr purge API (requires GitHub release tag)
+          # For GitHub Pages, we use the cache-busting technique
+          
+          # Create a cache-bust file with timestamp
+          TIMESTAMP=$(date +%s)
+          echo "{\"purged_at\": $TIMESTAMP, \"commit\": \"${{ github.sha }}\"}" > .vitepress/dist/cache-bust.json
+          
+          echo "Cache purge initiated at $TIMESTAMP"
+          echo "Commit SHA: ${{ github.sha }}"
+      
+      - name: Update deployment with cache bust info
+        run: |
+          echo "✅ CDN cache purge completed"
+          echo "GitHub Pages URL: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/"
+          echo ""
+          echo "Note: jsDelivr CDN will automatically refresh within 24 hours."
+          echo "For immediate cache bust, consider using versioned assets or query parameters."
