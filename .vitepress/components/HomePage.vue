@@ -305,6 +305,7 @@ const stats = [
   overflow-x: hidden;
   background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #0f0f1a 100%);
   min-height: 100vh;
+  color: #f1f5f9;
 }
 
 /* Animated Background */
