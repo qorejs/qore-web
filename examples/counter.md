@@ -1,7 +1,7 @@
 # 计数器示例
 
 ```ts
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const Counter = component(() => {
   const count = signal(0)

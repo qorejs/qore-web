@@ -3,7 +3,7 @@
 ## Hello World
 
 ```ts
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 
 const Hello = component(() => {
   return () => `<h1>Hello, Qore!</h1>`
@@ -13,7 +13,7 @@ const Hello = component(() => {
 ## 响应式文本
 
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Greeting = component(() => {
   const name = signal('World')

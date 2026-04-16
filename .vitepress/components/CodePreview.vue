@@ -6,7 +6,7 @@ const activeTab = ref(0)
 const examples = [
   {
     name: 'Signal',
-    code: `import { signal, computed, effect } from 'qore'
+    code: `import { signal, computed, effect } from '@qorejs/qore'
 
 // 创建响应式状态
 const count = signal(0)
@@ -27,7 +27,7 @@ count.set(5) // Count: 5, Double: 10`,
   },
   {
     name: 'Component',
-    code: `import { component, signal } from 'qore'
+    code: `import { component, signal } from '@qorejs/qore'
 
 // 定义组件
 const Counter = component(() => {

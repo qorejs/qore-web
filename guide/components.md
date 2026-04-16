@@ -11,7 +11,7 @@ Qore 的组件是简单的函数，返回渲染函数。
 ## 基础组件
 
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Hello = component(({ name }) => {
   return () => `<h1>Hello, ${name}!</h1>`

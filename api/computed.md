@@ -34,7 +34,7 @@ Computed 是**只读**的，不能使用 `set()` 或 `update()` 方法修改。
 ### 创建 Computed
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const price = signal(100)
 const quantity = signal(2)
@@ -54,7 +54,7 @@ console.log(total()) // 300
 Computed 自动追踪在 getter 函数中读取的所有 Signal：
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const firstName = signal('John')
 const lastName = signal('Doe')
@@ -75,7 +75,7 @@ console.log(fullName()) // "Jane Doe" (自动更新)
 Computed 可以依赖其他 Computed：
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const price = signal(100)
 const quantity = signal(2)
@@ -98,7 +98,7 @@ console.log(total()) // 440 (所有依赖链自动更新)
 ### 条件计算
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const discount = signal(0)
 const price = signal(100)
@@ -121,7 +121,7 @@ console.log(finalPrice()) // 80
 Computed 具有内置缓存，只有依赖变化时才会重新计算：
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const data = signal([])
 
@@ -140,7 +140,7 @@ data.set([1, 2, 3]) // 输出: Computing... (依赖变化)
 ### peek() - 静默读取
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const count = signal(0)
 const double = computed(() => count() * 2)
@@ -171,7 +171,7 @@ interface Computed<T> {
 Computed 完全支持 TypeScript 泛型：
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 // 类型推断（推荐）
 const count = signal(0)
@@ -202,7 +202,7 @@ const wrong: Computed<string> = computed(() => 123) // ❌ TypeScript 错误
 ### 1. 派生状态
 
 ```typescript
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const ShoppingCart = component(() => {
   const items = signal([
@@ -241,7 +241,7 @@ const ShoppingCart = component(() => {
 ### 2. 过滤和排序
 
 ```typescript
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const TodoList = component(() => {
   const todos = signal([
@@ -289,7 +289,7 @@ const TodoList = component(() => {
 ### 3. 表单验证
 
 ```typescript
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const LoginForm = component(() => {
   const email = signal('')
@@ -340,7 +340,7 @@ const LoginForm = component(() => {
 ### 4. 数据转换
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 interface APIUser {
   id: number
@@ -379,7 +379,7 @@ const userNames = computed(() =>
 ### 避免重复计算
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const numbers = signal<number[]>([])
 
@@ -399,7 +399,7 @@ const expensiveComputed = computed(() => {
 Computed 只在被读取时才会计算：
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const data = signal([])
 
@@ -421,7 +421,7 @@ processed() // 输出: Computing... (依赖变化后首次读取)
 ### 避免过度依赖
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const data = signal({ a: 1, b: 2, c: 3 })
 
@@ -439,7 +439,7 @@ const sum = computed(() => a() + b())
 ## 与 Effect 配合
 
 ```typescript
-import { signal, computed, effect } from 'qore'
+import { signal, computed, effect } from '@qorejs/qore'
 
 const price = signal(100)
 const quantity = signal(2)

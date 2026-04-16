@@ -1,7 +1,7 @@
 # AI 集成示例
 
 ```ts
-import { component, signal, effect } from 'qore'
+import { component, signal, effect } from '@qorejs/qore'
 import { ai } from 'qore/ai'
 
 const AIAssistant = component(() => {

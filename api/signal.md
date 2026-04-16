@@ -32,7 +32,7 @@ function signal<T>(initialValue: T): Signal<T>
 ### 创建 Signal
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 // 基本类型
 const count = signal(0)
@@ -50,7 +50,7 @@ const nullable = signal<string | null>(null)
 使用函数调用语法读取 Signal 的值。**重要**：在组件或 computed 中读取 Signal 会自动建立依赖关系。
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -69,7 +69,7 @@ const Counter = () => {
 使用 `set()` 方法设置新值。这会触发所有依赖的更新。
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -98,7 +98,7 @@ obj.set({ value: 1 }) // 会触发更新（新对象）
 使用 `update()` 方法基于当前值进行更新。这是 `set()` 的便捷方法，接受一个更新函数。
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -120,7 +120,7 @@ user.update(u => ({ ...u, age: u.age + 1 }))
 `peek()` 读取 Signal 的值但**不建立依赖关系**。适用于不想触发重新计算的场景。
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const count = signal(0)
 const logs = signal<string[]>([])
@@ -140,7 +140,7 @@ const logCount = () => {
 ### 在 Effect 中使用
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -156,7 +156,7 @@ count.set(2) // 输出: Count changed to: 2
 ### 在 Computed 中使用
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const price = signal(100)
 const quantity = signal(2)
@@ -197,7 +197,7 @@ interface Signal<T> {
 Signal 完全支持 TypeScript 泛型，提供完整的类型推断：
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 // 显式指定类型
 const count = signal<number>(0)
@@ -225,7 +225,7 @@ count.update(n => n + 'wrong') // ❌ TypeScript 错误
 ### 1. 组件状态
 
 ```typescript
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Counter = component(() => {
   const count = signal(0)
@@ -247,7 +247,7 @@ const Counter = component(() => {
 ### 2. 表单输入
 
 ```typescript
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Form = component(() => {
   const email = signal('')
@@ -289,7 +289,7 @@ const Form = component(() => {
 ### 3. 共享状态
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 // 在模块级别创建共享状态
 export const store = {
@@ -326,7 +326,7 @@ const UserProfile = component(() => {
 ### 避免不必要的更新
 
 ```typescript
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 const data = signal({ value: 1 })
 
@@ -347,7 +347,7 @@ data.update(d => d.value !== 1 ? { value: 1 } : d)
 当需要更新多个 Signal 时，使用 `batch()` 避免中间状态触发多次更新：
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const firstName = signal('')
 const lastName = signal('')

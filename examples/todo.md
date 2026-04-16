@@ -1,7 +1,7 @@
 # Todo 列表示例
 
 ```ts
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const TodoList = component(() => {
   const todos = signal([

@@ -47,7 +47,7 @@ function Counter() {
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Counter = component(() => {
   const count = signal(0)
@@ -97,7 +97,7 @@ function ShoppingCart() {
 
 **Qore:**
 ```ts
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const ShoppingCart = component(() => {
   const items = signal([...])
@@ -144,7 +144,7 @@ function Timer() {
 
 **Qore:**
 ```ts
-import { component, signal, effect, onMount } from 'qore'
+import { component, signal, effect, onMount } from '@qorejs/qore'
 
 const Timer = component(() => {
   const seconds = signal(0)
@@ -194,7 +194,7 @@ function Form() {
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Form = component(() => {
   const value = signal('')
@@ -245,7 +245,7 @@ function TodoList() {
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const TodoList = component(() => {
   const todos = signal([...])
@@ -283,7 +283,7 @@ function Greeting() {
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Greeting = component(() => {
   const isLoggedIn = signal(false)
@@ -317,7 +317,7 @@ function App() {
 
 **Qore:**
 ```ts
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 
 const Button = component(({ label, onClick }) => {
   return () => `
@@ -360,7 +360,7 @@ function Child() {
 **Qore:**
 ```ts
 // store.ts
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 export const themeStore = {
   theme: signal('light'),
@@ -368,7 +368,7 @@ export const themeStore = {
 }
 
 // 组件中使用
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 import { themeStore } from './store'
 
 const Child = component(() => {
@@ -398,7 +398,7 @@ function useLocalStorage(key, initialValue) {
 
 **Qore:**
 ```ts
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 function useLocalStorage(key, initialValue) {
   const value = signal(() => {
@@ -575,7 +575,7 @@ export default TodoApp
 
 ```ts
 // Qore App.ts
-import { component, signal, computed, effect } from 'qore'
+import { component, signal, computed, effect } from '@qorejs/qore'
 
 interface Todo {
   id: number

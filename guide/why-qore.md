@@ -58,7 +58,7 @@ Qore 在性能指标上全面领先：
 
 ```ts
 // 3 行代码创建一个响应式组件
-import { signal, component } from 'qore'
+import { signal, component } from '@qorejs/qore'
 
 const Counter = component(() => {
   const count = signal(0)

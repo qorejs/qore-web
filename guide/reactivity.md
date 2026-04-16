@@ -11,7 +11,7 @@ Qore 的响应式系统基于 Signal，提供细粒度的依赖追踪。
 ## Signal
 
 ```ts
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -28,7 +28,7 @@ count.update(n => n + 1)
 ## Computed
 
 ```ts
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const firstName = signal('John')
 const lastName = signal('Doe')
@@ -38,7 +38,7 @@ const fullName = computed(() => `${firstName()} ${lastName()}`)
 ## Effect
 
 ```ts
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const todos = signal([])
 

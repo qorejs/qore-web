@@ -31,7 +31,7 @@ function batch<T>(fn: () => T): T
 ### 问题示例
 
 ```typescript
-import { signal, computed, effect } from 'qore'
+import { signal, computed, effect } from '@qorejs/qore'
 
 const firstName = signal('')
 const lastName = signal('')
@@ -53,7 +53,7 @@ lastName.set('Doe')    // 输出: Computing fullName... Full name changed:  Doe
 ### 使用 Batch 解决
 
 ```typescript
-import { signal, computed, effect, batch } from 'qore'
+import { signal, computed, effect, batch } from '@qorejs/qore'
 
 const firstName = signal('')
 const lastName = signal('')
@@ -84,7 +84,7 @@ batch(() => {
 ### 批量更新多个 Signal
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const x = signal(0)
 const y = signal(0)
@@ -101,7 +101,7 @@ batch(() => {
 ### 嵌套 Batch
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const a = signal(0)
 const b = signal(0)
@@ -122,7 +122,7 @@ batch(() => {
 ### 返回值
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -141,7 +141,7 @@ console.log(result) // 20
 ### 1. 表单重置
 
 ```typescript
-import { component, signal, batch } from 'qore'
+import { component, signal, batch } from '@qorejs/qore'
 
 const Form = component(() => {
   const formData = signal({
@@ -174,7 +174,7 @@ const Form = component(() => {
 ### 2. 列表操作
 
 ```typescript
-import { component, signal, batch } from 'qore'
+import { component, signal, batch } from '@qorejs/qore'
 
 const TodoList = component(() => {
   const todos = signal([
@@ -216,7 +216,7 @@ const TodoList = component(() => {
 ### 3. 状态同步
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const user = signal({ name: '', email: '', age: 0 })
 const displayName = signal('')
@@ -243,7 +243,7 @@ updateUser({ name: 'Alice', age: 25 })
 ### 4. 动画状态
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const animation = signal({
   x: 0,
@@ -269,7 +269,7 @@ const animateTo = (target: typeof animation) => {
 ### 5. 数据获取和更新
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const data = signal([])
 const loading = signal(false)
@@ -307,7 +307,7 @@ const fetchData = async () => {
 ### 不使用 Batch
 
 ```typescript
-import { signal, computed } from 'qore'
+import { signal, computed } from '@qorejs/qore'
 
 const a = signal(0)
 const b = signal(0)
@@ -328,7 +328,7 @@ c.set(3) // Computing sum...
 ### 使用 Batch
 
 ```typescript
-import { signal, computed, batch } from 'qore'
+import { signal, computed, batch } from '@qorejs/qore'
 
 const a = signal(0)
 const b = signal(0)
@@ -354,7 +354,7 @@ batch(() => {
 ### Batch 嵌套 Computed
 
 ```typescript
-import { signal, computed, batch } from 'qore'
+import { signal, computed, batch } from '@qorejs/qore'
 
 const price = signal(100)
 const quantity = signal(1)
@@ -374,7 +374,7 @@ batch(() => {
 ### Batch 与 Effect
 
 ```typescript
-import { signal, effect, batch } from 'qore'
+import { signal, effect, batch } from '@qorejs/qore'
 
 const count = signal(0)
 const name = signal('Qore')
@@ -394,7 +394,7 @@ batch(() => {
 ### 条件 Batch
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const shouldBatch = signal(true)
 
@@ -421,7 +421,7 @@ update(() => {
 Batch 只影响在 `fn` 函数内执行的 Signal 更新：
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const a = signal(0)
 const b = signal(0)
@@ -438,7 +438,7 @@ b.set(2) // 在 batch 外，立即触发更新
 Batch 不等待异步操作完成：
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const data = signal([])
 const loading = signal(false)
@@ -472,7 +472,7 @@ fetch('/api/data')
 对于单个 Signal 更新，不需要使用 batch：
 
 ```typescript
-import { signal, batch } from 'qore'
+import { signal, batch } from '@qorejs/qore'
 
 const count = signal(0)
 

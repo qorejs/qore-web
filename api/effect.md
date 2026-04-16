@@ -36,7 +36,7 @@ function effect(
 ### 创建 Effect
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -54,7 +54,7 @@ count.set(2) // 输出: Count is: 2
 Effect 函数可以返回一个清理函数，在下次执行前或 Effect 停止时调用：
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const userId = signal(1)
 
@@ -81,7 +81,7 @@ userId.set(2)
 ### 停止 Effect
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -105,7 +105,7 @@ count.set(2) // 无输出（effect 已停止）
 ### 条件 Effect
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const isActive = signal(true)
 const count = signal(0)
@@ -124,7 +124,7 @@ count.set(2) // 无输出（条件不满足）
 ### 多个依赖
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const firstName = signal('John')
 const lastName = signal('Doe')
@@ -145,7 +145,7 @@ Effect 函数本身不能是 async，但可以在内部处理异步操作。
 :::
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const userId = signal(1)
 const userData = signal(null)
@@ -169,7 +169,7 @@ effect(() => {
 ### 防抖 Effect
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const searchQuery = signal('')
 
@@ -218,7 +218,7 @@ function effect(
 ### 1. DOM 操作
 
 ```typescript
-import { component, signal, effect } from 'qore'
+import { component, signal, effect } from '@qorejs/qore'
 
 const Title = component(() => {
   const title = signal('My App')
@@ -235,7 +235,7 @@ const Title = component(() => {
 ### 2. 本地存储同步
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const theme = signal<'light' | 'dark'>('light')
 
@@ -254,7 +254,7 @@ if (saved) {
 ### 3. API 订阅
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const channelId = signal('general')
 const messages = signal([])
@@ -278,7 +278,7 @@ effect(() => {
 ### 4. 动画和定时器
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const isPlaying = signal(false)
 const progress = signal(0)
@@ -298,7 +298,7 @@ effect(() => {
 ### 5. 日志和监控
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const errorCount = signal(0)
 const lastError = signal(null)
@@ -326,7 +326,7 @@ effect(() => {
 ### 在组件中使用
 
 ```typescript
-import { component, signal, effect, onUnmount } from 'qore'
+import { component, signal, effect, onUnmount } from '@qorejs/qore'
 
 const DataFetcher = component(() => {
   const data = signal(null)
@@ -363,7 +363,7 @@ const DataFetcher = component(() => {
 ### onMount 和 onUnmount
 
 ```typescript
-import { component, signal, onMount, onUnmount } from 'qore'
+import { component, signal, onMount, onUnmount } from '@qorejs/qore'
 
 const Timer = component(() => {
   const seconds = signal(0)
@@ -392,7 +392,7 @@ const Timer = component(() => {
 ### 避免不必要的 Effect
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const data = signal({ count: 0, name: 'Qore' })
 
@@ -411,7 +411,7 @@ effect(() => {
 ### 使用 peek() 避免追踪
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const count = signal(0)
 const logs = signal<string[]>([])
@@ -428,7 +428,7 @@ count.set(1) // 不会触发 effect 重新执行
 ### 批处理更新
 
 ```typescript
-import { signal, effect, batch } from 'qore'
+import { signal, effect, batch } from '@qorejs/qore'
 
 const a = signal(0)
 const b = signal(0)
@@ -456,7 +456,7 @@ batch(() => {
 ## 与 Computed 配合
 
 ```typescript
-import { signal, computed, effect } from 'qore'
+import { signal, computed, effect } from '@qorejs/qore'
 
 const price = signal(100)
 const quantity = signal(2)
@@ -478,7 +478,7 @@ price.set(150) // 输出: Total: 300
 ## 错误处理
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const data = signal([])
 
@@ -496,7 +496,7 @@ effect(() => {
 ### 错误恢复
 
 ```typescript
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const url = signal('/api/data')
 const error = signal(null)

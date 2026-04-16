@@ -5,7 +5,7 @@ Component 是 Qore 的 UI 构建单元。
 ## 创建组件
 
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Hello = component(({ name }) => {
   return () => `<h1>Hello, ${name}!</h1>`
@@ -15,7 +15,7 @@ const Hello = component(({ name }) => {
 ## 生命周期
 
 ```ts
-import { component, onMount, onUnmount } from 'qore'
+import { component, onMount, onUnmount } from '@qorejs/qore'
 
 const MyComponent = component(() => {
   onMount(() => {

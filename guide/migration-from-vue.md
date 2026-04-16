@@ -58,7 +58,7 @@ function increment() {
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Counter = component(() => {
   const count = signal(0)
@@ -143,7 +143,7 @@ const formattedTotal = computed(() => {
 
 **Qore:**
 ```ts
-import { component, signal, computed } from 'qore'
+import { component, signal, computed } from '@qorejs/qore'
 
 const ShoppingCart = component(() => {
   const price = signal(100)
@@ -181,7 +181,7 @@ watchEffect(() => {
 
 **Qore effect:**
 ```ts
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const count = signal(0)
 
@@ -206,7 +206,7 @@ watch(count, (newVal, oldVal) => {
 
 **Qore effect（带旧值追踪）:**
 ```ts
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 const count = signal(0)
 let oldCount = 0
@@ -253,7 +253,7 @@ onUnmounted(() => {
 
 **Qore:**
 ```ts
-import { component, signal, onMount, onUnmount } from 'qore'
+import { component, signal, onMount, onUnmount } from '@qorejs/qore'
 
 const Timer = component(() => {
   const timer = signal(0)
@@ -333,7 +333,7 @@ const todos = ref([
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const TodoList = component(() => {
   const todos = signal([
@@ -371,7 +371,7 @@ const handleClick = () => {
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Button = component(() => {
   const count = signal(0)
@@ -413,7 +413,7 @@ const selected = ref('a')
 
 **Qore:**
 ```ts
-import { component, signal } from 'qore'
+import { component, signal } from '@qorejs/qore'
 
 const Form = component(() => {
   const text = signal('')
@@ -480,7 +480,7 @@ const handleChildClick = (label) => {
 **Qore:**
 ```ts
 // Child.ts
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 
 const Button = component(({ label, onClick }) => {
   return () => `
@@ -489,7 +489,7 @@ const Button = component(({ label, onClick }) => {
 })
 
 // Parent.ts
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 import { Button } from './Button'
 
 const Parent = component(() => {
@@ -531,14 +531,14 @@ const theme = inject('theme', 'light')
 **Qore:**
 ```ts
 // store.ts
-import { signal } from 'qore'
+import { signal } from '@qorejs/qore'
 
 export const themeStore = {
   theme: signal('light')
 }
 
 // Consumer.ts
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 import { themeStore } from './store'
 
 const ThemedComponent = component(() => {
@@ -574,7 +574,7 @@ export function useLocalStorage(key, initialValue) {
 **Qore:**
 ```ts
 // useLocalStorage.ts
-import { signal, effect } from 'qore'
+import { signal, effect } from '@qorejs/qore'
 
 export function useLocalStorage(key, initialValue) {
   const value = signal(() => {
@@ -620,7 +620,7 @@ theme.set('dark') // 自动保存
 **Qore:**
 ```ts
 // Card.ts
-import { component } from 'qore'
+import { component } from '@qorejs/qore'
 
 const Card = component(({ header, children }) => {
   return () => `
@@ -749,7 +749,7 @@ watch(remaining, (val) => {
 
 ```ts
 // Qore TodoApp.ts
-import { component, signal, computed, effect } from 'qore'
+import { component, signal, computed, effect } from '@qorejs/qore'
 
 const TodoApp = component(() => {
   const todos = signal([
