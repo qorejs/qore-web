@@ -1,3 +1,9 @@
+---
+title: 响应式系统
+description: 深入了解 Qore 的细粒度响应式系统 - Signal、Computed、Effect 详解
+keywords: [Qore, 响应式，Signal, Computed, Effect, 细粒度，依赖追踪]
+---
+
 # 响应式系统
 
 Qore 的响应式系统基于 Signal，提供细粒度的依赖追踪。

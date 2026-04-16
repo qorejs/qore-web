@@ -1,3 +1,9 @@
+---
+title: 核心概念
+description: 理解 Qore 的核心设计理念 - 响应式优先、零虚拟 DOM、AI Native、类型安全
+keywords: [Qore, 核心概念，响应式，虚拟 DOM, AI Native, TypeScript, 设计理念]
+---
+
 # 核心概念
 
 Qore 的设计基于几个核心概念，理解它们将帮助你更好地使用框架。

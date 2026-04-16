@@ -1,3 +1,9 @@
+---
+title: AI Native 特性
+description: 探索 Qore 的 AI Native 特性 - 智能代码生成、自动优化、AI 集成
+keywords: [Qore, AI Native, 人工智能，代码生成，自动优化，机器学习，前端]
+---
+
 # AI Native 特性
 
 Qore 是首个 AI Native 的前端框架。

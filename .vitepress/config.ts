@@ -18,9 +18,10 @@ export default defineConfig({
   themeConfig: {
     logo: '/logo.svg',
     
-    // 优化导航栏 - 参考主流框架
+    // 优化导航栏 - 参考主流框架，突出快速开始
     nav: [
       { text: '首页', link: '/' },
+      { text: '快速开始', link: '/guide/quick-start' },
       { text: '指南', link: '/guide/getting-started' },
       { text: 'API', link: '/api/signal' },
       { text: '示例', link: '/examples/basic' },
@@ -28,10 +29,12 @@ export default defineConfig({
       { text: '社区', link: 'https://discord.gg/qore' },
     ],
 
-    // 搜索配置
+    // 搜索配置 - 优化搜索体验
     search: {
       provider: 'local',
       options: {
+        // 搜索优化：确保所有页面可搜索
+        detailedView: true,
         locales: {
           root: {
             translations: {
@@ -56,14 +59,16 @@ export default defineConfig({
     sidebar: {
       '/guide/': [
         {
-          text: '快速开始',
+          text: '🚀 新手入门',
           items: [
+            { text: '5 分钟快速入门', link: '/guide/quick-start' },
+            { text: '为什么选择 Qore', link: '/guide/why-qore' },
             { text: '快速开始', link: '/guide/getting-started' },
             { text: '核心概念', link: '/guide/core-concepts' },
           ],
         },
         {
-          text: '核心特性',
+          text: '💡 核心特性',
           items: [
             { text: '响应式系统', link: '/guide/reactivity' },
             { text: '组件系统', link: '/guide/components' },
@@ -72,7 +77,7 @@ export default defineConfig({
           ],
         },
         {
-          text: 'AI Native',
+          text: '🤖 AI Native',
           items: [
             { text: 'AI 特性概览', link: '/guide/ai-native' },
           ],

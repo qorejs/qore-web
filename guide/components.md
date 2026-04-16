@@ -1,3 +1,9 @@
+---
+title: 组件系统
+description: Qore 组件系统详解 - 基础组件、Props、插槽、生命周期
+keywords: [Qore, 组件，Component, Props, 插槽，生命周期，前端]
+---
+
 # 组件系统
 
 Qore 的组件是简单的函数，返回渲染函数。

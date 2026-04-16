@@ -1,3 +1,9 @@
+---
+title: 流式渲染
+description: Qore 流式渲染详解 - Streaming SSR、AI 响应、渐进式加载
+keywords: [Qore, 流式渲染，Streaming, SSR, AI, 渐进式加载，性能优化]
+---
+
 # 流式渲染
 
 Qore 提供强大的流式渲染支持，专为 AI 应用和实时数据设计。

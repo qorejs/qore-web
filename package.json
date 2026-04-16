@@ -6,10 +6,15 @@
   "scripts": {
     "dev": "vitepress dev",
     "build": "vitepress build",
-    "preview": "vitepress preview"
+    "preview": "vitepress preview",
+    "doctest": "tsx scripts/doctest/runner.ts",
+    "doctest:api": "tsx scripts/doctest/runner.ts api/signal.md api/computed.md api/effect.md api/batch.md"
   },
   "dependencies": {
     "vitepress": "^1.6.4",
     "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.3"
   }
 }

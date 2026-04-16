@@ -1,3 +1,9 @@
+---
+title: 快速开始
+description: Qore 框架快速开始指南 - 安装、第一个组件、核心概念入门
+keywords: [Qore, 快速开始，安装，组件，Signal, Computed, Effect, 新手指南]
+---
+
 # 快速开始
 
 欢迎使用 Qore！本指南将帮助你快速上手。

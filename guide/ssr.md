@@ -1,3 +1,9 @@
+---
+title: 服务端渲染 (SSR)
+description: Qore SSR 完整指南 - 流式渲染、Suspense、水合优化
+keywords: [Qore, SSR, 服务端渲染，流式，Suspense, 水合，SEO, 性能]
+---
+
 # 服务端渲染 (SSR)
 
 Qore 提供完整的 SSR 支持，包括流式渲染和 Suspense 边界。
