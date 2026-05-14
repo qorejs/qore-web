@@ -1,262 +1,118 @@
 ---
-title: 流式渲染
-description: Qore 流式渲染详解 - Streaming SSR、AI 响应、渐进式加载
-keywords: [Qore, 流式渲染，Streaming, SSR, AI, 渐进式加载，性能优化]
+title: 流式响应
+description: Qore stream = signal 的设计与使用方式
+keywords: [Qore, 流式响应, Streaming, Signal, AI, SSE]
 ---
 
-# 流式渲染
+# 流式响应
 
-Qore 提供强大的流式渲染支持，专为 AI 应用和实时数据设计。
+Qore 的灵魂是四个字：**流式响应**。
 
-## 为什么需要流式？
+传统 UI 把数据看成一次快照：请求、等待、拿到完整结果、再渲染。AI 应用不是这样。模型会一段一段地产生 token，UI 应该像接住水流一样接住它。
 
-在传统的前端应用中，我们需要等待整个响应加载完成才能渲染。对于 AI 应用，这意味用户需要等待很长时间才能看到结果。
+Qore 的做法是：
 
-流式渲染允许我们：
-
-- ✅ **即时显示** - 数据一到就渲染
-- ✅ **渐进式加载** - 分块显示内容
-- ✅ **更好的用户体验** - 减少等待时间
-- ✅ **更低的内存占用** - 不需要缓存整个响应
-
-## 基础流式
-
-### 使用 stream 辅助函数
-
-```typescript
-import { signal } from '@qore/core';
-import { h, render, stream } from '@qore/core';
-
-const StreamingApp = () => {
-  const content = signal('');
-  const isComplete = signal(false);
-  
-  const loadStream = async () => {
-    const response = await fetch('/api/stream');
-    const reader = response.body.getReader();
-    
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) {
-        isComplete(true);
-        break;
-      }
-      
-      const chunk = new TextDecoder().decode(value);
-      content(content() + chunk);
-    }
-  };
-  
-  return h('div', {}, [
-    h('button', { onclick: loadStream }, 'Load Stream'),
-    h('div', { class: 'content' }, [
-      content(),
-      !isComplete() && h('span', { class: 'loading' }, '...')
-    ])
-  ]);
-};
+```ts
+const answer = stream(openAI.chat('hello'))
 ```
 
-## AI 流式响应
+`answer` 既是 stream，也是 signal。
 
-### 聊天应用示例
+```ts
+answer() // 当前累积内容
+```
 
-```typescript
-import { signal } from '@qore/core';
-import { h, render } from '@qore/core';
+只要视图依赖它，chunk 到达时 UI 会自动更新。
 
-interface Message {
-  id: number;
-  role: 'user' | 'assistant';
-  content: string;
-  isStreaming?: boolean;
+```ts
+return h('div', {}, text(() => answer()))
+```
+
+## 最小 AI 响应
+
+```ts
+import { createOpenAI, h, mount, stream, text } from '@qorejs/qore'
+
+const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
+const answer = stream(openAI.chat('hello'))
+
+mount('#app', () => h('main', {},
+  h('h1', {}, 'AI response'),
+  h('p', {}, text(() => answer())),
+  h('small', {}, text(() => answer.status()))
+))
+```
+
+这里没有手动拼字符串，没有 loading 状态散落在组件里，也没有整棵树重绘。`text(() => answer())` 对应的那个 text node 会更新。
+
+## 多轮对话
+
+```ts
+import { h, list, signal, stream, text } from '@qorejs/qore'
+
+const messages = signal<{ role: 'user' | 'assistant'; content: string }[]>([])
+
+async function send(content: string) {
+  messages([...messages(), { role: 'user', content }])
+
+  const answer = stream(openAI.chat([...messages(), { role: 'user', content }]))
+
+  messages([...messages(), { role: 'assistant', content: '' }])
+
+  for await (const _ of answer) {
+    const next = [...messages()]
+    next[next.length - 1] = { role: 'assistant', content: answer() }
+    messages(next)
+  }
 }
 
-const ChatApp = () => {
-  const messages = signal<Message[]>([]);
-  const input = signal('');
-  
-  const sendMessage = async () => {
-    if (!input().trim()) return;
-    
-    // 添加用户消息
-    const userMsg: Message = {
-      id: Date.now(),
-      role: 'user',
-      content: input()
-    };
-    messages([...messages(), userMsg]);
-    input('');
-    
-    // 添加 AI 消息占位
-    const aiMsg: Message = {
-      id: Date.now() + 1,
-      role: 'assistant',
-      content: '',
-      isStreaming: true
-    };
-    messages([...messages(), aiMsg]);
-    
-    // 流式获取响应
-    const response = await fetch('/api/chat', {
-      method: 'POST',
-      body: JSON.stringify({
-        messages: [...messages()]
-      })
-    });
-    
-    const reader = response.body.getReader();
-    while (true) {
-      const { done, value } = await reader.read();
-      if (done) break;
-      
-      const chunk = new TextDecoder().decode(value);
-      
-      // 更新 AI 消息内容
-      const updated = messages().map(m =>
-        m.id === aiMsg.id
-          ? { ...m, content: m.content + chunk }
-          : m
-      );
-      messages(updated);
-    }
-    
-    // 标记流式完成
-    const finalized = messages().map(m =>
-      m.id === aiMsg.id
-        ? { ...m, isStreaming: false }
-        : m
-    );
-    messages(finalized);
-  };
-  
-  return h('div', { class: 'chat' }, [
-    h('div', { class: 'messages' }, [
-      ...messages().map(msg =>
-        h('div', {
-          key: msg.id,
-          class: `message ${msg.role}`
-        }, [
-          h('strong', {}, msg.role + ': '),
-          h('span', {}, msg.content),
-          msg.isStreaming && h('span', { class: 'cursor' }, '▋')
-        ])
-      )
-    ]),
-    h('input', {
-      value: input(),
-      placeholder: 'Type a message...',
-      oninput: (e: any) => input(e.target.value),
-      onkeydown: (e: any) => e.key === 'Enter' && sendMessage()
-    })
-  ]);
-};
+export const Chat = () => h('section', {},
+  list(messages, message => h('p', { class: message.role }, message.content)),
+  h('button', { onclick: () => send('Explain Qore') }, 'Ask')
+)
 ```
 
-## 流式 SSR
+如果只需要展示一条正在生成的回复，可以直接把 `stream()` 返回值交给 UI；如果要把完成后的内容写回历史消息，也可以用 async iterator 消费同一个 stream。
 
-Qore 支持服务端流式渲染：
+## 打字机效果
 
-```typescript
-import { renderToStream } from '@qore/ssr';
-
-const stream = await renderToStream(App, {
-  // 启用 suspense 边界
-  suspense: true,
-  
-  // 预取数据
-  prefetch: async () => {
-    const data = await fetchData();
-    return { data };
-  }
-});
-
-// 将流式传输到客户端
-stream.pipe(res);
+```ts
+const answer = stream.paced(openAI.chat('hello'), 24)
 ```
 
-## 性能优化
+`paced()` 会给 chunk commit 增加最小间隔，适合让高频 token 以更稳定的节奏进入 UI。
 
-### 批处理更新
+## Backpressure
 
-```typescript
-import { batch } from '@qore/core';
+当 provider 发得比 UI 消费更快，可以限制缓冲区。
 
-const handleStream = async () => {
-  const response = await fetch('/api/stream');
-  const reader = response.body.getReader();
-  
-  const chunks = [];
-  while (true) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    
-    chunks.push(new TextDecoder().decode(value));
-    
-    // 每 10 个 chunk 批量更新一次
-    if (chunks.length % 10 === 0) {
-      batch(() => {
-        content(chunks.join(''));
-        progress((chunks.length / totalChunks) * 100);
-      });
-    }
-  }
-  
-  // 最终更新
-  content(chunks.join(''));
-};
+```ts
+const answer = stream.withBackpressure(openAI.chat('hello'), {
+  interval: 16,
+  buffer: 128,
+  overflow: 'drop-oldest'
+})
 ```
 
-### 虚拟列表
+这让“流太快了要控速”成为框架 primitive，而不是每个应用自己重写一次。
 
-对于大量流式数据，使用虚拟列表：
+## Provider
 
-```typescript
-import { VirtualList } from '@qore/components';
+Qore 的 provider story 围绕同一个接口：任何 provider 最终都变成 async iterable，然后交给 `stream()`。
 
-const StreamList = () => {
-  const items = signal([]);
-  
-  return h(VirtualList, {
-    items: items(),
-    itemHeight: 50,
-    renderItem: (item) => h('div', { class: 'item' }, item.text)
-  });
-};
+```ts
+const openAIAnswer = stream(openAI.chat(prompt))
+const claudeAnswer = stream(anthropic.chat(prompt))
+const genericAnswer = stream(sse.stream({ prompt }))
 ```
 
-## 错误处理
+UI 不关心来源，只关心 signal。
 
-```typescript
-import { retry } from '@qore/core';
+## 设计原则
 
-const robustStream = async () => {
-  try {
-    const response = await retry(
-      () => fetch('/api/stream'),
-      [],
-      { maxRetries: 3, delay: 1000 }
-    );
-    
-    if (!response.ok) throw new Error('Stream failed');
-    
-    // 处理流式响应...
-  } catch (error) {
-    errorState(`Stream error: ${error.message}`);
-  }
-};
-```
+- `stream` 负责数据如何流动。
+- `signal` 负责 UI 如何响应。
+- `QoreStream` 把两者合成一个只读 runtime 状态。
+- UI 更新应该细到 text node，而不是整棵树。
 
-## 最佳实践
-
-1. **显示加载状态** - 让用户知道数据正在加载
-2. **处理错误** - 提供重试机制
-3. **限制更新频率** - 避免过于频繁的 DOM 更新
-4. **使用批处理** - 合并多个更新
-5. **清理资源** - 组件卸载时取消流式请求
-
-## 相关资源
-
-- [API 参考 - Streaming](/api/streaming)
-- [示例 - AI 集成](/examples/ai-integration)
-- [服务端渲染指南](/guide/ssr)
+[查看 Streaming API](/api/streaming)

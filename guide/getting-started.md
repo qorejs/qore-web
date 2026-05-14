@@ -97,4 +97,4 @@ name.set('World') // 自动重新执行
 - [核心概念](/guide/core-concepts) - 深入了解 Qore 的设计理念
 - [响应式系统](/guide/reactivity) - 学习细粒度响应式
 - [组件系统](/guide/components) - 构建可复用组件
-- [AI Native 特性](/guide/ai-native) - 探索 AI 集成
+- [AI 流集成](/guide/ai-native) - 探索 AI 集成

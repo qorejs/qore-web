@@ -29,11 +29,11 @@ Qore v0.5.0 正式发布！带来了完整的 SSR 支持、性能优化和更多
 
 ---
 
-### [AI Native 开发：用 Qore 构建智能应用](./ai-native-development.md)
+### [流式响应开发：用 Qore 构建智能应用](./ai-native-development.md)
 
 **发布日期**: 2026-04-05
 
-探索如何使用 Qore 的 AI Native 特性构建下一代智能应用。
+探索如何使用 Qore 的 stream primitive 构建下一代智能应用。
 
 [阅读全文 →](./ai-native-development.md)
 
@@ -41,6 +41,6 @@ Qore v0.5.0 正式发布！带来了完整的 SSR 支持、性能优化和更多
 
 ## 订阅更新
 
-- 🐦 关注 [@qore_framework](https://twitter.com/qore_framework)
-- 💬 加入 [Discord 社区](https://discord.gg/qore)
-- 📚 查看 [完整文档](/guide/getting-started)
+- 关注 [qorejs/qore](https://github.com/qorejs/qore)
+- 访问 [官网源码](https://github.com/qorejs/qore-web)
+- 查看 [完整文档](/guide/getting-started)

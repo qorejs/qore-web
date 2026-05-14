@@ -1,42 +1,48 @@
 ---
-title: AI Native 特性
-description: 探索 Qore 的 AI Native 特性 - 智能代码生成、自动优化、AI 集成
-keywords: [Qore, AI Native, 人工智能，代码生成，自动优化，机器学习，前端]
+title: AI 流集成
+description: 使用 Qore 的 stream primitive 连接 OpenAI、Anthropic 与通用 SSE
+keywords: [Qore, AI, stream, OpenAI, Anthropic, SSE]
 ---
 
-# AI Native 特性
+# AI 流集成
 
-Qore 是首个 AI Native 的前端框架。
+Qore 不靠模糊口号定义自己。它只抓住 AI UI 最具体的问题：**模型输出是流，而 UI 应该自然响应这条流**。
 
-## 智能代码生成
-
-```ts
-import { ai } from 'qore/ai'
-
-const component = await ai.generate(`
-  Create a todo list component with add, delete, and toggle features
-`)
-```
-
-## 自动优化
+## OpenAI
 
 ```ts
-import { ai } from 'qore/ai'
+import { createOpenAI, stream } from '@qorejs/qore'
 
-const optimized = await ai.optimize(myComponent, {
-  target: 'performance',
-  constraints: { maxSize: '5kb' }
-})
+const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
+const answer = stream(openAI.chat('用一句话解释 Qore'))
 ```
 
-## 运行时自适应
+## Anthropic
 
 ```ts
-import { ai } from 'qore/ai'
+import { createAnthropic, stream } from '@qorejs/qore'
 
-ai.adapt({
-  device: 'mobile',
-  connection: 'slow',
-  priority: 'performance'
-})
+const anthropic = createAnthropic({ apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY })
+const answer = stream(anthropic.chat('Explain streaming response UI'))
 ```
+
+## Generic SSE
+
+```ts
+import { createSSEAdapter, stream } from '@qorejs/qore'
+
+const sse = createSSEAdapter({ endpoint: '/api/chat' })
+const answer = stream(sse.stream({ prompt: 'hello' }))
+```
+
+## UI
+
+```ts
+import { h, text } from '@qorejs/qore'
+
+export const Answer = () => h('article', {},
+  text(() => answer())
+)
+```
+
+Provider 可以变化，UI primitive 不变。

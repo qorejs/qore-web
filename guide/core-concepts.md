@@ -1,7 +1,7 @@
 ---
 title: 核心概念
-description: 理解 Qore 的核心设计理念 - 响应式优先、零虚拟 DOM、AI Native、类型安全
-keywords: [Qore, 核心概念，响应式，虚拟 DOM, AI Native, TypeScript, 设计理念]
+description: 理解 Qore 的核心设计理念 - stream、signal、细粒度 DOM 更新、类型安全
+keywords: [Qore, 核心概念，stream, signal, TypeScript, 设计理念]
 ---
 
 # 核心概念
@@ -28,12 +28,16 @@ a.set(10) // 只重新计算 sum，不触发其他无关更新
 
 Qore 不使用虚拟 DOM，直接操作真实 DOM，性能更优。
 
-## AI Native
+## 流式响应
 
-Qore 内置 AI 能力，支持：
-- 智能代码生成
-- 自动性能优化
-- 运行时自适应调整
+Qore 把 stream 和 signal 连接成同一个 primitive：
+
+```ts
+const answer = stream(openAI.chat('hello'))
+answer() // 当前累积内容
+```
+
+当 chunk 到达，signal 更新；当 signal 更新，只刷新依赖它的 DOM 节点。
 
 ## 类型安全
 

@@ -20,7 +20,7 @@ function h(
 **示例：**
 
 ```typescript
-import { h } from '@qore/core';
+import { h } from '@qorejs/qore';
 
 // HTML 元素
 const div = h('div', { class: 'container' }, [
@@ -51,7 +51,7 @@ function render(
 **示例：**
 
 ```typescript
-import { render, h } from '@qore/core';
+import { render, h } from '@qorejs/qore';
 
 const App = () => h('div', {}, 'Hello World');
 
@@ -77,7 +77,7 @@ function hydrate(
 **示例：**
 
 ```typescript
-import { hydrate, h } from '@qore/core';
+import { hydrate, h } from '@qorejs/qore';
 
 const App = () => h('div', {}, 'Hello World');
 
@@ -96,7 +96,7 @@ function text(value: string | number | Signal): VNode
 **示例：**
 
 ```typescript
-import { text, signal } from '@qore/core';
+import { text, signal } from '@qorejs/qore';
 
 const count = signal(0);
 
@@ -121,7 +121,7 @@ function show(
 **示例：**
 
 ```typescript
-import { show, signal } from '@qore/core';
+import { show, signal } from '@qorejs/qore';
 
 const isVisible = signal(true);
 
@@ -147,7 +147,7 @@ function For<T>(
 **示例：**
 
 ```typescript
-import { For, signal } from '@qore/core';
+import { For, signal } from '@qorejs/qore';
 
 const items = signal(['A', 'B', 'C']);
 
@@ -179,7 +179,7 @@ function Fragment(props: { children: Children[] }): Children[]
 **示例：**
 
 ```typescript
-import { Fragment, h } from '@qore/core';
+import { Fragment, h } from '@qorejs/qore';
 
 const List = () => {
   return h(Fragment, {}, [
@@ -213,7 +213,7 @@ function Portal(
 **示例：**
 
 ```typescript
-import { Portal, h } from '@qore/core';
+import { Portal, h } from '@qorejs/qore';
 
 const Modal = () => {
   return h(Portal, { target: '#modal-root' }, [
@@ -231,7 +231,7 @@ const Modal = () => {
 ### 批处理更新
 
 ```typescript
-import { batch, h, render } from '@qore/core';
+import { batch, h, render } from '@qorejs/qore';
 
 const App = () => {
   const count = signal(0);

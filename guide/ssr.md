@@ -46,7 +46,7 @@ res.send(`
 
 ```typescript
 // client.ts
-import { hydrate } from '@qore/core';
+import { hydrate } from '@qorejs/qore';
 import { App } from './App';
 
 const app = document.getElementById('app');
@@ -82,7 +82,7 @@ Suspense 允许延迟渲染某些组件，直到它们准备好。
 ### 基础用法
 
 ```typescript
-import { Suspense, lazy } from '@qore/core';
+import { Suspense, lazy } from '@qorejs/qore';
 
 // 懒加载组件
 const HeavyComponent = lazy(() => import('./HeavyComponent'));
@@ -166,7 +166,7 @@ const App = () => {
 ## 错误边界
 
 ```typescript
-import { createErrorBoundary } from '@qore/core';
+import { createErrorBoundary } from '@qorejs/qore';
 
 const ErrorBoundary = createErrorBoundary({
   fallback: (error) => h('div', { class: 'error' }, [
@@ -244,7 +244,7 @@ app.listen(3000);
 
 ```typescript
 // client.ts
-import { hydrate } from '@qore/core';
+import { hydrate } from '@qorejs/qore';
 import { App } from './App';
 
 const app = document.getElementById('app');

@@ -1,7 +1,8 @@
 {
-  "name": "qore-docs",
-  "version": "0.5.0",
+  "name": "qore-web",
+  "version": "0.7.1",
   "private": true,
+  "description": "Official website for Qore, the streaming-response framework.",
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",
@@ -11,6 +12,7 @@
     "doctest:api": "tsx scripts/doctest/runner.ts api/signal.md api/computed.md api/effect.md api/batch.md"
   },
   "dependencies": {
+    "@qorejs/qore": "^0.7.1",
     "vitepress": "^1.6.4",
     "vue": "^3.5.0"
   },

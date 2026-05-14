@@ -37,7 +37,7 @@ const Counter = () => {
 ### Signal - 响应式的基石
 
 ```typescript
-import { signal, computed, effect } from '@qore/core';
+import { signal, computed, effect } from '@qorejs/qore';
 
 // 创建响应式值
 const name = signal('World');
@@ -95,7 +95,7 @@ user({ ...user(), age: 31 }); // 只触发 age 的更新
 ### 3. 批量更新
 
 ```typescript
-import { batch } from '@qore/core';
+import { batch } from '@qorejs/qore';
 
 // 多次更新合并为一次渲染
 batch(() => {
@@ -130,7 +130,7 @@ Qore 特别适合：
 ## 开始使用
 
 ```bash
-npm install @qore/core
+npm install @qorejs/qore
 ```
 
 查看 [快速开始指南](/guide/getting-started) 了解更多。

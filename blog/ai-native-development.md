@@ -1,29 +1,29 @@
 ---
-title: AI Native 开发 - 用 Qore 构建智能应用
+title: 流式响应 开发 - 用 Qore 构建智能应用
 date: 2026-04-05
 author: Qore Team
 ---
 
-# AI Native 开发：用 Qore 构建智能应用
+# 流式响应 开发：用 Qore 构建智能应用
 
-AI 正在改变软件开发的方式。Qore 是第一个 AI Native 的前端框架，专为 AI 时代设计。
+AI 正在改变软件开发的方式。Qore 是第一个 流式响应 的前端框架，专为 AI 时代设计。
 
-## 什么是 AI Native？
+## 什么是 流式响应？
 
-AI Native 不仅仅是"集成 AI"，而是从设计之初就考虑 AI 的工作方式：
+流式响应 不仅仅是"集成 AI"，而是从设计之初就考虑 AI 的工作方式：
 
 - 🔄 **流式响应** - 实时处理 AI 的流式输出
 - 🧠 **自适应 UI** - 根据 AI 输出动态调整界面
 - ⚡ **即时反馈** - 零延迟的用户体验
 - 🎯 **智能优化** - AI 辅助的性能优化
 
-## Qore 的 AI Native 特性
+## Qore 的 AI 流集成
 
 ### 1. 内置流式支持
 
 ```typescript
-import { signal } from '@qore/core';
-import { h, render, stream } from '@qore/core';
+import { signal } from '@qorejs/qore';
+import { h, render, stream } from '@qorejs/qore';
 
 const ChatApp = () => {
   const response = signal('');
@@ -64,7 +64,7 @@ const ChatApp = () => {
 ### 2. Suspense 边界
 
 ```typescript
-import { Suspense, lazy } from '@qore/core';
+import { Suspense, lazy } from '@qorejs/qore';
 
 // 懒加载 AI 组件
 const AIAssistant = lazy(() => import('./AIAssistant'));
@@ -81,7 +81,7 @@ const App = () => {
 ### 3. 错误恢复
 
 ```typescript
-import { retry } from '@qore/core';
+import { retry } from '@qorejs/qore';
 
 const callAI = async (query) => {
   const response = await fetch('/api/ai', {
@@ -101,8 +101,8 @@ const result = await retry(callAI, ['Hello'], {
 ## 实战：构建 AI 聊天应用
 
 ```typescript
-import { signal, computed } from '@qore/core';
-import { h, render, For, stream } from '@qore/core';
+import { signal, computed } from '@qorejs/qore';
+import { h, render, For, stream } from '@qorejs/qore';
 
 interface Message {
   id: number;
@@ -227,10 +227,10 @@ const tests = await ai.generateTests(component);
 ## 开始构建
 
 ```bash
-npm install @qore/core
+npm install @qorejs/qore
 ```
 
-查看 [AI Native 特性文档](/guide/ai-native) 了解更多。
+查看 [AI 流集成文档](/guide/ai-native) 了解更多。
 
 ---
 

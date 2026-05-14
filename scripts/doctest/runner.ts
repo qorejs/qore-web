@@ -79,6 +79,22 @@ function shouldTestBlock(block: CodeBlock): boolean {
     return false
   }
 
+  const runtimeOnlyPatterns = [
+    /TypeScript 错误/,
+    /❌/,
+    /from\s*['"]\.\/store['"]/,
+    /\bfetch\s*\(/,
+    /\blocalStorage\b/,
+    /\bsubscribeTo(?:User|Channel)\b/,
+    /\bupdateDocumentTitle\b/,
+    /\bupdateCartDisplay\b/,
+    /\btransform\b/
+  ]
+
+  if (runtimeOnlyPatterns.some((pattern) => pattern.test(block.code))) {
+    return false
+  }
+
   // 跳过纯类型定义
   if (block.code.trim().startsWith('interface') && !block.code.includes('=')) {
     return false
@@ -123,19 +139,18 @@ function transformCode(code: string, existingImports: string[] = []): string {
   let transformed = code
 
   // 检查是否已有导入
-  const hasQoreImport = transformed.includes('from \'qore\'') || transformed.includes('from "qore"')
+  const hasQoreImport = /from\s*['"](?:qore|@qorejs\/qore)['"]/.test(transformed)
   
   if (hasQoreImport) {
-    // 替换现有的 qore 导入
     transformed = transformed.replace(
-      /import\s*\{([^}]+)\}\s*from\s*['"]qore['"]/g,
-      'import { $1 } from \'../../doctest/qore-mock.js\''
+      /import\s*\{([^}]+)\}\s*from\s*['"](?:qore|@qorejs\/qore)['"]/g,
+      'import { $1 } from \'./qore-mock.ts\''
     )
   } else {
     // 添加必要的导入
     const neededImports = analyzeImports(code)
     if (neededImports.length > 0) {
-      const importStatement = `import { ${neededImports.join(', ')} } from '../../doctest/qore-mock.js'\n`
+      const importStatement = `import { ${neededImports.join(', ')} } from './qore-mock.ts'\n`
       transformed = importStatement + transformed
     }
   }
