@@ -25,11 +25,10 @@ return messages.map(message => (
 ))`
 
 const streamTokens = [
-  'Qore receives each token as water, not as cargo. ',
-  'The stream is a signal, so the UI subscribes once and keeps flowing. ',
-  'No manual string stitching. ',
-  'No whole-tree rerender. ',
-  'One text node updates as the model speaks.'
+  'Token arrives. ',
+  'Signal updates. ',
+  'Text node paints. ',
+  'The UI keeps flowing.'
 ]
 
 const pillars = [
@@ -123,6 +122,28 @@ onBeforeUnmount(() => {
   padding-top: 0;
 }
 
+:global(.VPContent.is-home .VPHome > .vp-doc.container) {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+:global(.VPContent.is-home .VPHome > .vp-doc.container > div) {
+  width: 100%;
+}
+
+:global(.VPFooter) {
+  margin-top: 0 !important;
+  border-top: 0 !important;
+  background: #020605 !important;
+}
+
+:global(.VPFooter .message),
+:global(.VPFooter .copyright) {
+  color: rgba(243, 255, 247, 0.56) !important;
+}
+
 :global(.VPNavBar.has-sidebar .content) {
   border-bottom: none;
 }
@@ -139,12 +160,16 @@ onBeforeUnmount(() => {
   position: relative;
   overflow: hidden;
   min-height: 100vh;
+  box-sizing: border-box;
+  width: 100vw;
+  max-width: 100%;
   margin-top: -64px;
-  padding: 128px 24px 80px;
+  padding: 118px clamp(22px, 4vw, 76px) 96px;
   color: var(--qore-text);
   background:
-    radial-gradient(circle at 18% 12%, rgba(116, 247, 255, 0.2), transparent 30%),
-    radial-gradient(circle at 84% 18%, rgba(143, 255, 193, 0.18), transparent 28%),
+    radial-gradient(circle at 10% 8%, rgba(116, 247, 255, 0.22), transparent 28%),
+    radial-gradient(circle at 92% 18%, rgba(143, 255, 193, 0.22), transparent 30%),
+    radial-gradient(circle at 48% 110%, rgba(30, 230, 168, 0.14), transparent 34%),
     linear-gradient(135deg, #06100f 0%, #0b1d19 48%, #020605 100%);
   opacity: 0;
   transform: translateY(12px);
@@ -196,16 +221,17 @@ onBeforeUnmount(() => {
 .compare-section {
   position: relative;
   z-index: 1;
-  width: min(1160px, 100%);
+  width: 100%;
+  max-width: 1640px;
   margin: 0 auto;
 }
 
 .hero-section {
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1.1fr);
-  gap: 32px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(380px, 0.82fr);
+  gap: clamp(32px, 5vw, 92px);
   align-items: center;
-  min-height: 620px;
+  min-height: clamp(600px, calc(100vh - 74px), 740px);
 }
 
 .hero-copy {
@@ -231,7 +257,7 @@ h2,
 }
 
 h1 {
-  font: 900 clamp(84px, 14vw, 184px)/0.82 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font: 900 clamp(76px, 13vw, 170px)/0.82 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
   letter-spacing: -0.12em;
   color: transparent;
   background: linear-gradient(110deg, #ffffff 0%, #b4ffd5 48%, #73f7ff 100%);
@@ -242,7 +268,7 @@ h1 {
 
 .tagline {
   max-width: 760px;
-  font-size: clamp(30px, 4vw, 58px);
+  font-size: clamp(28px, 3.5vw, 52px);
   font-weight: 800;
   line-height: 1.06;
   letter-spacing: -0.06em;
@@ -301,6 +327,7 @@ h1 {
 .demo-card,
 .pillar-card,
 .code-card {
+  box-sizing: border-box;
   border: 1px solid var(--qore-line);
   background: linear-gradient(180deg, var(--qore-panel-strong), var(--qore-panel));
   box-shadow: 0 30px 100px rgba(0, 0, 0, 0.36);
@@ -308,9 +335,13 @@ h1 {
 }
 
 .demo-card {
-  min-height: 430px;
-  padding: 18px;
-  border-radius: 32px;
+  align-self: center;
+  justify-self: stretch;
+  min-height: 440px;
+  max-width: 680px;
+  padding: clamp(16px, 2vw, 26px);
+  border-radius: 34px;
+  transform: rotate(0.35deg);
 }
 
 .qore-root {
@@ -322,9 +353,9 @@ h1 {
   display: grid;
   gap: 18px;
   height: 100%;
-  min-height: 360px;
-  padding: 22px;
-  border-radius: 24px;
+  min-height: 372px;
+  padding: clamp(20px, 2.6vw, 30px);
+  border-radius: 28px;
   background:
     linear-gradient(135deg, rgba(5, 24, 19, 0.94), rgba(3, 8, 8, 0.98)),
     radial-gradient(circle at 20% 20%, rgba(143, 255, 193, 0.22), transparent 36%);
@@ -350,11 +381,12 @@ h1 {
 }
 
 :deep(.runtime-output) {
-  min-height: 220px;
+  min-height: 186px;
   margin: 0;
   white-space: pre-wrap;
   color: #eafff1;
-  font: 700 clamp(22px, 3vw, 35px)/1.38 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font: 700 clamp(22px, 2.65vw, 40px)/1.22 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  letter-spacing: -0.035em;
 }
 
 :deep(.runtime-meta) {
@@ -367,7 +399,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 16px;
-  margin-top: 8px;
+  margin-top: 20px;
 }
 
 .pillar-card {
@@ -468,7 +500,16 @@ h1 {
   }
 
   .demo-card {
-    min-height: 380px;
+    min-height: 340px;
+    transform: none;
+  }
+
+  :deep(.runtime-shell) {
+    min-height: 292px;
+  }
+
+  :deep(.runtime-output) {
+    min-height: 132px;
   }
 }
 </style>
