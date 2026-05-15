@@ -1,6 +1,167 @@
 import { defineConfig } from 'vitepress'
 
+const englishNav = [
+  { text: 'Home', link: '/' },
+  { text: 'Quick Start', link: '/guide/quick-start' },
+  { text: 'Streaming', link: '/guide/streaming' },
+  { text: 'API', link: '/api/streaming' },
+  { text: 'Examples', link: '/examples/ai-integration' },
+  { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
+]
+
+const chineseNav = [
+  { text: '首页', link: '/zh/' },
+  { text: '快速开始', link: '/zh/guide/quick-start' },
+  { text: '流式响应', link: '/zh/guide/streaming' },
+  { text: 'API', link: '/zh/api/streaming' },
+  { text: '示例', link: '/zh/examples/ai-integration' },
+  { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
+]
+
+const englishSidebar = {
+  '/guide/': [
+    {
+      text: 'Start',
+      items: [
+        { text: '5-Minute Quick Start', link: '/guide/quick-start' },
+        { text: 'Why Qore', link: '/guide/why-qore' },
+        { text: 'Getting Started', link: '/guide/getting-started' },
+        { text: 'Core Concepts', link: '/guide/core-concepts' },
+      ],
+    },
+    {
+      text: 'Streaming Response',
+      items: [
+        { text: 'Reactivity', link: '/guide/reactivity' },
+        { text: 'Streaming Response', link: '/guide/streaming' },
+        { text: 'AI Stream Integration', link: '/guide/ai-native' },
+        { text: 'Server Rendering', link: '/guide/ssr' },
+      ],
+    },
+    {
+      text: 'Migration',
+      items: [
+        { text: 'From React', link: '/guide/migration-from-react' },
+        { text: 'From Vue', link: '/guide/migration-from-vue' },
+      ],
+    },
+    {
+      text: 'Components',
+      items: [
+        { text: 'Components', link: '/guide/components' },
+      ],
+    },
+  ],
+  '/api/': [
+    {
+      text: 'Stream API',
+      items: [
+        { text: 'Streaming', link: '/api/streaming' },
+      ],
+    },
+    {
+      text: 'Reactive API',
+      items: [
+        { text: 'Signal', link: '/api/signal' },
+        { text: 'Computed', link: '/api/computed' },
+        { text: 'Effect', link: '/api/effect' },
+        { text: 'Batch', link: '/api/batch' },
+      ],
+    },
+    {
+      text: 'DOM API',
+      items: [
+        { text: 'Component', link: '/api/component' },
+        { text: 'Renderer', link: '/api/renderer' },
+      ],
+    },
+  ],
+  '/examples/': [
+    {
+      text: 'Examples',
+      items: [
+        { text: 'AI Integration', link: '/examples/ai-integration' },
+        { text: 'Basic', link: '/examples/basic' },
+        { text: 'Counter', link: '/examples/counter' },
+        { text: 'Todo List', link: '/examples/todo' },
+      ],
+    },
+  ],
+}
+
+const chineseSidebar = {
+  '/zh/guide/': [
+    {
+      text: '开始',
+      items: [
+        { text: '5 分钟快速入门', link: '/zh/guide/quick-start' },
+        { text: '为什么选择 Qore', link: '/zh/guide/why-qore' },
+        { text: '快速开始', link: '/zh/guide/getting-started' },
+        { text: '核心概念', link: '/zh/guide/core-concepts' },
+      ],
+    },
+    {
+      text: '流式响应',
+      items: [
+        { text: '响应式系统', link: '/zh/guide/reactivity' },
+        { text: '流式渲染', link: '/zh/guide/streaming' },
+        { text: 'AI 流', link: '/zh/guide/ai-native' },
+        { text: '服务端渲染', link: '/zh/guide/ssr' },
+      ],
+    },
+    {
+      text: '迁移',
+      items: [
+        { text: '从 React 迁移', link: '/zh/guide/migration-from-react' },
+        { text: '从 Vue 迁移', link: '/zh/guide/migration-from-vue' },
+      ],
+    },
+    {
+      text: '组件',
+      items: [
+        { text: '组件系统', link: '/zh/guide/components' },
+      ],
+    },
+  ],
+  '/zh/api/': [
+    {
+      text: 'Stream API',
+      items: [
+        { text: 'Streaming', link: '/zh/api/streaming' },
+      ],
+    },
+    {
+      text: 'Reactive API',
+      items: [
+        { text: 'Signal', link: '/zh/api/signal' },
+        { text: 'Computed', link: '/zh/api/computed' },
+        { text: 'Effect', link: '/zh/api/effect' },
+        { text: 'Batch', link: '/zh/api/batch' },
+      ],
+    },
+    {
+      text: 'DOM API',
+      items: [
+        { text: 'Component', link: '/zh/api/component' },
+        { text: 'Renderer', link: '/zh/api/renderer' },
+      ],
+    },
+  ],
+  '/zh/examples/': [
+    {
+      text: '示例',
+      items: [
+        { text: 'AI 集成', link: '/zh/examples/ai-integration' },
+        { text: '基础示例', link: '/zh/examples/basic' },
+        { text: '计数器', link: '/zh/examples/counter' },
+        { text: 'Todo 列表', link: '/zh/examples/todo' },
+      ],
+    },
+  ],
+}
+
 export default defineConfig({
+  lang: 'en-US',
   title: 'Qore',
   description: 'Streaming response framework: stream becomes signal.',
   base: '/',
@@ -10,22 +171,15 @@ export default defineConfig({
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1' }],
     ['meta', { name: 'theme-color', content: '#07110f' }],
     ['meta', { property: 'og:type', content: 'website' }],
-    ['meta', { property: 'og:locale', content: 'zh-CN' }],
+    ['meta', { property: 'og:locale', content: 'en_US' }],
     ['meta', { property: 'og:title', content: 'Qore - Streaming Response Framework' }],
     ['meta', { property: 'og:description', content: 'stream becomes signal, and AI tokens flow directly into UI.' }],
   ],
 
   themeConfig: {
     logo: '/logo.svg',
-
-    nav: [
-      { text: '首页', link: '/' },
-      { text: '快速开始', link: '/guide/quick-start' },
-      { text: '流式响应', link: '/guide/streaming' },
-      { text: 'API', link: '/api/streaming' },
-      { text: '示例', link: '/examples/ai-integration' },
-      { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
-    ],
+    nav: englishNav,
+    sidebar: englishSidebar,
 
     search: {
       provider: 'local',
@@ -35,85 +189,37 @@ export default defineConfig({
           root: {
             translations: {
               button: {
+                buttonText: 'Search docs',
+                buttonAriaLabel: 'Search docs',
+              },
+              modal: {
+                noResultsText: 'No results found',
+                resetButtonTitle: 'Reset search',
+                footer: {
+                  selectText: 'select',
+                  navigateText: 'navigate',
+                },
+              },
+            },
+          },
+          zh: {
+            translations: {
+              button: {
                 buttonText: '搜索文档',
-                buttonAriaLabel: '搜索文档'
+                buttonAriaLabel: '搜索文档',
               },
               modal: {
                 noResultsText: '无法找到相关结果',
                 resetButtonTitle: '清除查询',
                 footer: {
                   selectText: '选择',
-                  navigateText: '切换'
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-
-    sidebar: {
-      '/guide/': [
-        {
-          text: '开始',
-          items: [
-            { text: '5 分钟快速入门', link: '/guide/quick-start' },
-            { text: '为什么选择 Qore', link: '/guide/why-qore' },
-            { text: '快速开始', link: '/guide/getting-started' },
-            { text: '核心概念', link: '/guide/core-concepts' },
-          ],
+                  navigateText: '切换',
+                },
+              },
+            },
+          },
         },
-        {
-          text: '流式响应',
-          items: [
-            { text: '响应式系统', link: '/guide/reactivity' },
-            { text: '流式渲染', link: '/guide/streaming' },
-            { text: 'AI 流', link: '/guide/ai-native' },
-            { text: '服务端渲染', link: '/guide/ssr' },
-          ],
-        },
-        {
-          text: '组件',
-          items: [
-            { text: '组件系统', link: '/guide/components' },
-          ],
-        },
-      ],
-      '/api/': [
-        {
-          text: 'Stream API',
-          items: [
-            { text: 'Streaming', link: '/api/streaming' },
-          ],
-        },
-        {
-          text: 'Reactive API',
-          items: [
-            { text: 'Signal', link: '/api/signal' },
-            { text: 'Computed', link: '/api/computed' },
-            { text: 'Effect', link: '/api/effect' },
-            { text: 'Batch', link: '/api/batch' },
-          ],
-        },
-        {
-          text: 'DOM API',
-          items: [
-            { text: 'Component', link: '/api/component' },
-            { text: 'Renderer', link: '/api/renderer' },
-          ],
-        },
-      ],
-      '/examples/': [
-        {
-          text: '示例',
-          items: [
-            { text: 'AI 集成', link: '/examples/ai-integration' },
-            { text: '快速开始', link: '/examples/basic' },
-            { text: '计数器', link: '/examples/counter' },
-            { text: 'Todo 列表', link: '/examples/todo' },
-          ],
-        },
-      ],
+      },
     },
 
     socialLinks: [
@@ -127,23 +233,58 @@ export default defineConfig({
 
     editLink: {
       pattern: 'https://github.com/qorejs/qore-web/edit/main/:path',
-      text: '在 GitHub 上编辑此页面',
+      text: 'Edit this page on GitHub',
     },
 
     docFooter: {
-      prev: '上一页',
-      next: '下一页',
+      prev: 'Previous page',
+      next: 'Next page',
     },
 
     outline: {
-      label: '本页目录',
+      label: 'On this page',
     },
 
-    darkModeSwitchLabel: '主题',
-    lightModeSwitchTitle: '切换到浅色模式',
-    darkModeSwitchTitle: '切换到深色模式',
-    sidebarMenuLabel: '菜单',
-    returnToTopLabel: '返回顶部',
+    darkModeSwitchLabel: 'Appearance',
+    lightModeSwitchTitle: 'Switch to light theme',
+    darkModeSwitchTitle: 'Switch to dark theme',
+    sidebarMenuLabel: 'Menu',
+    returnToTopLabel: 'Return to top',
+  },
+
+  locales: {
+    root: {
+      label: 'English',
+      lang: 'en-US',
+      title: 'Qore',
+      description: 'Streaming response framework: stream becomes signal.',
+    },
+    zh: {
+      label: '简体中文',
+      lang: 'zh-CN',
+      title: 'Qore',
+      description: '流式响应框架：stream becomes signal.',
+      themeConfig: {
+        nav: chineseNav,
+        sidebar: chineseSidebar,
+        editLink: {
+          pattern: 'https://github.com/qorejs/qore-web/edit/main/:path',
+          text: '在 GitHub 上编辑此页面',
+        },
+        docFooter: {
+          prev: '上一页',
+          next: '下一页',
+        },
+        outline: {
+          label: '本页目录',
+        },
+        darkModeSwitchLabel: '主题',
+        lightModeSwitchTitle: '切换到浅色模式',
+        darkModeSwitchTitle: '切换到深色模式',
+        sidebarMenuLabel: '菜单',
+        returnToTopLabel: '返回顶部',
+      },
+    },
   },
 
   markdown: {
@@ -162,17 +303,8 @@ export default defineConfig({
 
   ignoreDeadLinks: true,
 
-  locales: {
-    root: {
-      label: '简体中文',
-      lang: 'zh-CN',
-      title: 'Qore',
-      description: 'Streaming response framework: stream becomes signal.',
-    },
-  },
-
   lastUpdated: {
-    text: '最后更新时间',
+    text: 'Last updated',
     formatOptions: {
       dateStyle: 'full',
       timeStyle: 'medium',

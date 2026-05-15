@@ -1,46 +1,22 @@
 ---
-title: Qore 博客
-description: 最新消息、更新和教程
+title: Qore Blog
+description: News, updates, and notes from the Qore project.
 ---
 
-# 📝 Qore 博客
+# Qore Blog
 
-最新消息、更新和教程
+Notes about streaming response UI, fine-grained reactivity, and Qore releases.
 
-## 最新文章
+## Latest Posts
 
-### [Qore v0.5.0 发布 - 完整 SSR 支持](./v0.5.0-release.md)
+### [Qore v0.5.0 Release: SSR Foundations](./v0.5.0-release.md)
 
-**发布日期**: 2026-04-15
+A release note about SSR foundations, streaming direction, and performance work.
 
-Qore v0.5.0 正式发布！带来了完整的 SSR 支持、性能优化和更多新特性。
+### [Fine-Grained Reactivity for Streaming UI](./fine-grained-reactivity.md)
 
-[阅读全文 →](./v0.5.0-release.md)
+Why token-level updates should not rerender an entire component tree.
 
----
+### [Building AI Interfaces with Streaming Response](./ai-native-development.md)
 
-### [为什么选择 Qore？细粒度响应式的优势](./fine-grained-reactivity.md)
-
-**发布日期**: 2026-04-10
-
-深入了解 Qore 的细粒度响应式系统，以及它如何带来 10 倍性能提升。
-
-[阅读全文 →](./fine-grained-reactivity.md)
-
----
-
-### [流式响应开发：用 Qore 构建智能应用](./ai-native-development.md)
-
-**发布日期**: 2026-04-05
-
-探索如何使用 Qore 的 stream primitive 构建下一代智能应用。
-
-[阅读全文 →](./ai-native-development.md)
-
----
-
-## 订阅更新
-
-- 关注 [qorejs/qore](https://github.com/qorejs/qore)
-- 访问 [官网源码](https://github.com/qorejs/qore-web)
-- 查看 [完整文档](/guide/getting-started)
+How Qore's stream primitive changes the shape of AI UI code.

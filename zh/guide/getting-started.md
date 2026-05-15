@@ -1,0 +1,100 @@
+---
+title: 快速开始
+description: Qore 框架快速开始指南 - 安装、第一个组件、核心概念入门
+keywords: [Qore, 快速开始，安装，组件，Signal, Computed, Effect, 新手指南]
+---
+
+# 快速开始
+
+欢迎使用 Qore！本指南将帮助你快速上手。
+
+## 安装
+
+### 创建新项目
+
+```bash
+pnpm create @qorejs/qore my-app
+cd my-app
+pnpm install
+```
+
+### 手动安装
+
+```bash
+pnpm add qore
+```
+
+## 第一个组件
+
+```ts
+import { signal, component } from '@qorejs/qore'
+
+const Counter = component(() => {
+  const count = signal(0)
+  
+  return () => `
+    <div>
+      <p>Count: ${count()}</p>
+      <button onclick="${() => count.set(count() + 1)}">
+        Increment
+      </button>
+    </div>
+  `
+})
+
+export default Counter
+```
+
+## 核心概念
+
+### Signal
+
+Signal 是 Qore 响应式系统的基础。
+
+```ts
+import { signal } from '@qorejs/qore'
+
+const count = signal(0)
+console.log(count()) // 0
+count.set(5)
+console.log(count()) // 5
+```
+
+### Computed
+
+Computed 自动追踪依赖并缓存结果。
+
+```ts
+import { signal, computed } from '@qorejs/qore'
+
+const price = signal(100)
+const quantity = signal(2)
+const total = computed(() => price() * quantity())
+
+console.log(total()) // 200
+price.set(150)
+console.log(total()) // 300 (自动更新)
+```
+
+### Effect
+
+Effect 用于副作用，自动追踪依赖。
+
+```ts
+import { signal, effect } from '@qorejs/qore'
+
+const name = signal('Qore')
+
+effect(() => {
+  console.log(`Hello, ${name()}!`)
+})
+
+name.set('World') // 自动重新执行
+```
+
+## 下一步
+
+- [核心概念](/zh/guide/core-concepts) - 深入了解 Qore 的设计理念
+- [响应式系统](/zh/guide/reactivity) - 学习细粒度响应式
+- [组件系统](/zh/guide/components) - 构建可复用组件
+- [AI 流集成](/zh/guide/ai-native) - 探索 AI 集成

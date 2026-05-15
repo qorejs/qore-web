@@ -1,28 +1,22 @@
-# 基础示例
+# Basic Example
 
 ## Hello World
 
 ```ts
-import { component } from '@qorejs/qore'
+import { h, mount } from '@qorejs/qore'
 
-const Hello = component(() => {
-  return () => `<h1>Hello, Qore!</h1>`
-})
+mount('#app', () => h('h1', {}, 'Hello, Qore!'))
 ```
 
-## 响应式文本
+## Reactive Text
 
 ```ts
-import { component, signal } from '@qorejs/qore'
+import { h, mount, signal, text } from '@qorejs/qore'
 
-const Greeting = component(() => {
-  const name = signal('World')
-  
-  return () => `
-    <div>
-      <input value="${name()}" oninput="${e => name.set(e.target.value)}" />
-      <p>Hello, ${name()}!</p>
-    </div>
-  `
-})
+const name = signal('World')
+
+mount('#app', () => h('main', {},
+  h('input', { value: name(), oninput: event => name(event.target.value) }),
+  h('p', {}, text(() => `Hello, ${name()}!`))
+))
 ```

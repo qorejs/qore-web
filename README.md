@@ -2,6 +2,8 @@
 
 Official website and documentation for Qore: the streaming-response framework where `stream` becomes `signal`.
 
+The default site language is English. Simplified Chinese docs live under `/zh/`.
+
 ## Local Development
 
 ```bash

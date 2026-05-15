@@ -1,31 +1,26 @@
 # Component API
 
-Component 是 Qore 的 UI 构建单元。
-
-## 创建组件
+Qore components are plain functions that return DOM descriptions.
 
 ```ts
-import { component, signal } from '@qorejs/qore'
+import { h } from '@qorejs/qore'
 
-const Hello = component(({ name }) => {
-  return () => `<h1>Hello, ${name}!</h1>`
-})
+const Hello = ({ name }: { name: string }) => h('h1', {}, `Hello, ${name}`)
 ```
 
-## 生命周期
+## Reactive Component
 
 ```ts
-import { component, onMount, onUnmount } from '@qorejs/qore'
+import { h, signal, text } from '@qorejs/qore'
 
-const MyComponent = component(() => {
-  onMount(() => {
-    console.log('mounted')
-  })
-  
-  onUnmount(() => {
-    console.log('unmounted')
-  })
-  
-  return () => `<div>Content</div>`
-})
+const Counter = () => {
+  const count = signal(0)
+
+  return h('section', {},
+    h('button', { onclick: () => count.update(n => n + 1) }, 'Increment'),
+    h('p', {}, text(() => count()))
+  )
+}
 ```
+
+Components should be small composition units. Signals and streams own the reactive parts.

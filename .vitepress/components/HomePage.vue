@@ -1,10 +1,100 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useData } from 'vitepress'
 import { h, mount, stream, text } from '@qorejs/qore'
 
+const { lang } = useData()
 const qoreRoot = ref<HTMLElement | null>(null)
 const isVisible = ref(false)
-const prompt = ref('Explain stream = signal')
+const isZh = computed(() => lang.value.startsWith('zh'))
+
+const copy = {
+  en: {
+    eyebrow: 'Streaming Response Framework',
+    tagline: 'stream = signal',
+    summary: 'Tokens flow directly into reactive UI. No manual stitching. No whole-tree rerender.',
+    primaryAction: 'Try the stream demo',
+    quickStart: 'Quick Start',
+    github: 'GitHub',
+    cardLabel: 'Live primitive',
+    streamButton: 'Stream',
+    promptLabel: 'Demo prompt',
+    presetLabel: 'Demo presets',
+    runtimeTitle: 'Qore runtime demo',
+    waiting: 'waiting for the first token...',
+    runtimePromptPrefix: 'prompt',
+    streamTokens: [
+      'stream(prompt) returns a signal. ',
+      'Signal updates. ',
+      'One text node paints. ',
+      'The UI keeps flowing.'
+    ],
+    presets: [
+      'Explain stream = signal',
+      'Draft a tiny AI chat reply',
+      'Show why token-level UI matters'
+    ],
+    pillars: [
+      ['stream = signal', 'AI output is reactive state from the first byte.'],
+      ['Token-level UI', 'Only the dependent text node updates while tokens arrive.'],
+      ['Provider-ready', 'OpenAI, Anthropic, and generic SSE adapters fit one primitive.']
+    ],
+    pointEyebrow: 'The point',
+    pointTitle: 'Do not move tokens into state. Let tokens become state.',
+    pointSummary: 'Qore has one core path: declare a stream, then let UI subscribe to the signal.',
+    proofPoints: [
+      ['Primitive', 'stream()', 'reader loop + state'],
+      ['UI update', 'one text node', 'component rerender'],
+      ['User work', 'declare dependency', 'append, status, abort']
+    ],
+    qoreTitle: 'Qore',
+    manualTitle: 'Manual stream state'
+  },
+  zh: {
+    eyebrow: 'Streaming Response Framework',
+    tagline: 'stream = signal',
+    summary: 'Token 直接流入响应式 UI。没有手动拼接，没有整棵树重渲染。',
+    primaryAction: '试试流式 demo',
+    quickStart: '快速开始',
+    github: 'GitHub',
+    cardLabel: '实时 primitive',
+    streamButton: 'Stream',
+    promptLabel: '演示提示词',
+    presetLabel: '演示预设',
+    runtimeTitle: 'Qore 运行时演示',
+    waiting: '等待第一个 token...',
+    runtimePromptPrefix: '提示词',
+    streamTokens: [
+      'stream(prompt) 返回一个 signal。 ',
+      'Signal 自动更新。 ',
+      '一个 text node 精准刷新。 ',
+      'UI 像水流一样继续前进。'
+    ],
+    presets: [
+      '解释 stream = signal',
+      '生成一段 AI 聊天回复',
+      '说明 token 级 UI 的价值'
+    ],
+    pillars: [
+      ['stream = signal', 'AI 输出从第一个字节起就是响应式状态。'],
+      ['Token-level UI', 'token 到达时，只更新依赖它的 text node。'],
+      ['Provider-ready', 'OpenAI、Anthropic 和通用 SSE 都接入同一个 primitive。']
+    ],
+    pointEyebrow: '核心',
+    pointTitle: '不是把 token 搬进状态，而是让 token 自己成为状态。',
+    pointSummary: 'Qore 的核心路径只有两步：声明 stream，然后让 UI 订阅 signal。',
+    proofPoints: [
+      ['Primitive', 'stream()', 'reader loop + state'],
+      ['UI 更新', 'one text node', 'component rerender'],
+      ['用户工作', '声明依赖', 'append, status, abort']
+    ],
+    qoreTitle: 'Qore',
+    manualTitle: '手动 stream 状态'
+  }
+} as const
+
+const t = computed(() => isZh.value ? copy.zh : copy.en)
+const prompt = ref(t.value.presets[0])
 const activePrompt = ref(prompt.value)
 let disposeQore: (() => Element) | null = null
 let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
@@ -29,31 +119,8 @@ for await (const token of aiStream) {
 
 return <Markdown>{text}</Markdown>`
 
-const presets = [
-  'Explain stream = signal',
-  'Draft a tiny AI chat reply',
-  'Show why token-level UI matters'
-]
-
-const pillars = [
-  ['stream = signal', 'AI output is reactive state from the first byte.'],
-  ['Token-level UI', 'Only the dependent text node updates while tokens arrive.'],
-  ['Provider-ready', 'OpenAI, Anthropic, and generic SSE adapters fit one primitive.']
-]
-
-const proofPoints = [
-  ['Primitive', 'stream()', 'reader loop + state'],
-  ['UI update', 'one text node', 'component rerender'],
-  ['User work', 'declare dependency', 'append, status, abort']
-]
-
 function makeDemoTokens() {
-  return [
-    'stream(prompt) returns a signal. ',
-    'Signal updates. ',
-    'One text node paints. ',
-    'The UI keeps flowing.'
-  ]
+  return [...t.value.streamTokens]
 }
 
 function renderDemo(value = activePrompt.value) {
@@ -70,10 +137,10 @@ function renderDemo(value = activePrompt.value) {
   disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell' },
     h('div', { class: 'runtime-topline' },
       h('span', { class: 'runtime-dot' }),
-      h('span', {}, 'Qore runtime demo')
+      h('span', {}, t.value.runtimeTitle)
     ),
-    h('p', { class: 'runtime-prompt' }, `prompt: ${value}`),
-    h('pre', { class: 'runtime-output' }, text(() => answer() || 'waiting for the first token...')),
+    h('p', { class: 'runtime-prompt' }, `${t.value.runtimePromptPrefix}: ${value}`),
+    h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting)),
     h('div', { class: 'runtime-meta' }, text(() => {
       const status = answer.status()
       const chunks = answer.chunkCount()
@@ -84,7 +151,7 @@ function renderDemo(value = activePrompt.value) {
 }
 
 function runDemo() {
-  activePrompt.value = prompt.value.trim() || presets[0]
+  activePrompt.value = prompt.value.trim() || t.value.presets[0]
   prompt.value = activePrompt.value
   renderDemo(activePrompt.value)
 }
@@ -97,6 +164,13 @@ function usePreset(value: string) {
 onMounted(() => {
   isVisible.value = true
   renderDemo()
+})
+
+watch(isZh, () => {
+  const nextPrompt = t.value.presets[0]
+  prompt.value = nextPrompt
+  activePrompt.value = nextPrompt
+  renderDemo(nextPrompt)
 })
 
 onBeforeUnmount(() => {
@@ -113,25 +187,25 @@ onBeforeUnmount(() => {
       <div class="aurora aurora-one"></div>
       <div class="aurora aurora-two"></div>
       <div class="hero-copy">
-        <p class="eyebrow">Streaming Response Framework</p>
+        <p class="eyebrow">{{ t.eyebrow }}</p>
         <h1>Qore</h1>
-        <p class="tagline">stream = signal</p>
-        <p class="summary">Token 直接流入响应式 UI。没有手动拼接，没有整棵树重渲染。</p>
+        <p class="tagline">{{ t.tagline }}</p>
+        <p class="summary">{{ t.summary }}</p>
         <div class="actions">
-          <a class="primary-action" href="#live-demo">试试流式 demo</a>
-          <a class="secondary-action" href="/guide/quick-start.html">快速开始</a>
-          <a class="secondary-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">GitHub</a>
+          <a class="primary-action" href="#live-demo">{{ t.primaryAction }}</a>
+          <a class="secondary-action" :href="isZh ? '/zh/guide/quick-start.html' : '/guide/quick-start.html'">{{ t.quickStart }}</a>
+          <a class="secondary-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.github }}</a>
         </div>
       </div>
 
       <div class="demo-card">
-        <div class="card-label">Live primitive</div>
+        <div class="card-label">{{ t.cardLabel }}</div>
         <form id="live-demo" class="demo-prompt" @submit.prevent="runDemo">
-          <input v-model="prompt" aria-label="Demo prompt" autocomplete="off" />
-          <button type="submit">Stream</button>
+          <input v-model="prompt" :aria-label="t.promptLabel" autocomplete="off" />
+          <button type="submit">{{ t.streamButton }}</button>
         </form>
-        <div class="preset-row" aria-label="Demo presets">
-          <button v-for="item in presets" :key="item" type="button" @click="usePreset(item)">
+        <div class="preset-row" :aria-label="t.presetLabel">
+          <button v-for="item in t.presets" :key="item" type="button" @click="usePreset(item)">
             {{ item }}
           </button>
         </div>
@@ -140,7 +214,7 @@ onBeforeUnmount(() => {
     </section>
 
     <section class="pillars-section" aria-label="Qore pillars">
-      <a v-for="pillar in pillars" :key="pillar[0]" class="pillar-card" href="/guide/streaming.html">
+      <a v-for="pillar in t.pillars" :key="pillar[0]" class="pillar-card" :href="isZh ? '/zh/guide/streaming.html' : '/guide/streaming.html'">
         <span>{{ pillar[0] }}</span>
         <p>{{ pillar[1] }}</p>
       </a>
@@ -148,11 +222,11 @@ onBeforeUnmount(() => {
 
     <section class="compare-section">
       <div class="compare-copy">
-        <p class="eyebrow">The point</p>
-        <h2>不是把 token 搬进状态，而是让 token 自己成为状态。</h2>
-        <p>Qore 的核心路径只有两步：声明 stream，然后让 UI 订阅 signal。</p>
+        <p class="eyebrow">{{ t.pointEyebrow }}</p>
+        <h2>{{ t.pointTitle }}</h2>
+        <p>{{ t.pointSummary }}</p>
         <div class="proof-strip" aria-label="Qore comparison summary">
-          <div v-for="point in proofPoints" :key="point[0]">
+          <div v-for="point in t.proofPoints" :key="point[0]">
             <span>{{ point[0] }}</span>
             <strong>{{ point[1] }}</strong>
             <small>{{ point[2] }}</small>
@@ -161,11 +235,11 @@ onBeforeUnmount(() => {
       </div>
       <div class="code-grid">
         <article class="code-card featured-code">
-          <div class="code-title">Qore</div>
+          <div class="code-title">{{ t.qoreTitle }}</div>
           <pre><code>{{ qoreCode }}</code></pre>
         </article>
         <article class="code-card muted-code">
-          <div class="code-title">Manual stream state</div>
+          <div class="code-title">{{ t.manualTitle }}</div>
           <pre><code>{{ manualCode }}</code></pre>
         </article>
       </div>

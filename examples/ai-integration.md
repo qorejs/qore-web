@@ -1,43 +1,22 @@
-# AI 集成示例
+# AI Integration Example
 
 ```ts
-import { component, signal, effect } from '@qorejs/qore'
-import { ai } from 'qore/ai'
+import { createOpenAI, h, mount, signal, stream, text } from '@qorejs/qore'
 
-const AIAssistant = component(() => {
-  const prompt = signal('')
-  const response = signal('')
-  const loading = signal(false)
-  
-  const askAI = async () => {
-    loading.set(true)
-    try {
-      const result = await ai.generate(prompt())
-      response.set(result)
-    } finally {
-      loading.set(false)
-    }
-  }
-  
-  return () => `
-    <div style="max-width: 600px; margin: 2rem auto;">
-      <h1>AI Assistant</h1>
-      <textarea 
-        value="${prompt()}"
-        oninput="${e => prompt.set(e.target.value)}"
-        placeholder="Ask AI..."
-        rows="4"
-      />
-      <button 
-        onclick="${askAI}" 
-        disabled="${loading()}"
-      >
-        ${loading() ? 'Thinking...' : 'Ask'}
-      </button>
-      ${response() ? `<div class="response">${response()}</div>` : ''}
-    </div>
-  `
-})
+const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
+const prompt = signal('Explain Qore in one sentence')
+const answer = signal<ReturnType<typeof stream> | null>(null)
 
-export default AIAssistant
+function ask() {
+  answer(stream(openAI.chat(prompt())))
+}
+
+mount('#app', () => h('main', {},
+  h('textarea', { value: prompt(), oninput: event => prompt(event.target.value) }),
+  h('button', { onclick: ask }, 'Ask'),
+  h('article', {}, text(() => answer()?.() ?? 'Ask something...')),
+  h('small', {}, text(() => answer()?.status() ?? 'idle'))
+))
 ```
+
+The provider stream becomes a signal, and the article updates token by token.

@@ -1,12 +1,12 @@
 ---
-title: 响应式系统
-description: 深入了解 Qore 的细粒度响应式系统 - Signal、Computed、Effect 详解
-keywords: [Qore, 响应式，Signal, Computed, Effect, 细粒度，依赖追踪]
+title: Reactivity
+description: Learn Qore signals, computed values, effects, and fine-grained updates.
+keywords: [Qore, reactivity, signal, computed, effect]
 ---
 
-# 响应式系统
+# Reactivity
 
-Qore 的响应式系统基于 Signal，提供细粒度的依赖追踪。
+Qore uses fine-grained signals to track exactly which DOM nodes depend on which values.
 
 ## Signal
 
@@ -15,34 +15,37 @@ import { signal } from '@qorejs/qore'
 
 const count = signal(0)
 
-// 读取值
-console.log(count())
-
-// 设置值
-count.set(10)
-
-// 更新值
+count()          // read
+count(10)        // write
 count.update(n => n + 1)
 ```
 
 ## Computed
 
 ```ts
-import { signal, computed } from '@qorejs/qore'
+import { computed, signal } from '@qorejs/qore'
 
-const firstName = signal('John')
-const lastName = signal('Doe')
+const firstName = signal('Ada')
+const lastName = signal('Lovelace')
 const fullName = computed(() => `${firstName()} ${lastName()}`)
 ```
 
 ## Effect
 
 ```ts
-import { signal, effect } from '@qorejs/qore'
+import { effect, signal } from '@qorejs/qore'
 
-const todos = signal([])
+const todos = signal<string[]>([])
 
-effect(() => {
-  saveToLocalStorage(todos())
+const stop = effect(() => {
+  localStorage.setItem('todos', JSON.stringify(todos()))
 })
 ```
+
+## DOM Binding
+
+```ts
+h('p', {}, text(() => fullName()))
+```
+
+The text node subscribes to `fullName()` and updates without a virtual DOM diff.

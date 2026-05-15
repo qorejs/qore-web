@@ -1,54 +1,43 @@
 ---
-title: 组件系统
-description: Qore 组件系统详解 - 基础组件、Props、插槽、生命周期
-keywords: [Qore, 组件，Component, Props, 插槽，生命周期，前端]
+title: Components
+description: Build DOM views with Qore functions and reactive text bindings.
+keywords: [Qore, components, h, mount, text]
 ---
 
-# 组件系统
+# Components
 
-Qore 的组件是简单的函数，返回渲染函数。
+Qore components are plain functions that return DOM descriptions.
 
-## 基础组件
+## Basic View
 
 ```ts
-import { component, signal } from '@qorejs/qore'
+import { h } from '@qorejs/qore'
 
-const Hello = component(({ name }) => {
-  return () => `<h1>Hello, ${name}!</h1>`
-})
+export const Hello = () => h('h1', {}, 'Hello, Qore')
 ```
 
-## 状态组件
+## Reactive View
 
 ```ts
-const Counter = component(() => {
+import { h, signal, text } from '@qorejs/qore'
+
+export const Counter = () => {
   const count = signal(0)
-  
-  return () => `
-    <div>
-      <p>${count()}</p>
-      <button onclick="${() => count.set(count() + 1)}">
-        +1
-      </button>
-    </div>
-  `
-})
+
+  return h('section', {},
+    h('button', { onclick: () => count(count() + 1) }, 'Increment'),
+    h('p', {}, text(() => `Count: ${count()}`))
+  )
+}
 ```
 
-## 生命周期
+## Composition
 
 ```ts
-const MyComponent = component(() => {
-  const data = signal(null)
-  
-  onMount(async () => {
-    data.set(await fetchData())
-  })
-  
-  onUnmount(() => {
-    cleanup()
-  })
-  
-  return () => `<div>${data()}</div>`
-})
+const Shell = () => h('main', {},
+  h('header', {}, 'Qore'),
+  Counter()
+)
 ```
+
+Keep components small. Let signals and streams drive the nodes that actually need to change.

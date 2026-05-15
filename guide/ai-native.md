@@ -1,12 +1,12 @@
 ---
-title: AI 流集成
-description: 使用 Qore 的 stream primitive 连接 OpenAI、Anthropic 与通用 SSE
+title: AI Stream Integration
+description: Connect Qore stream primitives to OpenAI, Anthropic, and generic SSE.
 keywords: [Qore, AI, stream, OpenAI, Anthropic, SSE]
 ---
 
-# AI 流集成
+# AI Stream Integration
 
-Qore 不靠模糊口号定义自己。它只抓住 AI UI 最具体的问题：**模型输出是流，而 UI 应该自然响应这条流**。
+Qore focuses on one concrete AI UI problem: **model output is a stream, and UI should react to that stream naturally**.
 
 ## OpenAI
 
@@ -14,7 +14,7 @@ Qore 不靠模糊口号定义自己。它只抓住 AI UI 最具体的问题：**
 import { createOpenAI, stream } from '@qorejs/qore'
 
 const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
-const answer = stream(openAI.chat('用一句话解释 Qore'))
+const answer = stream(openAI.chat('Explain Qore in one sentence'))
 ```
 
 ## Anthropic
@@ -45,4 +45,4 @@ export const Answer = () => h('article', {},
 )
 ```
 
-Provider 可以变化，UI primitive 不变。
+Providers can change. The UI primitive stays the same.

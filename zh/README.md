@@ -1,0 +1,38 @@
+# Qore Web
+
+Official website and documentation for Qore: the streaming-response framework where `stream` becomes `signal`.
+
+## Local Development
+
+```bash
+pnpm install
+pnpm dev
+```
+
+Open the local URL printed by VitePress.
+
+## Build
+
+```bash
+pnpm build
+pnpm preview
+```
+
+The static site is generated in `.vitepress/dist`.
+
+## Repository Roles
+
+- `qorejs/qore` is the runtime and npm package source for `@qorejs/qore`.
+- `qorejs/qore-web` is the official website, docs, and product showcase.
+- Live demos should import `@qorejs/qore` from npm instead of copying runtime code.
+
+## Links
+
+- Website: https://qorejs.dev/
+- Runtime repository: https://github.com/qorejs/qore
+- Website repository: https://github.com/qorejs/qore-web
+- npm package: https://www.npmjs.com/package/@qorejs/qore
+
+## License
+
+MIT
