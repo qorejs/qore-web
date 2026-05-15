@@ -2,23 +2,8 @@ import type { Theme } from 'vitepress'
 import DefaultTheme from 'vitepress/theme'
 import './style.css'
 
-// Import components
-import Hero from '../components/Hero.vue'
-import FeatureGrid from '../components/FeatureGrid.vue'
-import CodePreview from '../components/CodePreview.vue'
-import PerformanceChart from '../components/PerformanceChart.vue'
-import CommunityStats from '../components/CommunityStats.vue'
-
 export default {
   extends: DefaultTheme,
-  enhanceApp({ app, router, siteData }) {
-    // Register global components
-    app.component('Hero', Hero)
-    app.component('FeatureGrid', FeatureGrid)
-    app.component('CodePreview', CodePreview)
-    app.component('PerformanceChart', PerformanceChart)
-    app.component('CommunityStats', CommunityStats)
-  },
   setup() {
     // Initialize global effects only on client side
     if (typeof window !== 'undefined') {

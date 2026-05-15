@@ -1,6 +1,6 @@
 /**
  * Qore Mock Implementation for Doctest
- * 用于测试文档示例代码的轻量级实现
+ * Lightweight implementation used by documentation example tests
  */
 
 type CleanupFn = () => void
@@ -22,11 +22,11 @@ interface EffectOptions {
   scheduler?: (fn: () => void) => void
 }
 
-// 依赖追踪
+// Dependency tracking state.
 let activeEffect: (() => void) | null = null
 const effectStack: (() => void)[] = []
 
-// Signal 实现
+// Signal implementation.
 export function signal<T>(initialValue: T): Signal<T> {
   let value = initialValue
   const listeners = new Set<() => void>()
@@ -54,7 +54,7 @@ export function signal<T>(initialValue: T): Signal<T> {
   return sig
 }
 
-// Computed 实现
+// Computed implementation.
 export function computed<T>(getter: () => T): Computed<T> {
   let cachedValue: T | null = null
   let dirty = true
@@ -70,7 +70,7 @@ export function computed<T>(getter: () => T): Computed<T> {
     dirty = true
   }
 
-  // 创建一个 effect 来追踪依赖
+  // Create an effect to track dependencies.
   const effectCleanup = effect(() => {
     if (dirty || cachedValue === null) {
       compute()
@@ -105,7 +105,7 @@ export function computed<T>(getter: () => T): Computed<T> {
   return comp
 }
 
-// Effect 实现
+// Effect implementation.
 export function effect(
   fn: () => void | CleanupFn,
   options?: EffectOptions
@@ -135,7 +135,7 @@ export function effect(
     }
   }
 
-  // 立即执行
+  // Run immediately by default.
   if (options?.immediate !== false) {
     if (options?.scheduler) {
       options.scheduler(run)
@@ -152,7 +152,7 @@ export function effect(
   }
 }
 
-// Batch 实现
+// Batch implementation.
 let batchDepth = 0
 const batchedEffects = new Set<() => void>()
 
@@ -169,19 +169,19 @@ export function batch<T>(fn: () => T): T {
   }
 }
 
-// 组件占位符（用于文档示例）
+// Component placeholder used by documentation examples.
 export function component<T extends () => string>(fn: T): T {
   return fn
 }
 
-// 生命周期占位符
+// Lifecycle placeholders.
 export function onMount(fn: () => void): void {
   fn()
 }
 
 export function onUnmount(fn: () => void): void {
-  // 在测试中不执行
+  // Do not execute teardown hooks during tests.
 }
 
-// 导出类型
+// Export test helper types.
 export type { Signal, Computed, EffectOptions, CleanupFn }

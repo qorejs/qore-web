@@ -1,6 +1,6 @@
 /**
  * Doctest Runner for Qore Documentation
- * 提取 Markdown 中的代码块并执行测试
+ * Extract Markdown code blocks and execute them as documentation tests
  */
 
 import { readFileSync, writeFileSync, existsSync, unlinkSync } from 'fs'
@@ -30,7 +30,7 @@ interface TestResult {
   }>
 }
 
-// 提取 Markdown 中的代码块
+// Extract code blocks from Markdown content.
 function extractCodeBlocks(content: string, filePath: string): CodeBlock[] {
   const blocks: CodeBlock[] = []
   const lines = content.split('\n')
@@ -67,20 +67,20 @@ function extractCodeBlocks(content: string, filePath: string): CodeBlock[] {
   return blocks
 }
 
-// 检查代码块是否应该被测试
+// Decide whether a code block should run in doctest.
 function shouldTestBlock(block: CodeBlock): boolean {
-  // 只测试 TypeScript 代码块
+  // Only test TypeScript and JavaScript code blocks.
   if (!['typescript', 'ts', 'js', 'javascript'].includes(block.language)) {
     return false
   }
 
-  // 跳过标记为 no-test 的代码块
+  // Skip blocks explicitly marked as no-test or no-run.
   if (block.info?.includes('no-test') || block.info?.includes('no-run')) {
     return false
   }
 
   const runtimeOnlyPatterns = [
-    /TypeScript 错误/,
+    /TypeScript (?:error|\u9519\u8bef)/,
     /❌/,
     /from\s*['"]\.\/store['"]/,
     /\bfetch\s*\(/,
@@ -95,22 +95,22 @@ function shouldTestBlock(block: CodeBlock): boolean {
     return false
   }
 
-  // 跳过纯类型定义
+  // Skip pure interface declarations.
   if (block.code.trim().startsWith('interface') && !block.code.includes('=')) {
     return false
   }
 
-  // 跳过只有类型定义的代码块
+  // Skip type-only blocks.
   if (block.code.trim().startsWith('type ') && !block.code.includes('function') && !block.code.includes('const')) {
     return false
   }
 
-  // 跳过只有函数签名的代码块
+  // Skip function signature examples.
   if (block.code.includes('function signature') || block.code.trim().match(/^function\s+\w+\s*\([^)]*\)\s*:/)) {
     return false
   }
 
-  // 检查是否有实际可执行的代码
+  // Require executable code before running the block.
   const hasRealCode = block.code.match(/(signal|computed|effect|batch|component|console\.log|\.set\(|\.update\(|\.peek\(|return\s|const\s|let\s|var\s|if\s|for\s|while|import.*from)/)
   if (!hasRealCode) {
     return false
@@ -119,7 +119,7 @@ function shouldTestBlock(block: CodeBlock): boolean {
   return true
 }
 
-// 分析代码需要哪些导入
+// Analyze which Qore imports a snippet needs.
 function analyzeImports(code: string): string[] {
   const imports: Set<string> = new Set()
   
@@ -134,11 +134,11 @@ function analyzeImports(code: string): string[] {
   return Array.from(imports)
 }
 
-// 转换代码以可执行
+// Transform a documentation snippet into executable test code.
 function transformCode(code: string, existingImports: string[] = []): string {
   let transformed = code
 
-  // 检查是否已有导入
+  // Check whether the snippet already imports Qore.
   const hasQoreImport = /from\s*['"](?:qore|@qorejs\/qore)['"]/.test(transformed)
   
   if (hasQoreImport) {
@@ -147,7 +147,7 @@ function transformCode(code: string, existingImports: string[] = []): string {
       'import { $1 } from \'./qore-mock.ts\''
     )
   } else {
-    // 添加必要的导入
+    // Add imports required by the snippet.
     const neededImports = analyzeImports(code)
     if (neededImports.length > 0) {
       const importStatement = `import { ${neededImports.join(', ')} } from './qore-mock.ts'\n`
@@ -158,16 +158,16 @@ function transformCode(code: string, existingImports: string[] = []): string {
   return transformed
 }
 
-// 运行单个代码块测试
+// Run one code block test.
 async function runCodeBlock(block: CodeBlock): Promise<{ success: boolean; error?: string }> {
   const transformedCode = transformCode(block.code)
   
-  // 创建临时文件
+  // Create a temporary test file.
   const tempFile = join(__dirname, 'temp-test.ts')
   writeFileSync(tempFile, transformedCode)
 
   try {
-    // 使用 tsx 运行
+    // Execute the temporary file with tsx.
     execSync(`cd "${__dirname}" && npx tsx "${tempFile}"`, {
       stdio: 'pipe',
       timeout: 5000
@@ -180,14 +180,14 @@ async function runCodeBlock(block: CodeBlock): Promise<{ success: boolean; error
       error: errorMsg.split('\n').slice(0, 5).join('\n')
     }
   } finally {
-    // 清理临时文件
+    // Remove the temporary test file.
     if (existsSync(tempFile)) {
       unlinkSync(tempFile)
     }
   }
 }
 
-// 运行单个文件的 doctest
+// Run doctests for a single Markdown file.
 async function testFile(filePath: string): Promise<TestResult> {
   const content = readFileSync(filePath, 'utf-8')
   const blocks = extractCodeBlocks(content, filePath)
@@ -220,7 +220,7 @@ async function testFile(filePath: string): Promise<TestResult> {
     }
   }
 
-  // 输出详细错误
+  // Print detailed errors for quick debugging.
   if (result.errors.length > 0) {
     console.log('\n  Detailed errors:')
     for (const err of result.errors.slice(0, 3)) {
@@ -231,7 +231,7 @@ async function testFile(filePath: string): Promise<TestResult> {
   return result
 }
 
-// 主函数
+// Main runner entry point.
 async function main() {
   const args = process.argv.slice(2)
   const files = args.length > 0 ? args : [
@@ -255,7 +255,7 @@ async function main() {
     }
   }
 
-  // 汇总结果
+  // Summarize results across all files.
   console.log('\n' + '='.repeat(50))
   console.log('📊 Summary:')
 

@@ -35,6 +35,12 @@ jobs:
       - name: Build
         run: pnpm build
       
+      - name: Install Playwright browser
+        run: pnpm exec playwright install --with-deps chromium
+      
+      - name: Run checks
+        run: pnpm doctest:api && pnpm test:site
+      
       - name: Add cache bust timestamp
         run: |
           TIMESTAMP=$(date +%s)
