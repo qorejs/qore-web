@@ -4,31 +4,35 @@ import { h, mount, stream, text } from '@qorejs/qore'
 
 const qoreRoot = ref<HTMLElement | null>(null)
 const isVisible = ref(false)
+const prompt = ref('Explain stream = signal')
+const activePrompt = ref(prompt.value)
 let disposeQore: (() => Element) | null = null
+let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
 
 const qoreCode = `import { h, stream, text } from '@qorejs/qore'
 
-const answer = stream(openAI.chat('hello'))
+const response = stream(openAI.chat(prompt))
 
 export function App() {
   return h('main', {},
-    text(() => answer())
+    text(() => response())
   )
 }`
 
-const reactCode = `const { messages, input, handleInputChange } = useChat()
+const manualCode = `const [text, setText] = useState('')
+const [status, setStatus] = useState('idle')
 
-return messages.map(message => (
-  <Markdown key={message.id}>
-    {message.content}
-  </Markdown>
-))`
+for await (const token of aiStream) {
+  setStatus('streaming')
+  setText(prev => prev + token)
+}
 
-const streamTokens = [
-  'Token arrives. ',
-  'Signal updates. ',
-  'Text node paints. ',
-  'The UI keeps flowing.'
+return <Markdown>{text}</Markdown>`
+
+const presets = [
+  'Explain stream = signal',
+  'Draft a tiny AI chat reply',
+  'Show why token-level UI matters'
 ]
 
 const pillars = [
@@ -37,20 +41,38 @@ const pillars = [
   ['Provider-ready', 'OpenAI, Anthropic, and generic SSE adapters fit one primitive.']
 ]
 
-onMounted(() => {
-  isVisible.value = true
+const proofPoints = [
+  ['Primitive', 'stream()', 'reader loop + state'],
+  ['UI update', 'one text node', 'component rerender'],
+  ['User work', 'declare dependency', 'append, status, abort']
+]
 
+function makeDemoTokens() {
+  return [
+    'stream(prompt) returns a signal. ',
+    'Signal updates. ',
+    'One text node paints. ',
+    'The UI keeps flowing.'
+  ]
+}
+
+function renderDemo(value = activePrompt.value) {
   if (!qoreRoot.value) {
     return
   }
 
-  const answer = stream.paced(streamTokens, 42)
+  activeAnswer?.abort()
+  disposeQore?.()
+
+  const answer = stream.paced(makeDemoTokens(), 38)
+  activeAnswer = answer
 
   disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell' },
     h('div', { class: 'runtime-topline' },
       h('span', { class: 'runtime-dot' }),
       h('span', {}, 'Qore runtime demo')
     ),
+    h('p', { class: 'runtime-prompt' }, `prompt: ${value}`),
     h('pre', { class: 'runtime-output' }, text(() => answer() || 'waiting for the first token...')),
     h('div', { class: 'runtime-meta' }, text(() => {
       const status = answer.status()
@@ -59,10 +81,28 @@ onMounted(() => {
       return `${status} / ${chunks} chunks / ${buffered} buffered`
     }))
   ))
+}
+
+function runDemo() {
+  activePrompt.value = prompt.value.trim() || presets[0]
+  prompt.value = activePrompt.value
+  renderDemo(activePrompt.value)
+}
+
+function usePreset(value: string) {
+  prompt.value = value
+  runDemo()
+}
+
+onMounted(() => {
+  isVisible.value = true
+  renderDemo()
 })
 
 onBeforeUnmount(() => {
+  activeAnswer?.abort()
   disposeQore?.()
+  activeAnswer = null
   disposeQore = null
 })
 </script>
@@ -75,17 +115,26 @@ onBeforeUnmount(() => {
       <div class="hero-copy">
         <p class="eyebrow">Streaming Response Framework</p>
         <h1>Qore</h1>
-        <p class="tagline">让数据像水流一样自然地流进 UI。</p>
-        <p class="summary">stream 是数据流动的方式，signal 是 UI 响应变化的方式。Qore 把它们变成同一个 primitive。</p>
+        <p class="tagline">stream = signal</p>
+        <p class="summary">Token 直接流入响应式 UI。没有手动拼接，没有整棵树重渲染。</p>
         <div class="actions">
-          <a class="primary-action" href="/guide/quick-start.html">快速开始</a>
-          <a class="secondary-action" href="/guide/streaming.html">看流式响应</a>
+          <a class="primary-action" href="#live-demo">试试流式 demo</a>
+          <a class="secondary-action" href="/guide/quick-start.html">快速开始</a>
           <a class="secondary-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">GitHub</a>
         </div>
       </div>
 
       <div class="demo-card">
         <div class="card-label">Live primitive</div>
+        <form id="live-demo" class="demo-prompt" @submit.prevent="runDemo">
+          <input v-model="prompt" aria-label="Demo prompt" autocomplete="off" />
+          <button type="submit">Stream</button>
+        </form>
+        <div class="preset-row" aria-label="Demo presets">
+          <button v-for="item in presets" :key="item" type="button" @click="usePreset(item)">
+            {{ item }}
+          </button>
+        </div>
         <div ref="qoreRoot" class="qore-root"></div>
       </div>
     </section>
@@ -101,7 +150,14 @@ onBeforeUnmount(() => {
       <div class="compare-copy">
         <p class="eyebrow">The point</p>
         <h2>不是把 token 搬进状态，而是让 token 自己成为状态。</h2>
-        <p>一个 AI 聊天页最核心的代码，只需要声明数据流和视图依赖。</p>
+        <p>Qore 的核心路径只有两步：声明 stream，然后让 UI 订阅 signal。</p>
+        <div class="proof-strip" aria-label="Qore comparison summary">
+          <div v-for="point in proofPoints" :key="point[0]">
+            <span>{{ point[0] }}</span>
+            <strong>{{ point[1] }}</strong>
+            <small>{{ point[2] }}</small>
+          </div>
+        </div>
       </div>
       <div class="code-grid">
         <article class="code-card featured-code">
@@ -109,8 +165,8 @@ onBeforeUnmount(() => {
           <pre><code>{{ qoreCode }}</code></pre>
         </article>
         <article class="code-card muted-code">
-          <div class="code-title">Typical chat UI</div>
-          <pre><code>{{ reactCode }}</code></pre>
+          <div class="code-title">Manual stream state</div>
+          <pre><code>{{ manualCode }}</code></pre>
         </article>
       </div>
     </section>
@@ -120,6 +176,11 @@ onBeforeUnmount(() => {
 <style scoped>
 :global(.VPContent.is-home) {
   padding-top: 0;
+  background: #020605;
+}
+
+:global(.VPContent.is-home .VPHome) {
+  background: #020605;
 }
 
 :global(.VPContent.is-home .VPHome > .vp-doc.container) {
@@ -142,6 +203,45 @@ onBeforeUnmount(() => {
 :global(.VPFooter .message),
 :global(.VPFooter .copyright) {
   color: rgba(243, 255, 247, 0.56) !important;
+}
+
+:global(body:has(.VPContent.is-home) .VPNavBar),
+:global(body:has(.VPContent.is-home) .VPNavBar .content-body) {
+  background: rgba(2, 6, 5, 0.74) !important;
+  backdrop-filter: blur(20px);
+}
+
+:global(body:has(.VPContent.is-home) .VPNavBar .divider-line) {
+  background: rgba(143, 255, 193, 0.12) !important;
+}
+
+:global(body:has(.VPContent.is-home) .VPNavBarTitle span),
+:global(body:has(.VPContent.is-home) .VPNavBarMenuLink),
+:global(body:has(.VPContent.is-home) .VPSocialLink),
+:global(body:has(.VPContent.is-home) .VPNavBarExtra .button) {
+  color: rgba(243, 255, 247, 0.84) !important;
+}
+
+:global(body:has(.VPContent.is-home) .VPNavBarMenuLink.active) {
+  color: #8fffc1 !important;
+}
+
+:global(body:has(.VPContent.is-home) .DocSearch-Button) {
+  color: rgba(243, 255, 247, 0.72);
+  background: rgba(255, 255, 255, 0.08);
+  border-color: rgba(143, 255, 193, 0.16);
+}
+
+:global(body:has(.VPContent.is-home) .DocSearch-Button-Placeholder),
+:global(body:has(.VPContent.is-home) .DocSearch-Search-Icon),
+:global(body:has(.VPContent.is-home) .DocSearch-Button-Key) {
+  color: rgba(243, 255, 247, 0.72) !important;
+}
+
+:global(body:has(.VPContent.is-home) .DocSearch-Button-Key) {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(143, 255, 193, 0.14) !important;
+  box-shadow: none !important;
 }
 
 :global(.VPNavBar.has-sidebar .content) {
@@ -335,25 +435,83 @@ h1 {
 }
 
 .demo-card {
+  display: grid;
+  gap: 14px;
   align-self: center;
   justify-self: stretch;
-  min-height: 440px;
+  min-height: 540px;
   max-width: 680px;
   padding: clamp(16px, 2vw, 26px);
   border-radius: 34px;
   transform: rotate(0.35deg);
 }
 
+.demo-prompt {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+
+.demo-prompt input,
+.demo-prompt button,
+.preset-row button {
+  border: 1px solid rgba(143, 255, 193, 0.2);
+  font: 800 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.demo-prompt input {
+  min-width: 0;
+  height: 44px;
+  padding: 0 14px;
+  border-radius: 16px;
+  color: var(--qore-text);
+  background: rgba(1, 10, 8, 0.58);
+  outline: none;
+}
+
+.demo-prompt input:focus {
+  border-color: rgba(143, 255, 193, 0.72);
+  box-shadow: 0 0 0 4px rgba(143, 255, 193, 0.12);
+}
+
+.demo-prompt button {
+  height: 44px;
+  padding: 0 16px;
+  border-radius: 16px;
+  color: #052019;
+  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
+  cursor: pointer;
+}
+
+.preset-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.preset-row button {
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  color: rgba(243, 255, 247, 0.72);
+  background: rgba(255, 255, 255, 0.05);
+  cursor: pointer;
+}
+
+.preset-row button:hover {
+  color: var(--qore-text);
+  border-color: rgba(143, 255, 193, 0.5);
+}
+
 .qore-root {
-  height: calc(100% - 24px);
-  margin-top: 14px;
+  min-height: 360px;
 }
 
 :deep(.runtime-shell) {
   display: grid;
   gap: 18px;
   height: 100%;
-  min-height: 372px;
+  min-height: 360px;
   padding: clamp(20px, 2.6vw, 30px);
   border-radius: 28px;
   background:
@@ -372,6 +530,16 @@ h1 {
   text-transform: uppercase;
 }
 
+:deep(.runtime-prompt) {
+  min-width: 0;
+  margin: 0;
+  overflow: hidden;
+  color: rgba(234, 255, 241, 0.6);
+  font: 800 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 :deep(.runtime-dot) {
   width: 10px;
   height: 10px;
@@ -381,11 +549,11 @@ h1 {
 }
 
 :deep(.runtime-output) {
-  min-height: 186px;
+  min-height: 176px;
   margin: 0;
   white-space: pre-wrap;
   color: #eafff1;
-  font: 700 clamp(22px, 2.65vw, 40px)/1.22 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font: 700 clamp(20px, 2.28vw, 34px)/1.24 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
   letter-spacing: -0.035em;
 }
 
@@ -441,6 +609,41 @@ h1 {
   font-size: clamp(34px, 4vw, 58px);
   line-height: 1.06;
   letter-spacing: -0.07em;
+}
+
+.proof-strip {
+  display: grid;
+  gap: 10px;
+  margin-top: 28px;
+}
+
+.proof-strip div {
+  display: grid;
+  grid-template-columns: 94px 1fr;
+  gap: 4px 14px;
+  align-items: baseline;
+  padding: 14px 16px;
+  border: 1px solid rgba(143, 255, 193, 0.16);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.proof-strip span,
+.proof-strip small {
+  color: var(--qore-muted);
+  font: 800 12px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-transform: uppercase;
+}
+
+.proof-strip strong {
+  color: var(--qore-text);
+  font-size: 18px;
+}
+
+.proof-strip small {
+  grid-column: 2;
+  text-transform: none;
+  opacity: 0.72;
 }
 
 .code-grid {
@@ -500,8 +703,24 @@ h1 {
   }
 
   .demo-card {
-    min-height: 340px;
+    min-height: 520px;
     transform: none;
+  }
+
+  .demo-prompt {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-prompt button {
+    width: 100%;
+  }
+
+  .preset-row {
+    display: none;
+  }
+
+  .qore-root {
+    min-height: 292px;
   }
 
   :deep(.runtime-shell) {
@@ -509,7 +728,15 @@ h1 {
   }
 
   :deep(.runtime-output) {
-    min-height: 132px;
+    min-height: 126px;
+  }
+
+  .proof-strip div {
+    grid-template-columns: 1fr;
+  }
+
+  .proof-strip small {
+    grid-column: 1;
   }
 }
 </style>
