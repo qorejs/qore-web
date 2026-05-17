@@ -45,6 +45,19 @@ mount('#app', () => h('main', {},
 
 这里没有手动拼字符串，没有 loading 状态散落在组件里，也没有整棵树重绘。`text(() => answer())` 对应的那个 text node 会更新。
 
+## 高频流
+
+Qore 内部用追加式 chunk history 支撑高频 token。每个 token 都能推进同一个 stream signal，而不是先复制完整 chunk 数组。
+
+```ts
+const answer = stream(modelTokens)
+
+answer.chunkCount() // 便宜的进度 signal
+answer.chunks()     // 用于检查历史的防御性快照
+```
+
+热 UI 路径优先读 `answer()`；只有确实需要检查历史时，再读 `answer.chunks()`。
+
 ## 多轮对话
 
 ```ts

@@ -26,6 +26,19 @@ mount('#app', () => h('main', {},
 
 No manual string stitching. No scattered loading state. No whole-tree rerender.
 
+## High-Frequency Streams
+
+Qore keeps chunk history append-fast internally. Every token can advance the same stream signal without cloning the entire chunk array first.
+
+```ts
+const answer = stream(modelTokens)
+
+answer.chunkCount() // cheap progress signal
+answer.chunks()     // defensive snapshot for inspection
+```
+
+Use `answer()` for the hot UI path, and `answer.chunks()` when you actually need to inspect history.
+
 ## Paced Typing
 
 ```ts

@@ -42,7 +42,7 @@ pnpm preview
 - 运行时仓库：https://github.com/qorejs/qore
 - 官网仓库：https://github.com/qorejs/qore-web
 - npm 包：https://www.npmjs.com/package/@qorejs/qore
-- 最新运行时发布：https://github.com/qorejs/qore/releases/tag/v0.7.2
+- 最新运行时发布：https://github.com/qorejs/qore/releases/tag/v0.7.3
 
 ## 许可证
 

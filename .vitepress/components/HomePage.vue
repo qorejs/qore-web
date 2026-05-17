@@ -12,13 +12,13 @@ const copy = {
   en: {
     eyebrow: 'Streaming Response Framework',
     tagline: 'stream = signal',
-    summary: 'Tokens flow directly into reactive UI. No manual stitching. No whole-tree rerender.',
+    summary: 'Tokens flow directly into reactive UI. Append-fast history. No whole-tree rerender.',
     primaryAction: 'Try the stream demo',
     quickStart: 'Quick Start',
     github: 'GitHub',
     releaseLabel: 'Release channels',
     releaseLinks: [
-      ['v0.7.2', 'https://github.com/qorejs/qore/releases/tag/v0.7.2'],
+      ['v0.7.3', 'https://github.com/qorejs/qore/releases/tag/v0.7.3'],
       ['npm latest', 'https://www.npmjs.com/package/@qorejs/qore'],
       ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
     ],
@@ -42,7 +42,7 @@ const copy = {
     ],
     pillars: [
       ['stream = signal', 'AI output is reactive state from the first byte.'],
-      ['Token-level UI', 'Only the dependent text node updates while tokens arrive.'],
+      ['Append-fast core', 'Chunk history grows without cloning the full array per token.'],
       ['Provider-ready', 'OpenAI, Anthropic, and generic SSE adapters fit one primitive.']
     ],
     pointEyebrow: 'The point',
@@ -50,7 +50,7 @@ const copy = {
     pointSummary: 'Qore has one core path: declare a stream, then let UI subscribe to the signal.',
     proofPoints: [
       ['Primitive', 'stream()', 'reader loop + state'],
-      ['UI update', 'one text node', 'component rerender'],
+      ['Hot path', 'append-only history', 'full-array clone/token'],
       ['User work', 'declare dependency', 'append, status, abort']
     ],
     qoreTitle: 'Qore',
@@ -59,13 +59,13 @@ const copy = {
   zh: {
     eyebrow: 'Streaming Response Framework',
     tagline: 'stream = signal',
-    summary: 'Token 直接流入响应式 UI。没有手动拼接，没有整棵树重渲染。',
+    summary: 'Token 直接流入响应式 UI。历史追加快，整棵树不重渲染。',
     primaryAction: '试试流式 demo',
     quickStart: '快速开始',
     github: 'GitHub',
     releaseLabel: '发布通道',
     releaseLinks: [
-      ['v0.7.2', 'https://github.com/qorejs/qore/releases/tag/v0.7.2'],
+      ['v0.7.3', 'https://github.com/qorejs/qore/releases/tag/v0.7.3'],
       ['npm 最新', 'https://www.npmjs.com/package/@qorejs/qore'],
       ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
     ],
@@ -89,7 +89,7 @@ const copy = {
     ],
     pillars: [
       ['stream = signal', 'AI 输出从第一个字节起就是响应式状态。'],
-      ['Token-level UI', 'token 到达时，只更新依赖它的 text node。'],
+      ['Append-fast core', 'chunk 历史追加增长，不在每个 token 上复制整条数组。'],
       ['Provider-ready', 'OpenAI、Anthropic 和通用 SSE 都接入同一个 primitive。']
     ],
     pointEyebrow: '核心',
@@ -97,7 +97,7 @@ const copy = {
     pointSummary: 'Qore 的核心路径只有两步：声明 stream，然后让 UI 订阅 signal。',
     proofPoints: [
       ['Primitive', 'stream()', 'reader loop + state'],
-      ['UI 更新', 'one text node', 'component rerender'],
+      ['热路径', 'append-only history', 'full-array clone/token'],
       ['用户工作', '声明依赖', 'append, status, abort']
     ],
     qoreTitle: 'Qore',
