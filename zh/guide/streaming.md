@@ -53,11 +53,11 @@ import { h, list, signal, stream, text } from '@qorejs/qore'
 const messages = signal<{ role: 'user' | 'assistant'; content: string }[]>([])
 
 async function send(content: string) {
-  messages([...messages(), { role: 'user', content }])
+  const history = [...messages(), { role: 'user' as const, content }]
+  messages(history)
 
-  const answer = stream(openAI.chat([...messages(), { role: 'user', content }]))
-
-  messages([...messages(), { role: 'assistant', content: '' }])
+  const answer = stream(openAI.chat(history))
+  messages([...history, { role: 'assistant', content: '' }])
 
   for await (const _ of answer) {
     const next = [...messages()]
@@ -103,7 +103,7 @@ Qore 的 provider story 围绕同一个接口：任何 provider 最终都变成 
 ```ts
 const openAIAnswer = stream(openAI.chat(prompt))
 const claudeAnswer = stream(anthropic.chat(prompt))
-const genericAnswer = stream(sse.stream({ prompt }))
+const genericAnswer = stream(sse.streamText({ prompt }))
 ```
 
 UI 不关心来源，只关心 signal。

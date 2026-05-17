@@ -13,6 +13,14 @@ pnpm dev
 
 Open the local URL printed by VitePress.
 
+## Documentation Guard
+
+```bash
+pnpm docs:core
+```
+
+This checks the high-traffic docs for removed Qore APIs and stale SSE adapter examples before the full site build runs.
+
 ## Build
 
 ```bash

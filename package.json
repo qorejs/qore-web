@@ -11,7 +11,8 @@
     "doctest": "tsx scripts/doctest/runner.ts",
     "doctest:api": "tsx scripts/doctest/runner.ts api/signal.md api/computed.md api/effect.md api/batch.md",
     "test:site": "node scripts/site-smoke.mjs",
-    "check": "pnpm build && pnpm doctest:api && pnpm test:site"
+    "check": "pnpm docs:core && pnpm build && pnpm doctest:api && pnpm test:site",
+    "docs:core": "node scripts/validate-core-docs.mjs"
   },
   "dependencies": {
     "@qorejs/qore": "^0.7.2",

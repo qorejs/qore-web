@@ -1,43 +1,29 @@
 # AI 集成示例
 
 ```ts
-import { component, signal, effect } from '@qorejs/qore'
-import { ai } from 'qore/ai'
+import { createOpenAI, h, mount, signal, stream, text } from '@qorejs/qore'
 
-const AIAssistant = component(() => {
-  const prompt = signal('')
-  const response = signal('')
-  const loading = signal(false)
-  
-  const askAI = async () => {
-    loading.set(true)
-    try {
-      const result = await ai.generate(prompt())
-      response.set(result)
-    } finally {
-      loading.set(false)
-    }
-  }
-  
-  return () => `
-    <div style="max-width: 600px; margin: 2rem auto;">
-      <h1>AI Assistant</h1>
-      <textarea 
-        value="${prompt()}"
-        oninput="${e => prompt.set(e.target.value)}"
-        placeholder="Ask AI..."
-        rows="4"
-      />
-      <button 
-        onclick="${askAI}" 
-        disabled="${loading()}"
-      >
-        ${loading() ? 'Thinking...' : 'Ask'}
-      </button>
-      ${response() ? `<div class="response">${response()}</div>` : ''}
-    </div>
-  `
-})
+const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
+const prompt = signal('用一句话解释 Qore')
 
-export default AIAssistant
+let activeAnswer = stream(['点击 Ask 开始流式生成。'])
+const answer = signal(activeAnswer)
+
+function ask() {
+  activeAnswer.abort()
+  activeAnswer = stream(openAI.chat(prompt()))
+  answer(activeAnswer)
+}
+
+mount('#app', () => h('main', {},
+  h('textarea', {
+    value: prompt(),
+    oninput: (event: Event) => prompt((event.currentTarget as HTMLTextAreaElement).value)
+  }),
+  h('button', { onclick: ask }, 'Ask'),
+  h('article', {}, text(() => answer()())),
+  h('small', {}, text(() => answer().status()))
+))
 ```
+
+外层 `answer` signal 负责切换当前对话；内部 `QoreStream` 继续按 token 驱动文章内容。

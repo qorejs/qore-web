@@ -75,7 +75,7 @@ answer.dropped()
 
 ### `stream.text()`
 
-Explicit text accumulation.
+显式使用文本累积。
 
 ```ts
 const response = stream.text(modelStream)
@@ -83,7 +83,7 @@ const response = stream.text(modelStream)
 
 ### `stream.list()`
 
-Accumulate every chunk into an array.
+把每个 chunk 累积进数组。
 
 ```ts
 const events = stream.list([{ step: 1 }, { step: 2 }])
@@ -92,7 +92,7 @@ events() // [{ step: 1 }, { step: 2 }]
 
 ### `stream.latest()`
 
-Expose only the latest chunk.
+只暴露最新的 chunk。
 
 ```ts
 const progress = stream.latest([10, 40, 100])
@@ -101,7 +101,7 @@ progress() // 100
 
 ### `stream.paced()`
 
-Add a minimum interval between chunk commits.
+给 chunk commit 增加最小间隔。
 
 ```ts
 const answer = stream.paced(openAI.chat('hello'), 24)
@@ -109,7 +109,7 @@ const answer = stream.paced(openAI.chat('hello'), 24)
 
 ### `stream.withBackpressure()`
 
-Control buffering when a source emits faster than the UI should consume.
+当 source 发得比 UI 应该消费的速度更快时，用它控制缓冲区。
 
 ```ts
 const answer = stream.withBackpressure(source, {
@@ -121,7 +121,7 @@ const answer = stream.withBackpressure(source, {
 
 ## Custom Reduction
 
-Use `stream.create()` when the current value is not plain text.
+当当前值不是普通文本时，用 `stream.create()`。
 
 ```ts
 const totals = stream.create<number, number>([1, 2, 3], {
@@ -148,7 +148,7 @@ const running = scanStream(
 
 ## Provider Adapters
 
-Qore ships provider helpers that produce async iterable streams, so the UI API stays the same.
+Qore 提供 provider helper，把 OpenAI、Anthropic 或通用 SSE 都变成 async iterable stream，所以 UI API 保持一致。
 
 ```ts
 import { createOpenAI, h, stream, text } from '@qorejs/qore'
@@ -169,13 +169,23 @@ const answer = stream(anthropic.chat('Explain streaming UI.'))
 ```ts
 import { createSSEAdapter, stream } from '@qorejs/qore'
 
-const sse = createSSEAdapter({ endpoint: '/api/events' })
-const answer = stream(sse.stream({ prompt: 'hello' }))
+const sse = createSSEAdapter<{ prompt: string }>({
+  url: '/api/events',
+  headers: { 'Content-Type': 'application/json' },
+  buildRequest(request) {
+    return { body: JSON.stringify(request) }
+  },
+  eventToText(event) {
+    return typeof event.data === 'string' ? event.data : undefined
+  }
+})
+
+const answer = stream(sse.streamText({ prompt: 'hello' }))
 ```
 
 ## Async Iteration
 
-The same response can drive the UI and external consumers.
+同一个 response 可以同时驱动 UI 和外部消费者。
 
 ```ts
 const answer = stream(openAI.chat('hello'))
@@ -183,19 +193,6 @@ const answer = stream(openAI.chat('hello'))
 for await (const chunk of answer) {
   console.log('chunk', chunk)
 }
-```
-
-## UI Rendering
-
-```ts
-import { h, mount, stream, text } from '@qorejs/qore'
-
-const answer = stream(openAI.chat('hello'))
-
-mount('#app', () => h('main', {},
-  h('p', {}, text(() => answer())),
-  h('small', {}, text(() => answer.status()))
-))
 ```
 
 [阅读流式响应指南](/zh/guide/streaming)

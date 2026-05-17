@@ -1,38 +1,49 @@
 # Qore Web
 
-Official website and documentation for Qore: the streaming-response framework where `stream` becomes `signal`.
+Qore 官方网站与文档仓库。Qore 的核心定位是：**流式响应框架，让 `stream` 成为 `signal`**。
 
-## Local Development
+默认语言是英文，简体中文内容位于 `/zh/`。
+
+## 本地开发
 
 ```bash
 pnpm install
 pnpm dev
 ```
 
-Open the local URL printed by VitePress.
+打开 VitePress 输出的本地地址即可预览。
 
-## Build
+## 文档守门
+
+```bash
+pnpm docs:core
+```
+
+这个脚本会检查高流量文档，避免已经移除的 Qore API 或旧版 SSE 示例重新混进官网主路径。
+
+## 构建
 
 ```bash
 pnpm build
 pnpm preview
 ```
 
-The static site is generated in `.vitepress/dist`.
+静态站点会生成到 `.vitepress/dist`。
 
-## Repository Roles
+## 仓库分工
 
-- `qorejs/qore` is the runtime and npm package source for `@qorejs/qore`.
-- `qorejs/qore-web` is the official website, docs, and product showcase.
-- Live demos should import `@qorejs/qore` from npm instead of copying runtime code.
+- `qorejs/qore`：运行时与 npm 包 `@qorejs/qore` 的源码仓库。
+- `qorejs/qore-web`：官网、文档与产品展示仓库。
+- 官网 demo 应从 npm 安装并使用 `@qorejs/qore`，不要复制运行时代码。
 
-## Links
+## 链接
 
-- Website: https://qorejs.dev/
-- Runtime repository: https://github.com/qorejs/qore
-- Website repository: https://github.com/qorejs/qore-web
-- npm package: https://www.npmjs.com/package/@qorejs/qore
+- 官网：https://qorejs.dev/
+- 运行时仓库：https://github.com/qorejs/qore
+- 官网仓库：https://github.com/qorejs/qore-web
+- npm 包：https://www.npmjs.com/package/@qorejs/qore
+- 最新运行时发布：https://github.com/qorejs/qore/releases/tag/v0.7.2
 
-## License
+## 许可证
 
 MIT
