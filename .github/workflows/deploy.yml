@@ -47,7 +47,8 @@ jobs:
       - name: Add cache bust timestamp
         run: |
           TIMESTAMP=$(date +%s)
-          echo "{"purged_at": $TIMESTAMP, "commit": "${{ github.sha }}", "version": "$(date +%Y%m%d%H%M%S)"}" > .vitepress/dist/cache-bust.json
+          VERSION=$(date +%Y%m%d%H%M%S)
+          printf '{"purged_at": %s, "commit": "%s", "version": "%s"}\n' "$TIMESTAMP" "${{ github.sha }}" "$VERSION" > .vitepress/dist/cache-bust.json
           echo "Added cache-bust.json with timestamp: $TIMESTAMP"
 
       - name: Upload Pages artifact

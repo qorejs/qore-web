@@ -148,39 +148,43 @@ const running = scanStream(
 
 ## Provider Adapters
 
-Qore 提供 provider helper，把 OpenAI、Anthropic 或通用 SSE 都变成 async iterable stream，所以 UI API 保持一致。
+Qore 提供 provider helper，把 OpenAI、Anthropic 或通用 SSE 都变成 async iterable stream，所以 UI API 保持一致。厂商 adapter 应运行在可信服务端，因为 provider key 不能进入浏览器。
 
 ```ts
-import { createOpenAI, h, stream, text } from '@qorejs/qore'
+import { createOpenAI, stream } from '@qorejs/qore'
 
-const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
+const openAI = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const answer = stream(openAI.chat('Explain signals in one sentence.'))
-
-export const App = () => h('article', {}, text(() => answer()))
 ```
 
 ```ts
 import { createAnthropic, stream } from '@qorejs/qore'
 
-const anthropic = createAnthropic({ apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY })
+const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 const answer = stream(anthropic.chat('Explain streaming UI.'))
 ```
 
-```ts
-import { createSSEAdapter, stream } from '@qorejs/qore'
+浏览器应用应该通过通用 SSE adapter 消费你自己的 `/api/chat` 代理：
 
-const sse = createSSEAdapter<{ prompt: string }>({
-  url: '/api/events',
+```ts
+import { createSSEAdapter, h, stream, text } from '@qorejs/qore'
+
+const chat = createSSEAdapter<{ prompt: string }, string, { text?: string }>({
+  url: '/api/chat',
   headers: { 'Content-Type': 'application/json' },
   buildRequest(request) {
     return { body: JSON.stringify(request) }
   },
+  buildChatRequest(prompt) {
+    return { prompt }
+  },
   eventToText(event) {
-    return typeof event.data === 'string' ? event.data : undefined
+    return event.data.text
   }
 })
 
-const answer = stream(sse.streamText({ prompt: 'hello' }))
+const answer = stream(chat.chat('hello'))
+export const App = () => h('article', {}, text(() => answer()))
 ```
 
 ## Async Iteration

@@ -8,12 +8,25 @@ const qoreRoot = ref<HTMLElement | null>(null)
 const isVisible = ref(false)
 const isZh = computed(() => lang.value.startsWith('zh'))
 
+type ProviderId = 'openai' | 'anthropic' | 'sse'
+
+type ProviderCopy = {
+  id: ProviderId
+  name: string
+  env: string
+  proxy: string
+  ui: string
+  factory: string
+  description: string
+  tokens: readonly string[]
+}
+
 const copy = {
   en: {
     eyebrow: 'Streaming Response Framework',
     tagline: 'stream = signal',
-    summary: 'Tokens flow directly into reactive UI. Append-fast history. No whole-tree rerender.',
-    primaryAction: 'Try the stream demo',
+    summary: 'Pick a provider, keep the key on your server, and let tokens flow into one reactive primitive.',
+    primaryAction: 'Try provider setup',
     quickStart: 'Quick Start',
     github: 'GitHub',
     releaseLabel: 'Release channels',
@@ -22,19 +35,73 @@ const copy = {
       ['npm latest', 'https://www.npmjs.com/package/@qorejs/qore'],
       ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
     ],
-    cardLabel: 'Live primitive',
+    cardLabel: 'Provider setup, live',
+    demoSubtitle: 'Three moves: server key, /api/chat proxy, QoreStream signal.',
+    providerLabel: 'Choose provider',
+    docsAction: 'Setup guide',
+    serverKeyLabel: 'Server key',
+    proxyLabel: 'Backend proxy',
+    uiLabel: 'UI primitive',
+    flowLabel: 'Flow',
+    flowSteps: [
+      ['1', 'Browser sends prompt'],
+      ['2', 'Server calls model'],
+      ['3', 'Qore streams UI']
+    ],
+    secretNote: 'Never expose provider keys in the browser. Keep OPENAI_API_KEY or ANTHROPIC_API_KEY on your server and stream through /api/chat.',
     streamButton: 'Stream',
     promptLabel: 'Demo prompt',
     presetLabel: 'Demo presets',
     runtimeTitle: 'Qore runtime demo',
     waiting: 'waiting for the first token...',
     runtimePromptPrefix: 'prompt',
-    streamTokens: [
-      'stream(prompt) returns a signal. ',
-      'Signal updates. ',
-      'One text node paints. ',
-      'The UI keeps flowing.'
-    ],
+    providers: [
+      {
+        id: 'openai',
+        name: 'OpenAI',
+        env: 'OPENAI_API_KEY',
+        proxy: 'POST /api/chat',
+        ui: 'stream(chat.chat(prompt))',
+        factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
+        description: 'Use the built-in OpenAI adapter on your server, then expose a small SSE route to the browser.',
+        tokens: [
+          'OpenAI selected. ',
+          'The API key stays server-side. ',
+          'Tokens cross /api/chat as SSE. ',
+          'Qore updates one signal.'
+        ]
+      },
+      {
+        id: 'anthropic',
+        name: 'Anthropic',
+        env: 'ANTHROPIC_API_KEY',
+        proxy: 'POST /api/chat',
+        ui: 'stream(chat.chat(prompt))',
+        factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
+        description: 'Swap providers without changing the UI binding. The stream still becomes the same signal.',
+        tokens: [
+          'Anthropic selected. ',
+          'Claude streams from the server. ',
+          'The browser receives safe SSE. ',
+          'The text node keeps flowing.'
+        ]
+      },
+      {
+        id: 'sse',
+        name: 'Generic SSE',
+        env: 'CUSTOM_AI_API_KEY',
+        proxy: 'POST /api/chat',
+        ui: 'stream(chat.chat(prompt))',
+        factory: "createSSEAdapter({ url: '/api/chat' })",
+        description: 'Already have a streaming backend? Map its events once, then reuse the Qore primitive everywhere.',
+        tokens: [
+          'Generic SSE selected. ',
+          'Your backend owns the vendor call. ',
+          'eventToText maps each chunk. ',
+          'stream() drives the UI.'
+        ]
+      }
+    ] satisfies readonly ProviderCopy[],
     presets: [
       'Explain stream = signal',
       'Draft a tiny AI chat reply',
@@ -42,16 +109,16 @@ const copy = {
     ],
     pillars: [
       ['stream = signal', 'AI output is reactive state from the first byte.'],
-      ['Append-fast core', 'Chunk history grows without cloning the full array per token.'],
-      ['Provider-ready', 'OpenAI, Anthropic, and generic SSE adapters fit one primitive.']
+      ['Server-safe providers', 'Keys live behind your backend proxy, never in client code.'],
+      ['Append-fast core', 'Chunk history grows without cloning the full array per token.']
     ],
     pointEyebrow: 'The point',
     pointTitle: 'Do not move tokens into state. Let tokens become state.',
-    pointSummary: 'Qore has one core path: declare a stream, then let UI subscribe to the signal.',
+    pointSummary: 'Qore has one core path: declare a provider stream, then let UI subscribe to the signal.',
     proofPoints: [
+      ['Provider', 'server env key', 'no browser secrets'],
       ['Primitive', 'stream()', 'reader loop + state'],
-      ['Hot path', 'append-only history', 'full-array clone/token'],
-      ['User work', 'declare dependency', 'append, status, abort']
+      ['Hot path', 'append-only history', 'full-array clone/token']
     ],
     qoreTitle: 'Qore',
     manualTitle: 'Manual stream state'
@@ -59,8 +126,8 @@ const copy = {
   zh: {
     eyebrow: 'Streaming Response Framework',
     tagline: 'stream = signal',
-    summary: 'Token 直接流入响应式 UI。历史追加快，整棵树不重渲染。',
-    primaryAction: '试试流式 demo',
+    summary: '选择模型厂商，把 key 留在服务端，让 token 自然流进一个响应式 primitive。',
+    primaryAction: '试试 provider 设置',
     quickStart: '快速开始',
     github: 'GitHub',
     releaseLabel: '发布通道',
@@ -69,19 +136,73 @@ const copy = {
       ['npm 最新', 'https://www.npmjs.com/package/@qorejs/qore'],
       ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
     ],
-    cardLabel: '实时 primitive',
+    cardLabel: 'Provider 设置演示',
+    demoSubtitle: '三步：服务端 key、/api/chat 代理、QoreStream signal。',
+    providerLabel: '选择模型厂商',
+    docsAction: '配置指南',
+    serverKeyLabel: '服务端 key',
+    proxyLabel: '后端代理',
+    uiLabel: 'UI primitive',
+    flowLabel: '流程',
+    flowSteps: [
+      ['1', '浏览器发送 prompt'],
+      ['2', '服务端调用模型'],
+      ['3', 'Qore 流式更新 UI']
+    ],
+    secretNote: '不要把模型厂商 key 暴露在浏览器里。OPENAI_API_KEY 或 ANTHROPIC_API_KEY 放在服务端，通过 /api/chat 向前端流式输出。',
     streamButton: 'Stream',
     promptLabel: '演示提示词',
     presetLabel: '演示预设',
     runtimeTitle: 'Qore 运行时演示',
     waiting: '等待第一个 token...',
     runtimePromptPrefix: '提示词',
-    streamTokens: [
-      'stream(prompt) 返回一个 signal。 ',
-      'Signal 自动更新。 ',
-      '一个 text node 精准刷新。 ',
-      'UI 像水流一样继续前进。'
-    ],
+    providers: [
+      {
+        id: 'openai',
+        name: 'OpenAI',
+        env: 'OPENAI_API_KEY',
+        proxy: 'POST /api/chat',
+        ui: 'stream(chat.chat(prompt))',
+        factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
+        description: '在服务端使用内置 OpenAI adapter，然后给浏览器暴露一个安全的 SSE 接口。',
+        tokens: [
+          '已选择 OpenAI。',
+          'API key 留在服务端。',
+          'Token 通过 /api/chat 流向前端。',
+          'Qore 只更新一个 signal。'
+        ]
+      },
+      {
+        id: 'anthropic',
+        name: 'Anthropic',
+        env: 'ANTHROPIC_API_KEY',
+        proxy: 'POST /api/chat',
+        ui: 'stream(chat.chat(prompt))',
+        factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
+        description: '切换厂商不需要改 UI 绑定，最终仍然是同一个 QoreStream signal。',
+        tokens: [
+          '已选择 Anthropic。',
+          'Claude 在服务端流式输出。',
+          '浏览器只接收安全 SSE。',
+          'text node 持续精准刷新。'
+        ]
+      },
+      {
+        id: 'sse',
+        name: 'Generic SSE',
+        env: 'CUSTOM_AI_API_KEY',
+        proxy: 'POST /api/chat',
+        ui: 'stream(chat.chat(prompt))',
+        factory: "createSSEAdapter({ url: '/api/chat' })",
+        description: '如果你已有流式后端，只要映射事件文本，就能复用 Qore primitive。',
+        tokens: [
+          '已选择通用 SSE。',
+          '厂商调用由你的后端负责。',
+          'eventToText 映射每个 chunk。',
+          'stream() 驱动 UI。'
+        ]
+      }
+    ] satisfies readonly ProviderCopy[],
     presets: [
       '解释 stream = signal',
       '生成一段 AI 聊天回复',
@@ -89,16 +210,16 @@ const copy = {
     ],
     pillars: [
       ['stream = signal', 'AI 输出从第一个字节起就是响应式状态。'],
-      ['Append-fast core', 'chunk 历史追加增长，不在每个 token 上复制整条数组。'],
-      ['Provider-ready', 'OpenAI、Anthropic 和通用 SSE 都接入同一个 primitive。']
+      ['Server-safe providers', 'key 留在后端代理里，绝不进浏览器代码。'],
+      ['Append-fast core', 'chunk 历史追加增长，不在每个 token 上复制整条数组。']
     ],
     pointEyebrow: '核心',
     pointTitle: '不是把 token 搬进状态，而是让 token 自己成为状态。',
-    pointSummary: 'Qore 的核心路径只有两步：声明 stream，然后让 UI 订阅 signal。',
+    pointSummary: 'Qore 的核心路径只有两步：声明 provider stream，然后让 UI 订阅 signal。',
     proofPoints: [
+      ['Provider', 'server env key', 'no browser secrets'],
       ['Primitive', 'stream()', 'reader loop + state'],
-      ['热路径', 'append-only history', 'full-array clone/token'],
-      ['用户工作', '声明依赖', 'append, status, abort']
+      ['热路径', 'append-only history', 'full-array clone/token']
     ],
     qoreTitle: 'Qore',
     manualTitle: '手动 stream 状态'
@@ -108,17 +229,29 @@ const copy = {
 const t = computed(() => isZh.value ? copy.zh : copy.en)
 const prompt = ref(t.value.presets[0])
 const activePrompt = ref(prompt.value)
+const providerId = ref<ProviderId>('openai')
+const activeProvider = computed(() => t.value.providers.find((provider) => provider.id === providerId.value) ?? t.value.providers[0])
+const setupGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
 let disposeQore: (() => Element) | null = null
 let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
 
-const qoreCode = `import { h, stream, text } from '@qorejs/qore'
+const setupCode = computed(() => `// server: provider key stays here
+const provider = ${activeProvider.value.factory}
 
-const response = stream(openAI.chat(prompt))
+// browser: call your backend proxy
+const answer = ${activeProvider.value.ui}`)
+
+const qoreCode = `import { createSSEAdapter, h, stream, text } from '@qorejs/qore'
+
+const chat = createSSEAdapter<{ prompt: string }, string>({
+  url: '/api/chat',
+  buildChatRequest: prompt => ({ prompt })
+})
+
+const response = stream(chat.chat(prompt))
 
 export function App() {
-  return h('main', {},
-    text(() => response())
-  )
+  return h('main', {}, text(() => response()))
 }`
 
 const manualCode = `const [text, setText] = useState('')
@@ -132,7 +265,7 @@ for await (const token of aiStream) {
 return <Markdown>{text}</Markdown>`
 
 function makeDemoTokens() {
-  return [...t.value.streamTokens]
+  return [...activeProvider.value.tokens]
 }
 
 function renderDemo(value = activePrompt.value) {
@@ -143,6 +276,7 @@ function renderDemo(value = activePrompt.value) {
   activeAnswer?.abort()
   disposeQore?.()
 
+  const provider = activeProvider.value
   const answer = stream.paced(makeDemoTokens(), 38)
   activeAnswer = answer
 
@@ -150,6 +284,11 @@ function renderDemo(value = activePrompt.value) {
     h('div', { class: 'runtime-topline' },
       h('span', { class: 'runtime-dot' }),
       h('span', {}, t.value.runtimeTitle)
+    ),
+    h('div', { class: 'runtime-route' },
+      h('span', {}, provider.name),
+      h('span', {}, provider.proxy),
+      h('span', {}, 'QoreStream')
     ),
     h('p', { class: 'runtime-prompt' }, `${t.value.runtimePromptPrefix}: ${value}`),
     h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting)),
@@ -171,6 +310,11 @@ function runDemo() {
 function usePreset(value: string) {
   prompt.value = value
   runDemo()
+}
+
+function selectProvider(value: ProviderId) {
+  providerId.value = value
+  renderDemo(activePrompt.value)
 }
 
 onMounted(() => {
@@ -216,7 +360,57 @@ onBeforeUnmount(() => {
       </div>
 
       <div class="demo-card">
-        <div class="card-label">{{ t.cardLabel }}</div>
+        <div class="card-heading">
+          <div>
+            <div class="card-label">{{ t.cardLabel }}</div>
+            <p class="demo-subtitle">{{ t.demoSubtitle }}</p>
+          </div>
+          <a class="setup-link" :href="setupGuideLink">{{ t.docsAction }}</a>
+        </div>
+
+        <section class="provider-panel" :aria-label="t.providerLabel">
+          <div class="provider-tabs" role="tablist" :aria-label="t.providerLabel">
+            <button
+              v-for="provider in t.providers"
+              :key="provider.id"
+              type="button"
+              role="tab"
+              :aria-selected="provider.id === providerId"
+              :class="{ active: provider.id === providerId }"
+              @click="selectProvider(provider.id)"
+            >
+              {{ provider.name }}
+            </button>
+          </div>
+
+          <div class="setup-grid">
+            <div class="setup-cell">
+              <span>{{ t.serverKeyLabel }}</span>
+              <strong>{{ activeProvider.env }}</strong>
+            </div>
+            <div class="setup-cell">
+              <span>{{ t.proxyLabel }}</span>
+              <strong>{{ activeProvider.proxy }}</strong>
+            </div>
+            <div class="setup-cell">
+              <span>{{ t.uiLabel }}</span>
+              <strong>{{ activeProvider.ui }}</strong>
+            </div>
+          </div>
+
+          <p class="provider-description">{{ activeProvider.description }}</p>
+          <p class="secret-note">{{ t.secretNote }}</p>
+        </section>
+
+        <section class="flow-rail" :aria-label="t.flowLabel">
+          <div v-for="step in t.flowSteps" :key="step[0]">
+            <span>{{ step[0] }}</span>
+            <strong>{{ step[1] }}</strong>
+          </div>
+        </section>
+
+        <pre class="setup-code"><code>{{ setupCode }}</code></pre>
+
         <form id="live-demo" class="demo-prompt" @submit.prevent="runDemo">
           <input v-model="prompt" :aria-label="t.promptLabel" autocomplete="off" />
           <button type="submit">{{ t.streamButton }}</button>
@@ -419,10 +613,10 @@ onBeforeUnmount(() => {
 
 .hero-section {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(380px, 0.82fr);
+  grid-template-columns: minmax(0, 0.88fr) minmax(430px, 0.92fr);
   gap: clamp(32px, 5vw, 92px);
   align-items: center;
-  min-height: clamp(600px, calc(100vh - 74px), 740px);
+  min-height: clamp(700px, calc(100vh - 74px), 860px);
 }
 
 .hero-copy {
@@ -467,7 +661,10 @@ h1 {
 
 .summary,
 .compare-copy p,
-.pillar-card p {
+.pillar-card p,
+.demo-subtitle,
+.provider-description,
+.secret-note {
   color: var(--qore-muted);
   font-size: 17px;
   line-height: 1.8;
@@ -491,7 +688,8 @@ h1 {
   margin-top: -8px;
 }
 
-.release-strip a {
+.release-strip a,
+.setup-link {
   display: inline-flex;
   align-items: center;
   min-height: 30px;
@@ -502,7 +700,7 @@ h1 {
   background: rgba(255, 255, 255, 0.045);
   font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   text-decoration: none;
-  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
 .release-strip a:first-child {
@@ -511,7 +709,8 @@ h1 {
   background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
 }
 
-.release-strip a:hover {
+.release-strip a:hover,
+.setup-link:hover {
   color: var(--qore-text);
   border-color: rgba(143, 255, 193, 0.48);
   background: rgba(255, 255, 255, 0.08);
@@ -548,7 +747,8 @@ h1 {
 
 .primary-action:hover,
 .secondary-action:hover,
-.pillar-card:hover {
+.pillar-card:hover,
+.setup-link:hover {
   transform: translateY(-2px);
 }
 
@@ -564,27 +764,137 @@ h1 {
 
 .demo-card {
   display: grid;
-  gap: 14px;
+  gap: 12px;
   align-self: center;
   justify-self: stretch;
-  min-height: 540px;
-  max-width: 680px;
-  padding: clamp(16px, 2vw, 26px);
+  max-width: 760px;
+  padding: clamp(16px, 2vw, 24px);
   border-radius: 34px;
   transform: rotate(0.35deg);
+}
+
+.card-heading {
+  display: flex;
+  gap: 16px;
+  align-items: start;
+  justify-content: space-between;
+}
+
+.demo-subtitle,
+.provider-description,
+.secret-note {
+  margin: 6px 0 0;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.provider-panel {
+  display: grid;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid rgba(143, 255, 193, 0.17);
+  border-radius: 24px;
+  background:
+    linear-gradient(135deg, rgba(143, 255, 193, 0.08), rgba(116, 247, 255, 0.03)),
+    rgba(1, 10, 8, 0.34);
+}
+
+.provider-tabs {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.provider-tabs button,
+.demo-prompt input,
+.demo-prompt button,
+.preset-row button {
+  border: 1px solid rgba(143, 255, 193, 0.2);
+  font: 800 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.provider-tabs button {
+  min-height: 38px;
+  padding: 0 10px;
+  border-radius: 15px;
+  color: rgba(243, 255, 247, 0.76);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+}
+
+.provider-tabs button.active {
+  color: #052019;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
+  box-shadow: 0 14px 34px rgba(116, 247, 255, 0.16);
+}
+
+.setup-grid {
+  display: grid;
+  grid-template-columns: 0.85fr 0.8fr 1.35fr;
+  gap: 8px;
+}
+
+.setup-cell,
+.flow-rail div {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(143, 255, 193, 0.14);
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.18);
+}
+
+.setup-cell span,
+.flow-rail span {
+  display: block;
+  margin-bottom: 6px;
+  color: rgba(243, 255, 247, 0.48);
+  font: 800 10px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.setup-cell strong,
+.flow-rail strong {
+  display: block;
+  overflow: hidden;
+  color: var(--qore-text);
+  font: 850 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.secret-note {
+  padding-left: 12px;
+  border-left: 2px solid var(--qore-accent);
+  color: rgba(180, 255, 213, 0.78);
+}
+
+.flow-rail {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.flow-rail div {
+  position: relative;
+}
+
+.setup-code {
+  margin: 0;
+  padding: 14px;
+  overflow: auto;
+  border: 1px solid rgba(143, 255, 193, 0.14);
+  border-radius: 18px;
+  color: #eafff1;
+  background: rgba(1, 10, 8, 0.62);
+  font: 750 12px/1.62 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .demo-prompt {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
-}
-
-.demo-prompt input,
-.demo-prompt button,
-.preset-row button {
-  border: 1px solid rgba(143, 255, 193, 0.2);
-  font: 800 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .demo-prompt input {
@@ -632,15 +942,15 @@ h1 {
 }
 
 .qore-root {
-  min-height: 360px;
+  min-height: 274px;
 }
 
 :deep(.runtime-shell) {
   display: grid;
-  gap: 18px;
+  gap: 14px;
   height: 100%;
-  min-height: 360px;
-  padding: clamp(20px, 2.6vw, 30px);
+  min-height: 274px;
+  padding: clamp(18px, 2.2vw, 24px);
   border-radius: 28px;
   background:
     linear-gradient(135deg, rgba(5, 24, 19, 0.94), rgba(3, 8, 8, 0.98)),
@@ -648,7 +958,8 @@ h1 {
   border: 1px solid rgba(143, 255, 193, 0.2);
 }
 
-:deep(.runtime-topline) {
+:deep(.runtime-topline),
+:deep(.runtime-route) {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -656,6 +967,21 @@ h1 {
   font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   letter-spacing: 0.14em;
   text-transform: uppercase;
+}
+
+:deep(.runtime-route) {
+  flex-wrap: wrap;
+  gap: 7px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+:deep(.runtime-route span) {
+  padding: 6px 9px;
+  border: 1px solid rgba(143, 255, 193, 0.14);
+  border-radius: 999px;
+  color: rgba(243, 255, 247, 0.72);
+  background: rgba(255, 255, 255, 0.045);
 }
 
 :deep(.runtime-prompt) {
@@ -677,11 +1003,11 @@ h1 {
 }
 
 :deep(.runtime-output) {
-  min-height: 176px;
+  min-height: 112px;
   margin: 0;
   white-space: pre-wrap;
   color: #eafff1;
-  font: 700 clamp(20px, 2.28vw, 34px)/1.24 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font: 700 clamp(19px, 2vw, 30px)/1.24 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
   letter-spacing: -0.035em;
 }
 
@@ -814,13 +1140,22 @@ h1 {
   }
 }
 
+@media (max-width: 1100px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-card {
+    max-width: none;
+  }
+}
+
 @media (max-width: 920px) {
   .home-page {
     margin-top: -56px;
     padding: 112px 18px 64px;
   }
 
-  .hero-section,
   .compare-section,
   .pillars-section {
     grid-template-columns: 1fr;
@@ -831,20 +1166,36 @@ h1 {
   }
 
   .demo-card {
-    min-height: 520px;
     transform: none;
   }
 
+  .card-heading,
   .demo-prompt {
     grid-template-columns: 1fr;
   }
 
+  .card-heading {
+    display: grid;
+  }
+
+  .setup-link,
   .demo-prompt button {
     width: 100%;
+    justify-content: center;
+  }
+
+  .provider-tabs,
+  .setup-grid,
+  .flow-rail {
+    grid-template-columns: 1fr;
   }
 
   .preset-row {
     display: none;
+  }
+
+  .setup-code {
+    font-size: 11px;
   }
 
   .qore-root {

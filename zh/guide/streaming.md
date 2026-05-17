@@ -30,11 +30,26 @@ return h('div', {}, text(() => answer()))
 
 ## 最小 AI 响应
 
-```ts
-import { createOpenAI, h, mount, stream, text } from '@qorejs/qore'
+浏览器不要直接持有模型厂商 key。先在服务端实现 `/api/chat`，再在 UI 中消费这个 SSE 代理：
 
-const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
-const answer = stream(openAI.chat('hello'))
+```ts
+import { createSSEAdapter, h, mount, stream, text } from '@qorejs/qore'
+
+const chat = createSSEAdapter<{ prompt: string }, string, { text?: string }>({
+  url: '/api/chat',
+  headers: { 'Content-Type': 'application/json' },
+  buildRequest(request) {
+    return { body: JSON.stringify(request) }
+  },
+  buildChatRequest(prompt) {
+    return { prompt }
+  },
+  eventToText(event) {
+    return event.data.text
+  }
+})
+
+const answer = stream(chat.chat('hello'))
 
 mount('#app', () => h('main', {},
   h('h1', {}, 'AI response'),

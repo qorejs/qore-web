@@ -145,6 +145,10 @@ for (const filePath of files) {
   const relativePath = relative(root, filePath);
   const content = readFileSync(filePath, 'utf8');
 
+  if (/\bVITE_(OPENAI|ANTHROPIC)_API_KEY\b/.test(content) || /import\.meta\.env\.[A-Z0-9_]*API_KEY\b/.test(content)) {
+    failures.push(`${relativePath} documents browser-exposed provider API keys; keep provider keys on the server and proxy through /api/chat.`);
+  }
+
   for (const block of extractCodeBlocks(content)) {
     if (!codeLanguages.has(block.language)) {
       continue;

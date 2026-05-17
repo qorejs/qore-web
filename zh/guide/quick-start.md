@@ -52,11 +52,26 @@ mount('#app', () => h('main', {},
 
 ## 接 provider
 
-```ts
-import { createOpenAI, h, mount, stream, text } from '@qorejs/qore'
+模型厂商 key 放在服务端，浏览器通过你自己的 `/api/chat` SSE 代理接收 token：
 
-const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
-const answer = stream(openAI.chat('用一句话解释 Qore'))
+```ts
+import { createSSEAdapter, h, mount, stream, text } from '@qorejs/qore'
+
+const chat = createSSEAdapter<{ prompt: string }, string, { text?: string }>({
+  url: '/api/chat',
+  headers: { 'Content-Type': 'application/json' },
+  buildRequest(request) {
+    return { body: JSON.stringify(request) }
+  },
+  buildChatRequest(prompt) {
+    return { prompt }
+  },
+  eventToText(event) {
+    return event.data.text
+  }
+})
+
+const answer = stream(chat.chat('用一句话解释 Qore'))
 
 mount('#app', () => h('article', {},
   text(() => answer())

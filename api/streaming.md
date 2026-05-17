@@ -109,39 +109,43 @@ const running = scanStream([1, 2, 3], (total, chunk) => total + chunk, 0)
 
 ## Provider Adapters
 
-Qore ships provider helpers that produce async iterable streams, so the UI API stays the same.
+Qore ships provider helpers that produce async iterable streams, so the UI API stays the same. Run vendor adapters in a trusted runtime because provider keys must not ship to the browser.
 
 ```ts
-import { createOpenAI, h, stream, text } from '@qorejs/qore'
+import { createOpenAI, stream } from '@qorejs/qore'
 
-const openAI = createOpenAI({ apiKey: import.meta.env.VITE_OPENAI_API_KEY })
+const openAI = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 const answer = stream(openAI.chat('Explain signals in one sentence.'))
-
-export const App = () => h('article', {}, text(() => answer()))
 ```
 
 ```ts
 import { createAnthropic, stream } from '@qorejs/qore'
 
-const anthropic = createAnthropic({ apiKey: import.meta.env.VITE_ANTHROPIC_API_KEY })
+const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 const answer = stream(anthropic.chat('Explain streaming UI.'))
 ```
 
-```ts
-import { createSSEAdapter, stream } from '@qorejs/qore'
+Browser apps should consume your own `/api/chat` proxy with the generic SSE adapter:
 
-const sse = createSSEAdapter<{ prompt: string }>({
-  url: '/api/events',
+```ts
+import { createSSEAdapter, h, stream, text } from '@qorejs/qore'
+
+const chat = createSSEAdapter<{ prompt: string }, string, { text?: string }>({
+  url: '/api/chat',
   headers: { 'Content-Type': 'application/json' },
   buildRequest(request) {
     return { body: JSON.stringify(request) }
   },
+  buildChatRequest(prompt) {
+    return { prompt }
+  },
   eventToText(event) {
-    return typeof event.data === 'string' ? event.data : undefined
+    return event.data.text
   }
 })
 
-const answer = stream(sse.streamText({ prompt: 'hello' }))
+const answer = stream(chat.chat('hello'))
+export const App = () => h('article', {}, text(() => answer()))
 ```
 
 ## Async Iteration
