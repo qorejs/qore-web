@@ -19,7 +19,7 @@ Open the local URL printed by VitePress.
 pnpm docs:core
 ```
 
-This checks the high-traffic docs for removed Qore APIs and stale SSE adapter examples before the full site build runs.
+This checks every source Markdown page for removed Qore APIs and stale SSE adapter examples before the full site build runs.
 
 ## Build
 

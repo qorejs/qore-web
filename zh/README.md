@@ -19,7 +19,7 @@ pnpm dev
 pnpm docs:core
 ```
 
-这个脚本会检查高流量文档，避免已经移除的 Qore API 或旧版 SSE 示例重新混进官网主路径。
+这个脚本会检查所有源码 Markdown 页面，避免已经移除的 Qore API 或旧版 SSE 示例重新混进官网。
 
 ## 构建
 

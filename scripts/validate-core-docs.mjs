@@ -1,38 +1,100 @@
-import { readFileSync } from 'node:fs';
-import { dirname, join } from 'node:path';
+import { existsSync, readdirSync, readFileSync } from 'node:fs';
+import { dirname, join, relative } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const root = dirname(fileURLToPath(new URL('../package.json', import.meta.url)));
-
-const coreDocs = [
-  'guide/quick-start.md',
-  'guide/streaming.md',
-  'guide/ai-native.md',
-  'api/streaming.md',
-  'examples/ai-integration.md',
-  'zh/guide/quick-start.md',
-  'zh/guide/streaming.md',
-  'zh/guide/ai-native.md',
-  'zh/api/streaming.md',
-  'zh/examples/ai-integration.md'
-];
-
+const sourceDirs = ['api', 'blog', 'examples', 'guide', 'zh'];
+const rootDocs = ['README.md', 'index.md'];
+const codeLanguages = new Set(['ts', 'tsx', 'js', 'javascript', 'typescript']);
 const allowedQoreExports = new Set([
+  'AppContext',
+  'BackpressureOptions',
+  'ComputedSignal',
+  'EffectOptions',
+  'EffectScheduler',
+  'ProviderRequestOptions',
+  'QoreChild',
+  'QoreDocumentFragment',
+  'QoreElement',
+  'QoreNode',
+  'QoreStream',
+  'QoreText',
+  'ReadonlySignal',
+  'ResponseRenderState',
+  'ResponseState',
+  'SSEAdapter',
+  'SSEEvent',
+  'Signal',
+  'StreamController',
   'batch',
   'computed',
   'createAnthropic',
+  'createApp',
   'createOpenAI',
+  'createResponse',
   'createSSEAdapter',
+  'dynamic',
   'effect',
+  'fragment',
+  'from',
   'h',
+  'isSignal',
   'list',
   'mapStream',
   'mount',
+  'normalizeError',
+  'renderResponse',
+  'response',
   'scanStream',
+  'show',
   'signal',
+  'sleep',
   'stream',
-  'text'
+  'text',
+  'toAsyncIterable',
+  'untrack'
 ]);
+
+function walkMarkdown(dir) {
+  const files = [];
+
+  if (!existsSync(dir)) {
+    return files;
+  }
+
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const path = join(dir, entry.name);
+
+    if (entry.isDirectory()) {
+      files.push(...walkMarkdown(path));
+      continue;
+    }
+
+    if (entry.isFile() && entry.name.endsWith('.md')) {
+      files.push(path);
+    }
+  }
+
+  return files;
+}
+
+function sourceMarkdownFiles() {
+  const files = [];
+
+  for (const doc of rootDocs) {
+    const path = join(root, doc);
+
+    if (existsSync(path)) {
+      files.push(path);
+    }
+  }
+
+  for (const dir of sourceDirs) {
+    files.push(...walkMarkdown(join(root, dir)));
+  }
+
+  return files.sort();
+}
 
 function extractCodeBlocks(markdown) {
   const blocks = [];
@@ -61,7 +123,11 @@ function importedQoreNames(code) {
 
   while ((match = importPattern.exec(code))) {
     for (const rawName of match[1].split(',')) {
-      const name = rawName.trim().split(/\s+as\s+/)[0]?.trim();
+      const name = rawName
+        .trim()
+        .replace(/^type\s+/, '')
+        .split(/\s+as\s+/)[0]
+        ?.trim();
 
       if (name) {
         names.add(name);
@@ -73,13 +139,14 @@ function importedQoreNames(code) {
 }
 
 const failures = [];
+const files = sourceMarkdownFiles();
 
-for (const relativePath of coreDocs) {
-  const filePath = join(root, relativePath);
+for (const filePath of files) {
+  const relativePath = relative(root, filePath);
   const content = readFileSync(filePath, 'utf8');
 
   for (const block of extractCodeBlocks(content)) {
-    if (!['ts', 'tsx', 'js', 'javascript', 'typescript'].includes(block.language)) {
+    if (!codeLanguages.has(block.language)) {
       continue;
     }
 
@@ -96,15 +163,19 @@ for (const relativePath of coreDocs) {
     if (/createSSEAdapter\s*\(\s*\{[\s\S]*?\bendpoint\s*:/.test(block.code)) {
       failures.push(`${relativePath}:${lineForOffset(content, block.offset)} uses endpoint; createSSEAdapter expects url.`);
     }
+
+    if (/\bcomponent\s*\(/.test(block.code)) {
+      failures.push(`${relativePath}:${lineForOffset(content, block.offset)} uses removed component() helper; use plain functions plus h().`);
+    }
   }
 }
 
 if (failures.length > 0) {
-  console.error('Core documentation validation failed:');
+  console.error('Documentation API validation failed:');
   for (const failure of failures) {
     console.error(`- ${failure}`);
   }
   process.exit(1);
 }
 
-console.log(`core-docs-ok ${coreDocs.length} files`);
+console.log(`docs-api-ok ${files.length} files`);
