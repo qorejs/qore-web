@@ -34,6 +34,7 @@ The static site is generated in `.vitepress/dist`.
 - Runtime repository: https://github.com/qorejs/qore
 - Website repository: https://github.com/qorejs/qore-web
 - npm package: https://www.npmjs.com/package/@qorejs/qore
+- Latest runtime release: https://github.com/qorejs/qore/releases/tag/v0.7.2
 
 ## License
 

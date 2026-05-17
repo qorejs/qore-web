@@ -1,6 +1,6 @@
 {
   "name": "qore-web",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "private": true,
   "description": "Official website for Qore, the streaming-response framework.",
   "type": "module",
@@ -14,7 +14,7 @@
     "check": "pnpm build && pnpm doctest:api && pnpm test:site"
   },
   "dependencies": {
-    "@qorejs/qore": "^0.7.1",
+    "@qorejs/qore": "^0.7.2",
     "vitepress": "^1.6.4",
     "vue": "^3.5.0"
   },

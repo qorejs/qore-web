@@ -16,6 +16,12 @@ const copy = {
     primaryAction: 'Try the stream demo',
     quickStart: 'Quick Start',
     github: 'GitHub',
+    releaseLabel: 'Release channels',
+    releaseLinks: [
+      ['v0.7.2', 'https://github.com/qorejs/qore/releases/tag/v0.7.2'],
+      ['npm latest', 'https://www.npmjs.com/package/@qorejs/qore'],
+      ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
+    ],
     cardLabel: 'Live primitive',
     streamButton: 'Stream',
     promptLabel: 'Demo prompt',
@@ -57,6 +63,12 @@ const copy = {
     primaryAction: '试试流式 demo',
     quickStart: '快速开始',
     github: 'GitHub',
+    releaseLabel: '发布通道',
+    releaseLinks: [
+      ['v0.7.2', 'https://github.com/qorejs/qore/releases/tag/v0.7.2'],
+      ['npm 最新', 'https://www.npmjs.com/package/@qorejs/qore'],
+      ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
+    ],
     cardLabel: '实时 primitive',
     streamButton: 'Stream',
     promptLabel: '演示提示词',
@@ -196,6 +208,11 @@ onBeforeUnmount(() => {
           <a class="secondary-action" :href="isZh ? '/zh/guide/quick-start.html' : '/guide/quick-start.html'">{{ t.quickStart }}</a>
           <a class="secondary-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.github }}</a>
         </div>
+        <nav class="release-strip" :aria-label="t.releaseLabel">
+          <a v-for="link in t.releaseLinks" :key="link[0]" :href="link[1]" target="_blank" rel="noreferrer">
+            {{ link[0] }}
+          </a>
+        </nav>
       </div>
 
       <div class="demo-card">
@@ -465,6 +482,43 @@ h1 {
   flex-wrap: wrap;
   gap: 12px;
   padding-top: 8px;
+}
+
+.release-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: -8px;
+}
+
+.release-strip a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 11px;
+  border: 1px solid rgba(143, 255, 193, 0.18);
+  border-radius: 999px;
+  color: rgba(243, 255, 247, 0.72);
+  background: rgba(255, 255, 255, 0.045);
+  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  text-decoration: none;
+  transition: color 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.release-strip a:first-child {
+  color: #052019;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
+}
+
+.release-strip a:hover {
+  color: var(--qore-text);
+  border-color: rgba(143, 255, 193, 0.48);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.release-strip a:first-child:hover {
+  color: #052019;
 }
 
 .primary-action,
