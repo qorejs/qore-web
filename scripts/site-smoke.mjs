@@ -167,7 +167,7 @@ async function main() {
     await waitForText(page, 'Provider setup, live')
     await waitForText(page, 'OPENAI_API_KEY')
     await waitForText(page, 'POST /api/chat')
-    await waitForText(page, 'Never expose provider keys in the browser')
+    await waitForText(page, 'Keys stay server-side')
     await page.getByRole('tab', { name: 'Anthropic', exact: true }).click()
     await waitForText(page, 'ANTHROPIC_API_KEY')
     await page.getByRole('tab', { name: 'Generic SSE', exact: true }).click()

@@ -14,7 +14,7 @@ const stop = effect(() => {
 
 ## Signature
 
-```ts
+```ts no-test
 function effect(
   fn: () => void | (() => void),
   options?: EffectOptions

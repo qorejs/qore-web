@@ -23,12 +23,17 @@ type ProviderCopy = {
 
 const copy = {
   en: {
-    eyebrow: 'Streaming Response Framework',
+    eyebrow: 'Qore / Streaming Response Runtime',
+    headlineTop: 'Streams',
+    headlineBottom: 'become UI.',
+    taglinePrefix: 'Qore makes',
     tagline: 'stream = signal',
-    summary: 'Pick a provider, keep the key on your server, and let tokens flow into one reactive primitive.',
-    primaryAction: 'Try provider setup',
+    summary: 'AI tokens should not be copied into state. In Qore, every chunk becomes reactive UI the moment it arrives.',
+    primaryAction: 'Run the live stream',
     quickStart: 'Quick Start',
     github: 'GitHub',
+    installLabel: 'Install',
+    installCommand: 'npm i @qorejs/qore',
     releaseLabel: 'Release channels',
     releaseLinks: [
       ['v0.7.3', 'https://github.com/qorejs/qore/releases/tag/v0.7.3'],
@@ -36,7 +41,7 @@ const copy = {
       ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
     ],
     cardLabel: 'Provider setup, live',
-    demoSubtitle: 'Three moves: server key, /api/chat proxy, QoreStream signal.',
+    demoSubtitle: 'Choose a provider. Stream through your server. Bind one signal to the UI.',
     providerLabel: 'Choose provider',
     docsAction: 'Setup guide',
     serverKeyLabel: 'Server key',
@@ -48,13 +53,25 @@ const copy = {
       ['2', 'Server calls model'],
       ['3', 'Qore streams UI']
     ],
-    secretNote: 'Never expose provider keys in the browser. Keep OPENAI_API_KEY or ANTHROPIC_API_KEY on your server and stream through /api/chat.',
+    secretNote: 'Keys stay server-side. The browser only receives safe SSE chunks.',
     streamButton: 'Stream',
     promptLabel: 'Demo prompt',
     presetLabel: 'Demo presets',
     runtimeTitle: 'Qore runtime demo',
     waiting: 'waiting for the first token...',
     runtimePromptPrefix: 'prompt',
+    tokenRailFallback: 'token rail armed',
+    signalSteps: [
+      ['Provider', 'SSE chunks'],
+      ['QoreStream', 'readonly signal'],
+      ['Text node', 'fine-grained UI']
+    ],
+    heroStats: [
+      ['1 primitive', 'stream + signal'],
+      ['3 adapters', 'OpenAI / Anthropic / SSE'],
+      ['0 secrets', 'browser-safe'],
+      ['1 node', 'targeted updates']
+    ],
     providers: [
       {
         id: 'openai',
@@ -63,7 +80,7 @@ const copy = {
         proxy: 'POST /api/chat',
         ui: 'stream(chat.chat(prompt))',
         factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
-        description: 'Use the built-in OpenAI adapter on your server, then expose a small SSE route to the browser.',
+        description: 'OpenAI on the server; QoreStream in the browser.',
         tokens: [
           'OpenAI selected. ',
           'The API key stays server-side. ',
@@ -78,7 +95,7 @@ const copy = {
         proxy: 'POST /api/chat',
         ui: 'stream(chat.chat(prompt))',
         factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
-        description: 'Swap providers without changing the UI binding. The stream still becomes the same signal.',
+        description: 'Swap providers without changing the UI binding.',
         tokens: [
           'Anthropic selected. ',
           'Claude streams from the server. ',
@@ -93,7 +110,7 @@ const copy = {
         proxy: 'POST /api/chat',
         ui: 'stream(chat.chat(prompt))',
         factory: "createSSEAdapter({ url: '/api/chat' })",
-        description: 'Already have a streaming backend? Map its events once, then reuse the Qore primitive everywhere.',
+        description: 'Map your existing SSE once, then reuse Qore everywhere.',
         tokens: [
           'Generic SSE selected. ',
           'Your backend owns the vendor call. ',
@@ -108,13 +125,13 @@ const copy = {
       'Show why token-level UI matters'
     ],
     pillars: [
-      ['stream = signal', 'AI output is reactive state from the first byte.'],
-      ['Server-safe providers', 'Keys live behind your backend proxy, never in client code.'],
-      ['Append-fast core', 'Chunk history grows without cloning the full array per token.']
+      ['Native stream signal', 'The answer is a callable signal, an async iterable, and lifecycle state.'],
+      ['Server-safe providers', 'OpenAI, Anthropic, or generic SSE behind your own backend route.'],
+      ['Append-fast core', 'The hot path tracks chunks without cloning the full history per token.']
     ],
-    pointEyebrow: 'The point',
-    pointTitle: 'Do not move tokens into state. Let tokens become state.',
-    pointSummary: 'Qore has one core path: declare a provider stream, then let UI subscribe to the signal.',
+    pointEyebrow: 'The difference',
+    pointTitle: 'Stop moving tokens around. Let them flow.',
+    pointSummary: 'Qore turns the streaming path itself into reactive state, so the UI subscribes instead of polling or rebuilding.',
     proofPoints: [
       ['Provider', 'server env key', 'no browser secrets'],
       ['Primitive', 'stream()', 'reader loop + state'],
@@ -124,12 +141,17 @@ const copy = {
     manualTitle: 'Manual stream state'
   },
   zh: {
-    eyebrow: 'Streaming Response Framework',
+    eyebrow: 'Qore / Streaming Response Runtime',
+    headlineTop: '让数据流',
+    headlineBottom: '长成 UI。',
+    taglinePrefix: 'Qore 让',
     tagline: 'stream = signal',
-    summary: '选择模型厂商，把 key 留在服务端，让 token 自然流进一个响应式 primitive。',
-    primaryAction: '试试 provider 设置',
+    summary: 'AI token 不应该被手动搬进状态。Qore 让每个 chunk 抵达的瞬间就变成响应式 UI。',
+    primaryAction: '运行实时流',
     quickStart: '快速开始',
     github: 'GitHub',
+    installLabel: '安装',
+    installCommand: 'npm i @qorejs/qore',
     releaseLabel: '发布通道',
     releaseLinks: [
       ['v0.7.3', 'https://github.com/qorejs/qore/releases/tag/v0.7.3'],
@@ -137,7 +159,7 @@ const copy = {
       ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
     ],
     cardLabel: 'Provider 设置演示',
-    demoSubtitle: '三步：服务端 key、/api/chat 代理、QoreStream signal。',
+    demoSubtitle: '选厂商，经由服务端流出，再把一个 signal 绑定到 UI。',
     providerLabel: '选择模型厂商',
     docsAction: '配置指南',
     serverKeyLabel: '服务端 key',
@@ -149,13 +171,25 @@ const copy = {
       ['2', '服务端调用模型'],
       ['3', 'Qore 流式更新 UI']
     ],
-    secretNote: '不要把模型厂商 key 暴露在浏览器里。OPENAI_API_KEY 或 ANTHROPIC_API_KEY 放在服务端，通过 /api/chat 向前端流式输出。',
+    secretNote: 'Key 留在服务端，浏览器只接收安全的 SSE chunk。',
     streamButton: 'Stream',
     promptLabel: '演示提示词',
     presetLabel: '演示预设',
     runtimeTitle: 'Qore 运行时演示',
     waiting: '等待第一个 token...',
     runtimePromptPrefix: '提示词',
+    tokenRailFallback: 'token 轨道已就绪',
+    signalSteps: [
+      ['Provider', 'SSE chunk'],
+      ['QoreStream', '只读 signal'],
+      ['Text node', '细粒度 UI']
+    ],
+    heroStats: [
+      ['1 primitive', 'stream + signal'],
+      ['3 adapters', 'OpenAI / Anthropic / SSE'],
+      ['0 secrets', '浏览器安全'],
+      ['1 node', '精准更新']
+    ],
     providers: [
       {
         id: 'openai',
@@ -164,7 +198,7 @@ const copy = {
         proxy: 'POST /api/chat',
         ui: 'stream(chat.chat(prompt))',
         factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
-        description: '在服务端使用内置 OpenAI adapter，然后给浏览器暴露一个安全的 SSE 接口。',
+        description: 'OpenAI 留在服务端，浏览器只拿 QoreStream。',
         tokens: [
           '已选择 OpenAI。',
           'API key 留在服务端。',
@@ -179,7 +213,7 @@ const copy = {
         proxy: 'POST /api/chat',
         ui: 'stream(chat.chat(prompt))',
         factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
-        description: '切换厂商不需要改 UI 绑定，最终仍然是同一个 QoreStream signal。',
+        description: '切换厂商，不改 UI 绑定。',
         tokens: [
           '已选择 Anthropic。',
           'Claude 在服务端流式输出。',
@@ -194,7 +228,7 @@ const copy = {
         proxy: 'POST /api/chat',
         ui: 'stream(chat.chat(prompt))',
         factory: "createSSEAdapter({ url: '/api/chat' })",
-        description: '如果你已有流式后端，只要映射事件文本，就能复用 Qore primitive。',
+        description: '已有 SSE 后端时，只映射一次事件文本。',
         tokens: [
           '已选择通用 SSE。',
           '厂商调用由你的后端负责。',
@@ -209,13 +243,13 @@ const copy = {
       '说明 token 级 UI 的价值'
     ],
     pillars: [
-      ['stream = signal', 'AI 输出从第一个字节起就是响应式状态。'],
-      ['Server-safe providers', 'key 留在后端代理里，绝不进浏览器代码。'],
-      ['Append-fast core', 'chunk 历史追加增长，不在每个 token 上复制整条数组。']
+      ['Native stream signal', 'answer 既是 signal，也是 async iterable 和生命周期状态。'],
+      ['Server-safe providers', 'OpenAI、Anthropic 或通用 SSE 都藏在你的后端路由后面。'],
+      ['Append-fast core', '热路径追踪 chunk，不在每个 token 上复制整条历史。']
     ],
-    pointEyebrow: '核心',
-    pointTitle: '不是把 token 搬进状态，而是让 token 自己成为状态。',
-    pointSummary: 'Qore 的核心路径只有两步：声明 provider stream，然后让 UI 订阅 signal。',
+    pointEyebrow: '差异',
+    pointTitle: '不要搬运 token，让它自己流动。',
+    pointSummary: 'Qore 把流式路径本身变成响应式状态，所以 UI 只需要订阅，不需要轮询或重建。',
     proofPoints: [
       ['Provider', 'server env key', 'no browser secrets'],
       ['Primitive', 'stream()', 'reader loop + state'],
@@ -291,7 +325,15 @@ function renderDemo(value = activePrompt.value) {
       h('span', {}, 'QoreStream')
     ),
     h('p', { class: 'runtime-prompt' }, `${t.value.runtimePromptPrefix}: ${value}`),
+    h('div', { class: 'runtime-code-line' },
+      h('span', {}, 'const answer = stream(chat.chat(prompt))'),
+      h('strong', {}, 'text(() => answer())')
+    ),
     h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting)),
+    h('div', { class: 'runtime-token-line' }, text(() => {
+      const tokens = answer.chunks().slice(-4).map((chunk) => chunk.trim() || '↵')
+      return tokens.length > 0 ? tokens.join('  ·  ') : t.value.tokenRailFallback
+    })),
     h('div', { class: 'runtime-meta' }, text(() => {
       const status = answer.status()
       const chunks = answer.chunkCount()
@@ -344,19 +386,32 @@ onBeforeUnmount(() => {
       <div class="aurora aurora-two"></div>
       <div class="hero-copy">
         <p class="eyebrow">{{ t.eyebrow }}</p>
-        <h1>Qore</h1>
-        <p class="tagline">{{ t.tagline }}</p>
+        <h1>
+          <span>{{ t.headlineTop }}</span>
+          <span>{{ t.headlineBottom }}</span>
+        </h1>
+        <p class="tagline">{{ t.taglinePrefix }} <code>{{ t.tagline }}</code>.</p>
         <p class="summary">{{ t.summary }}</p>
         <div class="actions">
           <a class="primary-action" href="#live-demo">{{ t.primaryAction }}</a>
           <a class="secondary-action" :href="isZh ? '/zh/guide/quick-start.html' : '/guide/quick-start.html'">{{ t.quickStart }}</a>
           <a class="secondary-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.github }}</a>
         </div>
+        <div class="install-strip" :aria-label="t.installLabel">
+          <span>{{ t.installLabel }}</span>
+          <code>{{ t.installCommand }}</code>
+        </div>
         <nav class="release-strip" :aria-label="t.releaseLabel">
           <a v-for="link in t.releaseLinks" :key="link[0]" :href="link[1]" target="_blank" rel="noreferrer">
             {{ link[0] }}
           </a>
         </nav>
+        <div class="hero-stat-grid" aria-label="Qore runtime highlights">
+          <div v-for="stat in t.heroStats" :key="stat[0]">
+            <strong>{{ stat[0] }}</strong>
+            <span>{{ stat[1] }}</span>
+          </div>
+        </div>
       </div>
 
       <div class="demo-card">
@@ -366,6 +421,13 @@ onBeforeUnmount(() => {
             <p class="demo-subtitle">{{ t.demoSubtitle }}</p>
           </div>
           <a class="setup-link" :href="setupGuideLink">{{ t.docsAction }}</a>
+        </div>
+
+        <div class="signal-map" aria-label="stream to signal pipeline">
+          <div v-for="step in t.signalSteps" :key="step[0]" class="signal-node">
+            <span>{{ step[0] }}</span>
+            <strong>{{ step[1] }}</strong>
+          </div>
         </div>
 
         <section class="provider-panel" :aria-label="t.providerLabel">
@@ -534,14 +596,15 @@ onBeforeUnmount(() => {
 }
 
 .home-page {
-  --qore-bg: #07110f;
-  --qore-panel: rgba(239, 255, 244, 0.08);
-  --qore-panel-strong: rgba(239, 255, 244, 0.13);
-  --qore-line: rgba(183, 255, 214, 0.2);
+  --qore-bg: #06100d;
+  --qore-panel: rgba(236, 255, 241, 0.075);
+  --qore-panel-strong: rgba(236, 255, 241, 0.14);
+  --qore-line: rgba(164, 255, 207, 0.22);
   --qore-text: #f3fff7;
   --qore-muted: rgba(243, 255, 247, 0.68);
   --qore-accent: #8fffc1;
   --qore-cyan: #74f7ff;
+  --qore-amber: #ffd36e;
   position: relative;
   overflow: hidden;
   min-height: 100vh;
@@ -549,13 +612,13 @@ onBeforeUnmount(() => {
   width: 100vw;
   max-width: 100%;
   margin-top: -64px;
-  padding: 118px clamp(22px, 4vw, 76px) 96px;
+  padding: 118px clamp(18px, 4vw, 76px) 104px;
   color: var(--qore-text);
   background:
-    radial-gradient(circle at 10% 8%, rgba(116, 247, 255, 0.22), transparent 28%),
-    radial-gradient(circle at 92% 18%, rgba(143, 255, 193, 0.22), transparent 30%),
-    radial-gradient(circle at 48% 110%, rgba(30, 230, 168, 0.14), transparent 34%),
-    linear-gradient(135deg, #06100f 0%, #0b1d19 48%, #020605 100%);
+    radial-gradient(circle at 8% 8%, rgba(116, 247, 255, 0.24), transparent 27%),
+    radial-gradient(circle at 92% 12%, rgba(143, 255, 193, 0.25), transparent 30%),
+    radial-gradient(circle at 54% 112%, rgba(255, 211, 110, 0.12), transparent 34%),
+    linear-gradient(135deg, #06100d 0%, #10231d 48%, #020504 100%);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 700ms ease, transform 700ms ease;
@@ -613,15 +676,16 @@ onBeforeUnmount(() => {
 
 .hero-section {
   display: grid;
-  grid-template-columns: minmax(0, 0.88fr) minmax(430px, 0.92fr);
-  gap: clamp(32px, 5vw, 92px);
+  grid-template-columns: minmax(0, 0.82fr) minmax(440px, 1fr);
+  gap: clamp(30px, 5vw, 88px);
   align-items: center;
-  min-height: clamp(700px, calc(100vh - 74px), 860px);
+  min-height: clamp(760px, calc(100vh - 56px), 920px);
 }
 
 .hero-copy {
   display: grid;
-  gap: 22px;
+  gap: 20px;
+  max-width: 780px;
 }
 
 .eyebrow,
@@ -634,29 +698,52 @@ onBeforeUnmount(() => {
   text-transform: uppercase;
 }
 
-h1,
-h2,
+.home-page h1,
+.home-page h2,
 .tagline,
 .summary {
   margin: 0;
 }
 
-h1 {
-  font: 900 clamp(76px, 13vw, 170px)/0.82 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
-  letter-spacing: -0.12em;
+.home-page h1 {
+  display: grid;
+  gap: 2px;
+  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+  font-size: clamp(64px, 9.8vw, 148px) !important;
+  font-weight: 950;
+  line-height: 0.82;
+  letter-spacing: -0.11em;
   color: transparent;
   background: linear-gradient(110deg, #ffffff 0%, #b4ffd5 48%, #73f7ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  text-shadow: 0 0 54px rgba(143, 255, 193, 0.3);
+  text-shadow: 0 0 54px rgba(143, 255, 193, 0.28);
+}
+
+.home-page h1 span {
+  font: inherit;
+  font-size: inherit !important;
+  line-height: inherit !important;
 }
 
 .tagline {
   max-width: 760px;
-  font-size: clamp(28px, 3.5vw, 52px);
+  font-size: clamp(28px, 3.2vw, 48px);
   font-weight: 800;
   line-height: 1.06;
   letter-spacing: -0.06em;
+}
+
+.tagline code {
+  display: inline-flex;
+  padding: 0.08em 0.24em 0.12em;
+  border: 1px solid rgba(143, 255, 193, 0.2);
+  border-radius: 0.28em;
+  color: #06100d;
+  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
+  font: 800 0.8em/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.04em;
+  vertical-align: 0.04em;
 }
 
 .summary,
@@ -686,6 +773,44 @@ h1 {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: -8px;
+}
+
+.install-strip {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  max-width: 100%;
+  min-height: 46px;
+  margin-top: -4px;
+  overflow: hidden;
+  border: 1px solid rgba(143, 255, 193, 0.22);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.26);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.install-strip span,
+.install-strip code {
+  padding: 0 15px;
+}
+
+.install-strip span {
+  display: inline-flex;
+  align-items: center;
+  align-self: stretch;
+  color: #06100d;
+  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
+  font: 900 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.install-strip code {
+  min-width: 0;
+  overflow: auto;
+  color: #eafff1;
+  font: 850 14px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  white-space: nowrap;
 }
 
 .release-strip a,
@@ -752,6 +877,39 @@ h1 {
   transform: translateY(-2px);
 }
 
+.hero-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.hero-stat-grid div {
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(143, 255, 193, 0.15);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.hero-stat-grid strong,
+.hero-stat-grid span {
+  display: block;
+}
+
+.hero-stat-grid strong {
+  color: var(--qore-text);
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -0.04em;
+}
+
+.hero-stat-grid span {
+  margin-top: 4px;
+  color: var(--qore-muted);
+  font: 800 11px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 .demo-card,
 .pillar-card,
 .code-card {
@@ -767,10 +925,27 @@ h1 {
   gap: 12px;
   align-self: center;
   justify-self: stretch;
-  max-width: 760px;
+  max-width: 820px;
   padding: clamp(16px, 2vw, 24px);
   border-radius: 34px;
   transform: rotate(0.35deg);
+  position: relative;
+  overflow: hidden;
+}
+
+.demo-card::before {
+  position: absolute;
+  inset: -1px;
+  pointer-events: none;
+  content: '';
+  background:
+    linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 36%),
+    radial-gradient(circle at 82% 18%, rgba(116, 247, 255, 0.18), transparent 26%);
+}
+
+.demo-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .card-heading {
@@ -786,6 +961,57 @@ h1 {
   margin: 6px 0 0;
   font-size: 13px;
   line-height: 1.55;
+}
+
+.signal-map {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.signal-node {
+  position: relative;
+  min-width: 0;
+  padding: 14px;
+  border: 1px solid rgba(143, 255, 193, 0.16);
+  border-radius: 20px;
+  background: rgba(1, 10, 8, 0.42);
+}
+
+.signal-node:not(:last-child)::after {
+  position: absolute;
+  top: 50%;
+  right: -12px;
+  z-index: 2;
+  width: 16px;
+  height: 2px;
+  border-radius: 999px;
+  content: '';
+  background: linear-gradient(90deg, var(--qore-accent), var(--qore-cyan));
+  box-shadow: 0 0 18px rgba(116, 247, 255, 0.5);
+}
+
+.signal-node span,
+.signal-node strong {
+  display: block;
+}
+
+.signal-node span {
+  color: rgba(243, 255, 247, 0.5);
+  font: 900 10px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.signal-node strong {
+  margin-top: 8px;
+  overflow: hidden;
+  color: var(--qore-text);
+  font-size: 18px;
+  font-weight: 950;
+  letter-spacing: -0.045em;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .provider-panel {
@@ -994,6 +1220,30 @@ h1 {
   white-space: nowrap;
 }
 
+:deep(.runtime-code-line),
+:deep(.runtime-token-line) {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid rgba(143, 255, 193, 0.14);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.045);
+  color: rgba(234, 255, 241, 0.68);
+  font: 800 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+:deep(.runtime-code-line strong) {
+  color: var(--qore-accent);
+}
+
+:deep(.runtime-token-line) {
+  color: var(--qore-amber);
+  min-height: 40px;
+}
+
 :deep(.runtime-dot) {
   width: 10px;
   height: 10px;
@@ -1186,8 +1436,19 @@ h1 {
 
   .provider-tabs,
   .setup-grid,
-  .flow-rail {
+  .flow-rail,
+  .signal-map,
+  .hero-stat-grid {
     grid-template-columns: 1fr;
+  }
+
+  .signal-node:not(:last-child)::after {
+    top: auto;
+    right: auto;
+    bottom: -10px;
+    left: 24px;
+    width: 2px;
+    height: 14px;
   }
 
   .preset-row {
@@ -1216,6 +1477,16 @@ h1 {
 
   .proof-strip small {
     grid-column: 1;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-page h1 {
+    font-size: clamp(58px, 21vw, 86px) !important;
+  }
+
+  .tagline {
+    font-size: clamp(27px, 8vw, 38px);
   }
 }
 </style>
