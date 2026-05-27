@@ -23,12 +23,12 @@ type ProviderCopy = {
 
 const copy = {
   en: {
-    eyebrow: 'Qore / Streaming Response Runtime',
+    eyebrow: 'Qore 1.0 / Streaming UI Runtime',
     headlineTop: 'Streams',
-    headlineBottom: 'become UI.',
-    taglinePrefix: 'Qore makes',
+    headlineBottom: 'become interface.',
+    taglinePrefix: 'One primitive:',
     tagline: 'stream = signal',
-    summary: 'AI tokens should not be copied into state. In Qore, every chunk becomes reactive UI the moment it arrives.',
+    summary: 'The model streams. The UI responds. Qore turns tokens into live interface state without string shuffling, snapshot churn, or broad DOM rewrites.',
     primaryAction: 'Run the live stream',
     quickStart: 'Quick Start',
     github: 'GitHub',
@@ -36,12 +36,12 @@ const copy = {
     installCommand: 'npm i @qorejs/qore',
     releaseLabel: 'Release channels',
     releaseLinks: [
-      ['v0.7.3', 'https://github.com/qorejs/qore/releases/tag/v0.7.3'],
+      ['Stable v1.0.0', 'https://github.com/qorejs/qore/releases/tag/v1.0.0'],
       ['npm latest', 'https://www.npmjs.com/package/@qorejs/qore'],
-      ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
+      ['API + docs', 'https://qorejs.dev/guide/quick-start']
     ],
-    cardLabel: 'Provider setup, live',
-    demoSubtitle: 'Choose a provider. Stream through your server. Bind one signal to the UI.',
+    cardLabel: 'Live architecture',
+    demoSubtitle: 'One provider call in. One readonly signal out. One text node updates.',
     providerLabel: 'Choose provider',
     docsAction: 'Setup guide',
     serverKeyLabel: 'Server key',
@@ -67,11 +67,12 @@ const copy = {
       ['Text node', 'fine-grained UI']
     ],
     heroStats: [
-      ['1 primitive', 'stream + signal'],
-      ['3 adapters', 'OpenAI / Anthropic / SSE'],
-      ['0 secrets', 'browser-safe'],
-      ['1 node', 'targeted updates']
+      ['1 primitive', 'stream = signal'],
+      ['6 providers', 'OpenAI to Ollama'],
+      ['retry + resume', 'SSE-ready'],
+      ['browser + server', 'end-to-end']
     ],
+    providerCloud: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE'],
     providers: [
       {
         id: 'openai',
@@ -125,28 +126,28 @@ const copy = {
       'Show why token-level UI matters'
     ],
     pillars: [
-      ['Native stream signal', 'The answer is a callable signal, an async iterable, and lifecycle state.'],
-      ['Server-safe providers', 'OpenAI, Anthropic, or generic SSE behind your own backend route.'],
-      ['Append-fast core', 'The hot path tracks chunks without cloning the full history per token.']
+      ['Composable streams', 'merge, concat, pipe, race, retryable, and switchMap ship in the core runtime.'],
+      ['Provider-complete', 'OpenAI, Anthropic, OpenRouter, DeepSeek, Ollama, and generic SSE fit the same UI surface.'],
+      ['Server to browser', 'createSSEResponse on the server meets fine-grained DOM updates in the client.']
     ],
     pointEyebrow: 'The difference',
-    pointTitle: 'Stop moving tokens around. Let them flow.',
-    pointSummary: 'Qore turns the streaming path itself into reactive state, so the UI subscribes instead of polling or rebuilding.',
+    pointTitle: 'Stop shuffling tokens through state.',
+    pointSummary: 'Qore makes the streaming path itself reactive, so your UI subscribes once and the runtime handles status, chunks, aborts, retries, and updates.',
     proofPoints: [
-      ['Provider', 'server env key', 'no browser secrets'],
-      ['Primitive', 'stream()', 'reader loop + state'],
-      ['Hot path', 'append-only history', 'full-array clone/token']
+      ['Provider', '6 built-in adapters', 'cloud, local, and generic'],
+      ['Runtime', 'readonly signal + async iterable', 'one stream surface for UI and logic'],
+      ['Server', 'createSSEResponse(...)', 'produce and consume SSE with one toolkit']
     ],
     qoreTitle: 'Qore',
     manualTitle: 'Manual stream state'
   },
   zh: {
-    eyebrow: 'Qore / Streaming Response Runtime',
+    eyebrow: 'Qore 1.0 / Streaming UI Runtime',
     headlineTop: '让数据流',
-    headlineBottom: '长成 UI。',
-    taglinePrefix: 'Qore 让',
+    headlineBottom: '自己长成界面。',
+    taglinePrefix: '一个核心原语：',
     tagline: 'stream = signal',
-    summary: 'AI token 不应该被手动搬进状态。Qore 让每个 chunk 抵达的瞬间就变成响应式 UI。',
+    summary: '模型负责流动，界面负责响应。Qore 把 token 直接变成活的界面状态，不再手动搬运字符串、不再靠快照重渲染。',
     primaryAction: '运行实时流',
     quickStart: '快速开始',
     github: 'GitHub',
@@ -154,12 +155,12 @@ const copy = {
     installCommand: 'npm i @qorejs/qore',
     releaseLabel: '发布通道',
     releaseLinks: [
-      ['v0.7.3', 'https://github.com/qorejs/qore/releases/tag/v0.7.3'],
+      ['稳定版 v1.0.0', 'https://github.com/qorejs/qore/releases/tag/v1.0.0'],
       ['npm 最新', 'https://www.npmjs.com/package/@qorejs/qore'],
-      ['GitHub Packages', 'https://github.com/qorejs/qore/packages']
+      ['文档与 API', 'https://qorejs.dev/zh/guide/quick-start']
     ],
-    cardLabel: 'Provider 设置演示',
-    demoSubtitle: '选厂商，经由服务端流出，再把一个 signal 绑定到 UI。',
+    cardLabel: '实时架构演示',
+    demoSubtitle: '一次模型调用进入，一条只读 signal 输出，一个 text node 持续更新。',
     providerLabel: '选择模型厂商',
     docsAction: '配置指南',
     serverKeyLabel: '服务端 key',
@@ -185,11 +186,12 @@ const copy = {
       ['Text node', '细粒度 UI']
     ],
     heroStats: [
-      ['1 primitive', 'stream + signal'],
-      ['3 adapters', 'OpenAI / Anthropic / SSE'],
-      ['0 secrets', '浏览器安全'],
-      ['1 node', '精准更新']
+      ['1 primitive', 'stream = signal'],
+      ['6 providers', 'OpenAI 到 Ollama'],
+      ['retry + resume', 'SSE 级韧性'],
+      ['browser + server', '端到端闭环']
     ],
+    providerCloud: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE'],
     providers: [
       {
         id: 'openai',
@@ -243,17 +245,17 @@ const copy = {
       '说明 token 级 UI 的价值'
     ],
     pillars: [
-      ['Native stream signal', 'answer 既是 signal，也是 async iterable 和生命周期状态。'],
-      ['Server-safe providers', 'OpenAI、Anthropic 或通用 SSE 都藏在你的后端路由后面。'],
-      ['Append-fast core', '热路径追踪 chunk，不在每个 token 上复制整条历史。']
+      ['可编排的流', 'merge、concat、pipe、race、retryable 与 switchMap 已内建进核心运行时。'],
+      ['完整 provider 面', 'OpenAI、Anthropic、OpenRouter、DeepSeek、Ollama 与通用 SSE 共用同一套 UI 表达。'],
+      ['从服务端到浏览器', '服务端用 createSSEResponse，浏览器用细粒度 DOM，整条链路自然闭环。']
     ],
     pointEyebrow: '差异',
-    pointTitle: '不要搬运 token，让它自己流动。',
-    pointSummary: 'Qore 把流式路径本身变成响应式状态，所以 UI 只需要订阅，不需要轮询或重建。',
+    pointTitle: '不要搬运 token，让状态自己流动。',
+    pointSummary: 'Qore 把流式路径本身变成响应式状态，所以 UI 只要订阅一次，剩下的状态、chunk、终止、重试和更新都交给 runtime。',
     proofPoints: [
-      ['Provider', 'server env key', 'no browser secrets'],
-      ['Primitive', 'stream()', 'reader loop + state'],
-      ['热路径', 'append-only history', 'full-array clone/token']
+      ['Provider', '6 个内建 adapter', '云端、本地、通用 SSE'],
+      ['Runtime', 'readonly signal + async iterable', 'UI 与逻辑共用一条流表面'],
+      ['Server', 'createSSEResponse(...)', '生产 SSE 与消费 SSE 使用同一套工具']
     ],
     qoreTitle: 'Qore',
     manualTitle: '手动 stream 状态'
@@ -275,28 +277,30 @@ const provider = ${activeProvider.value.factory}
 // browser: call your backend proxy
 const answer = ${activeProvider.value.ui}`)
 
-const qoreCode = `import { createSSEAdapter, h, stream, text } from '@qorejs/qore'
+const qoreCode = `import { h, stream, text, createOpenAI } from '@qorejs/qore'
 
-const chat = createSSEAdapter<{ prompt: string }, string>({
-  url: '/api/chat',
-  buildChatRequest: prompt => ({ prompt })
+const chat = createOpenAI({
+  apiKey: process.env.OPENAI_API_KEY
 })
 
-const response = stream(chat.chat(prompt))
+const answer = stream(chat.chat(prompt))
 
 export function App() {
-  return h('main', {}, text(() => response()))
+  return h('main', { class: 'reply' }, text(() => answer()))
 }`
 
-const manualCode = `const [text, setText] = useState('')
+const manualCode = `const [value, setValue] = useState('')
 const [status, setStatus] = useState('idle')
+const [error, setError] = useState(null)
 
-for await (const token of aiStream) {
-  setStatus('streaming')
-  setText(prev => prev + token)
+const controller = new AbortController()
+setStatus('streaming')
+
+for await (const token of aiStream({ signal: controller.signal })) {
+  setValue(prev => prev + token)
 }
 
-return <Markdown>{text}</Markdown>`
+return <Markdown>{value}</Markdown>`
 
 function makeDemoTokens() {
   return [...activeProvider.value.tokens]
@@ -411,6 +415,9 @@ onBeforeUnmount(() => {
             <strong>{{ stat[0] }}</strong>
             <span>{{ stat[1] }}</span>
           </div>
+        </div>
+        <div class="provider-cloud" aria-label="Built-in provider coverage">
+          <span v-for="provider in t.providerCloud" :key="provider">{{ provider }}</span>
         </div>
       </div>
 
@@ -882,6 +889,25 @@ onBeforeUnmount(() => {
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   margin-top: 4px;
+}
+
+.provider-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: -2px;
+}
+
+.provider-cloud span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border: 1px solid rgba(143, 255, 193, 0.14);
+  border-radius: 999px;
+  color: rgba(243, 255, 247, 0.72);
+  background: rgba(255, 255, 255, 0.035);
+  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .hero-stat-grid div {

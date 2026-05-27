@@ -163,7 +163,7 @@ const chineseSidebar = {
 export default defineConfig({
   lang: 'en-US',
   title: 'Qore',
-  description: 'Streaming response framework: stream becomes signal.',
+  description: 'Qore 1.0 is the streaming UI runtime where stream becomes signal.',
   base: '/',
 
   head: [
@@ -172,8 +172,8 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#07110f' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
-    ['meta', { property: 'og:title', content: 'Qore - Streaming Response Framework' }],
-    ['meta', { property: 'og:description', content: 'stream becomes signal, and AI tokens flow directly into UI.' }],
+    ['meta', { property: 'og:title', content: 'Qore 1.0 - Streaming UI Runtime' }],
+    ['meta', { property: 'og:description', content: 'stream becomes signal, so AI tokens flow straight into interface state.' }],
   ],
 
   themeConfig: {
@@ -257,7 +257,7 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       title: 'Qore',
-      description: 'Streaming response framework: stream becomes signal.',
+      description: 'Qore 1.0 is the streaming UI runtime where stream becomes signal.',
     },
     zh: {
       label: '简体中文',
