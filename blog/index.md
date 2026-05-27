@@ -9,6 +9,10 @@ Notes about streaming response UI, fine-grained reactivity, and Qore releases.
 
 ## Latest Posts
 
+### [Qore 1.0 Release](./qore-1-0-release.md)
+
+The first stable release of Qore as a focused runtime for streaming UI.
+
 ### [Qore v0.5.0 Release: SSR Foundations](./v0.5.0-release.md)
 
 A release note about SSR foundations, streaming direction, and performance work.

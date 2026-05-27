@@ -29,29 +29,13 @@ browser prompt -> POST /api/chat -> provider adapter on server -> SSE tokens -> 
 This server-side route keeps `OPENAI_API_KEY` private and streams safe SSE events to the browser.
 
 ```ts
-import { createOpenAI } from '@qorejs/qore'
+import { createOpenAI, createSSEResponse } from '@qorejs/qore'
 
 const openAI = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 export async function POST(request: Request) {
   const { prompt } = await request.json() as { prompt: string }
-  const encoder = new TextEncoder()
-
-  return new Response(new ReadableStream({
-    async start(controller) {
-      for await (const token of openAI.chat(prompt)) {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: token })}\n\n`))
-      }
-
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'))
-      controller.close()
-    }
-  }), {
-    headers: {
-      'Cache-Control': 'no-store',
-      'Content-Type': 'text/event-stream; charset=utf-8'
-    }
-  })
+  return createSSEResponse(openAI.chat(prompt))
 }
 ```
 

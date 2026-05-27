@@ -29,29 +29,13 @@ browser prompt -> POST /api/chat -> server provider adapter -> SSE tokens -> Qor
 这个服务端路由会把 `OPENAI_API_KEY` 留在后端，只向浏览器输出安全的 SSE 事件。
 
 ```ts
-import { createOpenAI } from '@qorejs/qore'
+import { createOpenAI, createSSEResponse } from '@qorejs/qore'
 
 const openAI = createOpenAI({ apiKey: process.env.OPENAI_API_KEY })
 
 export async function POST(request: Request) {
   const { prompt } = await request.json() as { prompt: string }
-  const encoder = new TextEncoder()
-
-  return new Response(new ReadableStream({
-    async start(controller) {
-      for await (const token of openAI.chat(prompt)) {
-        controller.enqueue(encoder.encode(`data: ${JSON.stringify({ text: token })}\n\n`))
-      }
-
-      controller.enqueue(encoder.encode('data: [DONE]\n\n'))
-      controller.close()
-    }
-  }), {
-    headers: {
-      'Cache-Control': 'no-store',
-      'Content-Type': 'text/event-stream; charset=utf-8'
-    }
-  })
+  return createSSEResponse(openAI.chat(prompt))
 }
 ```
 

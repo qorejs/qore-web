@@ -32,6 +32,7 @@ const allowedQoreExports = new Set([
   'createApp',
   'createOpenAI',
   'createResponse',
+  'createSSEResponse',
   'createSSEAdapter',
   'dynamic',
   'effect',

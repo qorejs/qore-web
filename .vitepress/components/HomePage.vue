@@ -38,7 +38,7 @@ const copy = {
     releaseLinks: [
       ['Stable v1.0.0', 'https://github.com/qorejs/qore/releases/tag/v1.0.0'],
       ['npm latest', 'https://www.npmjs.com/package/@qorejs/qore'],
-      ['API + docs', 'https://qorejs.dev/guide/quick-start']
+      ['1.0 notes', 'https://qorejs.dev/blog/qore-1-0-release']
     ],
     cardLabel: 'Live architecture',
     demoSubtitle: 'One provider call in. One readonly signal out. One text node updates.',
@@ -157,7 +157,7 @@ const copy = {
     releaseLinks: [
       ['稳定版 v1.0.0', 'https://github.com/qorejs/qore/releases/tag/v1.0.0'],
       ['npm 最新', 'https://www.npmjs.com/package/@qorejs/qore'],
-      ['文档与 API', 'https://qorejs.dev/zh/guide/quick-start']
+      ['1.0 发布说明', 'https://qorejs.dev/zh/blog/qore-1-0-release']
     ],
     cardLabel: '实时架构演示',
     demoSubtitle: '一次模型调用进入，一条只读 signal 输出，一个 text node 持续更新。',

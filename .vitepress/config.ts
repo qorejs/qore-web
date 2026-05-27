@@ -2,39 +2,46 @@ import { defineConfig } from 'vitepress'
 
 const englishNav = [
   { text: 'Home', link: '/' },
+  { text: 'Why', link: '/guide/why-qore' },
   { text: 'Quick Start', link: '/guide/quick-start' },
-  { text: 'Streaming', link: '/guide/streaming' },
+  { text: 'Providers', link: '/guide/ai-native' },
   { text: 'API', link: '/api/streaming' },
-  { text: 'Examples', link: '/examples/ai-integration' },
   { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
 ]
 
 const chineseNav = [
   { text: '首页', link: '/zh/' },
+  { text: '为什么', link: '/zh/guide/why-qore' },
   { text: '快速开始', link: '/zh/guide/quick-start' },
-  { text: '流式响应', link: '/zh/guide/streaming' },
+  { text: 'Providers', link: '/zh/guide/ai-native' },
   { text: 'API', link: '/zh/api/streaming' },
-  { text: '示例', link: '/zh/examples/ai-integration' },
   { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
 ]
 
 const englishSidebar = {
   '/guide/': [
     {
-      text: 'Start',
+      text: 'Start Here',
       items: [
-        { text: '5-Minute Quick Start', link: '/guide/quick-start' },
         { text: 'Why Qore', link: '/guide/why-qore' },
+        { text: '5-Minute Quick Start', link: '/guide/quick-start' },
         { text: 'Getting Started', link: '/guide/getting-started' },
-        { text: 'Core Concepts', link: '/guide/core-concepts' },
       ],
     },
     {
-      text: 'Streaming Response',
+      text: 'Runtime',
       items: [
-        { text: 'Reactivity', link: '/guide/reactivity' },
         { text: 'Streaming Response', link: '/guide/streaming' },
-        { text: 'AI Stream Integration', link: '/guide/ai-native' },
+        { text: 'Reactivity', link: '/guide/reactivity' },
+        { text: 'Core Concepts', link: '/guide/core-concepts' },
+        { text: 'Components', link: '/guide/components' },
+      ],
+    },
+    {
+      text: 'Providers & Server',
+      items: [
+        { text: 'Provider Integration', link: '/guide/ai-native' },
+        { text: 'Server Streaming', link: '/guide/server-streaming' },
         { text: 'Server Rendering', link: '/guide/ssr' },
       ],
     },
@@ -43,12 +50,6 @@ const englishSidebar = {
       items: [
         { text: 'From React', link: '/guide/migration-from-react' },
         { text: 'From Vue', link: '/guide/migration-from-vue' },
-      ],
-    },
-    {
-      text: 'Components',
-      items: [
-        { text: 'Components', link: '/guide/components' },
       ],
     },
   ],
@@ -94,18 +95,25 @@ const chineseSidebar = {
     {
       text: '开始',
       items: [
-        { text: '5 分钟快速入门', link: '/zh/guide/quick-start' },
         { text: '为什么选择 Qore', link: '/zh/guide/why-qore' },
+        { text: '5 分钟快速入门', link: '/zh/guide/quick-start' },
         { text: '快速开始', link: '/zh/guide/getting-started' },
-        { text: '核心概念', link: '/zh/guide/core-concepts' },
       ],
     },
     {
-      text: '流式响应',
+      text: '运行时',
       items: [
+        { text: '流式响应', link: '/zh/guide/streaming' },
         { text: '响应式系统', link: '/zh/guide/reactivity' },
-        { text: '流式渲染', link: '/zh/guide/streaming' },
-        { text: 'AI 流', link: '/zh/guide/ai-native' },
+        { text: '核心概念', link: '/zh/guide/core-concepts' },
+        { text: '组件系统', link: '/zh/guide/components' },
+      ],
+    },
+    {
+      text: 'Providers 与服务端',
+      items: [
+        { text: 'Provider 集成', link: '/zh/guide/ai-native' },
+        { text: '服务端流式输出', link: '/zh/guide/server-streaming' },
         { text: '服务端渲染', link: '/zh/guide/ssr' },
       ],
     },
@@ -114,12 +122,6 @@ const chineseSidebar = {
       items: [
         { text: '从 React 迁移', link: '/zh/guide/migration-from-react' },
         { text: '从 Vue 迁移', link: '/zh/guide/migration-from-vue' },
-      ],
-    },
-    {
-      text: '组件',
-      items: [
-        { text: '组件系统', link: '/zh/guide/components' },
       ],
     },
   ],
