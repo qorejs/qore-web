@@ -12,7 +12,8 @@ const host = '127.0.0.1'
 
 const zh = (...codes) => String.fromCharCode(...codes)
 const zhHome = zh(0x9996, 0x9875)
-const zhPromptLabel = zh(0x6f14, 0x793a, 0x63d0, 0x793a, 0x8bcd)
+const enPromptLabel = 'Prompt'
+const zhPromptLabel = zh(0x63d0, 0x793a, 0x8bcd)
 const zhPromptValue = zh(0x4e2d, 0x6587, 0x0020, 0x0073, 0x006d, 0x006f, 0x006b, 0x0065, 0x0020, 0x0070, 0x0072, 0x006f, 0x006d, 0x0070, 0x0074)
 const zhPromptPrefix = zh(0x63d0, 0x793a, 0x8bcd)
 const zhStreamingTitle = zh(0x6d41, 0x5f0f, 0x54cd, 0x5e94)
@@ -163,19 +164,22 @@ async function main() {
     await waitForText(page, 'stream = signal')
     assert(await page.evaluate(() => document.documentElement.lang) === 'en-US', 'English home should keep en-US html lang.')
     await waitForText(page, 'Search docs')
-    await waitForText(page, 'Stable v1.0.0')
-    await waitForText(page, 'Live architecture')
+    await waitForText(page, 'Stable release')
+    await waitForText(page, 'v1.0.0')
+    await waitForText(page, 'One provider in. One signal out.')
     await waitForText(page, 'OPENAI_API_KEY')
-    await waitForText(page, 'POST /api/chat')
-    await waitForText(page, 'Keys stay server-side')
+    await waitForText(page, 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })')
     await page.getByRole('tab', { name: 'Anthropic', exact: true }).click()
     await waitForText(page, 'ANTHROPIC_API_KEY')
     await page.getByRole('tab', { name: 'Generic SSE', exact: true }).click()
     await waitForText(page, 'CUSTOM_AI_API_KEY')
-    await page.getByLabel('Demo prompt').fill('Browser smoke prompt')
+    await page.getByLabel(enPromptLabel).fill('Browser smoke prompt')
     await page.getByRole('button', { name: 'Stream', exact: true }).click()
     await waitForText(page, 'prompt: Browser smoke prompt')
-    await page.waitForFunction(() => document.body.textContent?.includes('completed / 4 chunks'))
+    await page.waitForFunction(() => {
+      const text = document.body.textContent ?? ''
+      return text.includes('status: completed') && text.includes('chunks: 4')
+    })
     await assertNoConsoleErrors(errors, 'English home')
 
     await page.goto(`${baseUrl}/guide/streaming.html`, { waitUntil: 'networkidle' })
@@ -186,9 +190,10 @@ async function main() {
     await waitForText(page, zhHome)
     assert(await page.evaluate(() => document.documentElement.lang) === 'zh-CN', 'Chinese home should keep zh-CN html lang.')
     await waitForText(page, zhSearchDocs)
-    await waitForText(page, '稳定版 v1.0.0')
+    await waitForText(page, '稳定版本')
+    await waitForText(page, 'v1.0.0')
     await waitForText(page, 'OPENAI_API_KEY')
-    await waitForText(page, 'POST /api/chat')
+    await waitForText(page, 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })')
     await page.getByRole('tab', { name: 'Anthropic', exact: true }).click()
     await waitForText(page, 'ANTHROPIC_API_KEY')
     await page.getByRole('tab', { name: 'Generic SSE', exact: true }).click()
@@ -196,7 +201,10 @@ async function main() {
     await page.getByLabel(zhPromptLabel).fill(zhPromptValue)
     await page.getByRole('button', { name: 'Stream', exact: true }).click()
     await waitForText(page, `${zhPromptPrefix}: ${zhPromptValue}`)
-    await page.waitForFunction(() => document.body.textContent?.includes('completed / 4 chunks'))
+    await page.waitForFunction(() => {
+      const text = document.body.textContent ?? ''
+      return text.includes('状态: completed') && text.includes('chunks: 4')
+    })
     await assertNoConsoleErrors(errors, 'Chinese home')
 
     await page.goto(`${baseUrl}/zh/guide/streaming.html`, { waitUntil: 'networkidle' })

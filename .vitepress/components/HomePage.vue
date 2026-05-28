@@ -13,9 +13,8 @@ type ProviderId = 'openai' | 'anthropic' | 'sse'
 type ProviderCopy = {
   id: ProviderId
   name: string
+  badge: string
   env: string
-  proxy: string
-  ui: string
   factory: string
   description: string
   tokens: readonly string[]
@@ -23,242 +22,214 @@ type ProviderCopy = {
 
 const copy = {
   en: {
-    eyebrow: 'Qore 1.0 / Streaming UI Runtime',
-    headlineTop: 'Streams',
-    headlineBottom: 'become interface.',
-    taglinePrefix: 'One primitive:',
-    tagline: 'stream = signal',
-    summary: 'The model streams. The UI responds. Qore turns tokens into live interface state without string shuffling, snapshot churn, or broad DOM rewrites.',
-    primaryAction: 'Run the live stream',
-    quickStart: 'Quick Start',
-    github: 'GitHub',
+    eyebrow: 'Qore 1.0',
+    headline: 'Streaming UI, reduced to one primitive.',
+    summary: 'Qore turns streamed data into reactive interface state. No string shuffling, no broad rerenders, no special-case streaming layer.',
+    streamEqualsSignal: 'stream = signal',
+    primaryAction: 'Open the live demo',
+    secondaryAction: 'Read the quick start',
+    tertiaryAction: 'GitHub',
     installLabel: 'Install',
     installCommand: 'npm i @qorejs/qore',
-    releaseLabel: 'Release channels',
-    releaseLinks: [
-      ['Stable v1.0.0', 'https://github.com/qorejs/qore/releases/tag/v1.0.0'],
-      ['npm latest', 'https://www.npmjs.com/package/@qorejs/qore'],
-      ['1.0 notes', 'https://qorejs.dev/blog/qore-1-0-release']
-    ],
-    cardLabel: 'Live architecture',
-    demoSubtitle: 'One provider call in. One readonly signal out. One text node updates.',
-    providerLabel: 'Choose provider',
-    docsAction: 'Setup guide',
-    serverKeyLabel: 'Server key',
-    proxyLabel: 'Backend proxy',
-    uiLabel: 'UI primitive',
-    flowLabel: 'Flow',
-    flowSteps: [
-      ['1', 'Browser sends prompt'],
-      ['2', 'Server calls model'],
-      ['3', 'Qore streams UI']
-    ],
-    secretNote: 'Keys stay server-side. The browser only receives safe SSE chunks.',
-    streamButton: 'Stream',
-    promptLabel: 'Demo prompt',
-    presetLabel: 'Demo presets',
-    runtimeTitle: 'Qore runtime demo',
+    releaseLabel: 'Stable release',
+    releaseValue: 'v1.0.0',
+    releaseHref: 'https://github.com/qorejs/qore/releases/tag/v1.0.0',
+    demoEyebrow: 'Live demo',
+    demoTitle: 'One provider in. One signal out.',
+    demoSummary: 'Pick a provider, send one prompt, and watch Qore update a single text node as tokens arrive.',
+    promptLabel: 'Prompt',
+    promptButton: 'Stream',
+    presetsLabel: 'Presets',
+    runtimeLabel: 'Runtime output',
     waiting: 'waiting for the first token...',
-    runtimePromptPrefix: 'prompt',
-    tokenRailFallback: 'token rail armed',
-    signalSteps: [
-      ['Provider', 'SSE chunks'],
-      ['QoreStream', 'readonly signal'],
-      ['Text node', 'fine-grained UI']
+    promptPrefix: 'prompt',
+    statusPrefix: 'status',
+    chunksPrefix: 'chunks',
+    providersLabel: 'Providers',
+    setupGuide: 'Provider guide',
+    architectureLabel: 'Architecture',
+    architecture: [
+      ['Server', 'provider key stays here'],
+      ['Runtime', 'readonly signal + async iterable'],
+      ['DOM', 'only the bound text node updates']
     ],
-    heroStats: [
+    codeEyebrow: 'Three lines',
+    codeTitle: 'The product story should fit in one glance.',
+    codeSummary: 'This is the center of Qore. The rest of the runtime exists to keep this path reliable in real products.',
+    codeSample: `import { h, stream, text } from '@qorejs/qore'
+
+const answer = stream(chat.chat(prompt))
+
+return h('main', {}, text(() => answer()))`,
+    featureEyebrow: 'Why it lands',
+    features: [
+      ['Composable streams', 'merge, concat, pipe, race, retryable, and switchMap are built into the runtime.'],
+      ['Provider-complete', 'OpenAI, Anthropic, OpenRouter, DeepSeek, Ollama, and generic SSE share the same UI surface.'],
+      ['Server to browser', 'createSSEResponse keeps the backend and the browser on one streaming contract.']
+    ],
+    proofEyebrow: 'What ships',
+    proofTitle: 'A focused 1.0 runtime, not another bulky framework.',
+    proofSummary: 'Qore keeps the promise narrow: streams, signals, DOM binding, providers, and the server glue that makes streaming UI practical.',
+    proofPoints: [
       ['1 primitive', 'stream = signal'],
       ['6 providers', 'OpenAI to Ollama'],
       ['retry + resume', 'SSE-ready'],
-      ['browser + server', 'end-to-end']
+      ['browser + server', 'one toolkit']
     ],
-    providerCloud: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE'],
     providers: [
       {
         id: 'openai',
         name: 'OpenAI',
+        badge: 'cloud',
         env: 'OPENAI_API_KEY',
-        proxy: 'POST /api/chat',
-        ui: 'stream(chat.chat(prompt))',
         factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
-        description: 'OpenAI on the server; QoreStream in the browser.',
+        description: 'Stream from OpenAI on the server and bind the browser to one readonly signal.',
         tokens: [
           'OpenAI selected. ',
           'The API key stays server-side. ',
-          'Tokens cross /api/chat as SSE. ',
+          'Tokens stream through your route. ',
           'Qore updates one signal.'
         ]
       },
       {
         id: 'anthropic',
         name: 'Anthropic',
+        badge: 'cloud',
         env: 'ANTHROPIC_API_KEY',
-        proxy: 'POST /api/chat',
-        ui: 'stream(chat.chat(prompt))',
         factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
-        description: 'Swap providers without changing the UI binding.',
+        description: 'Change providers without changing the browser-side binding or UI rendering model.',
         tokens: [
           'Anthropic selected. ',
           'Claude streams from the server. ',
-          'The browser receives safe SSE. ',
-          'The text node keeps flowing.'
+          'The browser receives safe chunks. ',
+          'The same text node keeps updating.'
         ]
       },
       {
         id: 'sse',
         name: 'Generic SSE',
+        badge: 'custom',
         env: 'CUSTOM_AI_API_KEY',
-        proxy: 'POST /api/chat',
-        ui: 'stream(chat.chat(prompt))',
         factory: "createSSEAdapter({ url: '/api/chat' })",
-        description: 'Map your existing SSE once, then reuse Qore everywhere.',
+        description: 'Wrap your current SSE backend once and reuse the same stream surface everywhere.',
         tokens: [
           'Generic SSE selected. ',
           'Your backend owns the vendor call. ',
-          'eventToText maps each chunk. ',
-          'stream() drives the UI.'
+          'Qore consumes the stream. ',
+          'The UI stays declarative.'
         ]
       }
     ] satisfies readonly ProviderCopy[],
     presets: [
       'Explain stream = signal',
-      'Draft a tiny AI chat reply',
-      'Show why token-level UI matters'
-    ],
-    pillars: [
-      ['Composable streams', 'merge, concat, pipe, race, retryable, and switchMap ship in the core runtime.'],
-      ['Provider-complete', 'OpenAI, Anthropic, OpenRouter, DeepSeek, Ollama, and generic SSE fit the same UI surface.'],
-      ['Server to browser', 'createSSEResponse on the server meets fine-grained DOM updates in the client.']
-    ],
-    pointEyebrow: 'The difference',
-    pointTitle: 'Stop shuffling tokens through state.',
-    pointSummary: 'Qore makes the streaming path itself reactive, so your UI subscribes once and the runtime handles status, chunks, aborts, retries, and updates.',
-    proofPoints: [
-      ['Provider', '6 built-in adapters', 'cloud, local, and generic'],
-      ['Runtime', 'readonly signal + async iterable', 'one stream surface for UI and logic'],
-      ['Server', 'createSSEResponse(...)', 'produce and consume SSE with one toolkit']
-    ],
-    qoreTitle: 'Qore',
-    manualTitle: 'Manual stream state'
+      'Show a tiny AI chat reply',
+      'Why does token-level UI matter?'
+    ]
   },
   zh: {
-    eyebrow: 'Qore 1.0 / Streaming UI Runtime',
-    headlineTop: '让数据流',
-    headlineBottom: '自己长成界面。',
-    taglinePrefix: '一个核心原语：',
-    tagline: 'stream = signal',
-    summary: '模型负责流动，界面负责响应。Qore 把 token 直接变成活的界面状态，不再手动搬运字符串、不再靠快照重渲染。',
-    primaryAction: '运行实时流',
-    quickStart: '快速开始',
-    github: 'GitHub',
+    eyebrow: 'Qore 1.0',
+    headline: '把流式 UI 收敛成一个原语。',
+    summary: 'Qore 把流式数据直接变成响应式界面状态。不再手动拼字符串，不再整片重渲染，也不需要再额外发明一层 streaming 状态系统。',
+    streamEqualsSignal: 'stream = signal',
+    primaryAction: '打开实时演示',
+    secondaryAction: '阅读快速开始',
+    tertiaryAction: 'GitHub',
     installLabel: '安装',
     installCommand: 'npm i @qorejs/qore',
-    releaseLabel: '发布通道',
-    releaseLinks: [
-      ['稳定版 v1.0.0', 'https://github.com/qorejs/qore/releases/tag/v1.0.0'],
-      ['npm 最新', 'https://www.npmjs.com/package/@qorejs/qore'],
-      ['1.0 发布说明', 'https://qorejs.dev/zh/blog/qore-1-0-release']
-    ],
-    cardLabel: '实时架构演示',
-    demoSubtitle: '一次模型调用进入，一条只读 signal 输出，一个 text node 持续更新。',
-    providerLabel: '选择模型厂商',
-    docsAction: '配置指南',
-    serverKeyLabel: '服务端 key',
-    proxyLabel: '后端代理',
-    uiLabel: 'UI primitive',
-    flowLabel: '流程',
-    flowSteps: [
-      ['1', '浏览器发送 prompt'],
-      ['2', '服务端调用模型'],
-      ['3', 'Qore 流式更新 UI']
-    ],
-    secretNote: 'Key 留在服务端，浏览器只接收安全的 SSE chunk。',
-    streamButton: 'Stream',
-    promptLabel: '演示提示词',
-    presetLabel: '演示预设',
-    runtimeTitle: 'Qore 运行时演示',
+    releaseLabel: '稳定版本',
+    releaseValue: 'v1.0.0',
+    releaseHref: 'https://github.com/qorejs/qore/releases/tag/v1.0.0',
+    demoEyebrow: '实时演示',
+    demoTitle: '一次 provider 调用，得到一条 signal。',
+    demoSummary: '选择模型厂商，发送一个 prompt，然后看 Qore 如何在 token 抵达时只更新一个 text node。',
+    promptLabel: '提示词',
+    promptButton: 'Stream',
+    presetsLabel: '预设',
+    runtimeLabel: '运行时输出',
     waiting: '等待第一个 token...',
-    runtimePromptPrefix: '提示词',
-    tokenRailFallback: 'token 轨道已就绪',
-    signalSteps: [
-      ['Provider', 'SSE chunk'],
-      ['QoreStream', '只读 signal'],
-      ['Text node', '细粒度 UI']
+    promptPrefix: '提示词',
+    statusPrefix: '状态',
+    chunksPrefix: 'chunks',
+    providersLabel: 'Providers',
+    setupGuide: 'Provider 指南',
+    architectureLabel: '架构',
+    architecture: [
+      ['Server', 'provider key 留在这里'],
+      ['Runtime', '只读 signal + async iterable'],
+      ['DOM', '只更新绑定的 text node']
     ],
-    heroStats: [
+    codeEyebrow: '三行代码',
+    codeTitle: '产品表达应该一眼就能读懂。',
+    codeSummary: '这就是 Qore 的核心。其余运行时能力，都是为了让这条路径在真实产品里足够可靠。',
+    codeSample: `import { h, stream, text } from '@qorejs/qore'
+
+const answer = stream(chat.chat(prompt))
+
+return h('main', {}, text(() => answer()))`,
+    featureEyebrow: '为什么成立',
+    features: [
+      ['可编排的流', 'merge、concat、pipe、race、retryable 与 switchMap 已内建进运行时。'],
+      ['完整 provider 面', 'OpenAI、Anthropic、OpenRouter、DeepSeek、Ollama 与通用 SSE 共用同一套 UI 表达。'],
+      ['从服务端到浏览器', 'createSSEResponse 让后端输出与浏览器消费使用同一条流式契约。']
+    ],
+    proofEyebrow: '1.0 包含什么',
+    proofTitle: '一个聚焦的 1.0 运行时，而不是又一个臃肿框架。',
+    proofSummary: 'Qore 把承诺压得很窄：streams、signals、DOM binding、providers，以及让 streaming UI 真正能上线的服务端胶水。',
+    proofPoints: [
       ['1 primitive', 'stream = signal'],
       ['6 providers', 'OpenAI 到 Ollama'],
       ['retry + resume', 'SSE 级韧性'],
-      ['browser + server', '端到端闭环']
+      ['browser + server', '一套工具链']
     ],
-    providerCloud: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE'],
     providers: [
       {
         id: 'openai',
         name: 'OpenAI',
+        badge: 'cloud',
         env: 'OPENAI_API_KEY',
-        proxy: 'POST /api/chat',
-        ui: 'stream(chat.chat(prompt))',
         factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
-        description: 'OpenAI 留在服务端，浏览器只拿 QoreStream。',
+        description: 'OpenAI 留在服务端，浏览器只依赖一条只读 signal。',
         tokens: [
           '已选择 OpenAI。',
           'API key 留在服务端。',
-          'Token 通过 /api/chat 流向前端。',
+          'Token 通过你的路由流向前端。',
           'Qore 只更新一个 signal。'
         ]
       },
       {
         id: 'anthropic',
         name: 'Anthropic',
+        badge: 'cloud',
         env: 'ANTHROPIC_API_KEY',
-        proxy: 'POST /api/chat',
-        ui: 'stream(chat.chat(prompt))',
         factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
-        description: '切换厂商，不改 UI 绑定。',
+        description: '切换 provider，不需要改浏览器侧绑定，也不需要改 UI 更新模型。',
         tokens: [
           '已选择 Anthropic。',
           'Claude 在服务端流式输出。',
-          '浏览器只接收安全 SSE。',
-          'text node 持续精准刷新。'
+          '浏览器只接收安全 chunk。',
+          '同一个 text node 持续更新。'
         ]
       },
       {
         id: 'sse',
         name: 'Generic SSE',
+        badge: 'custom',
         env: 'CUSTOM_AI_API_KEY',
-        proxy: 'POST /api/chat',
-        ui: 'stream(chat.chat(prompt))',
         factory: "createSSEAdapter({ url: '/api/chat' })",
-        description: '已有 SSE 后端时，只映射一次事件文本。',
+        description: '把你现有的 SSE 后端接进来一次，之后整条 UI 流式路径都复用同一套表面。',
         tokens: [
           '已选择通用 SSE。',
           '厂商调用由你的后端负责。',
-          'eventToText 映射每个 chunk。',
-          'stream() 驱动 UI。'
+          'Qore 消费这条流。',
+          'UI 依旧保持声明式。'
         ]
       }
     ] satisfies readonly ProviderCopy[],
     presets: [
       '解释 stream = signal',
-      '生成一段 AI 聊天回复',
-      '说明 token 级 UI 的价值'
-    ],
-    pillars: [
-      ['可编排的流', 'merge、concat、pipe、race、retryable 与 switchMap 已内建进核心运行时。'],
-      ['完整 provider 面', 'OpenAI、Anthropic、OpenRouter、DeepSeek、Ollama 与通用 SSE 共用同一套 UI 表达。'],
-      ['从服务端到浏览器', '服务端用 createSSEResponse，浏览器用细粒度 DOM，整条链路自然闭环。']
-    ],
-    pointEyebrow: '差异',
-    pointTitle: '不要搬运 token，让状态自己流动。',
-    pointSummary: 'Qore 把流式路径本身变成响应式状态，所以 UI 只要订阅一次，剩下的状态、chunk、终止、重试和更新都交给 runtime。',
-    proofPoints: [
-      ['Provider', '6 个内建 adapter', '云端、本地、通用 SSE'],
-      ['Runtime', 'readonly signal + async iterable', 'UI 与逻辑共用一条流表面'],
-      ['Server', 'createSSEResponse(...)', '生产 SSE 与消费 SSE 使用同一套工具']
-    ],
-    qoreTitle: 'Qore',
-    manualTitle: '手动 stream 状态'
+      '展示一段简短 AI 回复',
+      '为什么 token 级 UI 很重要？'
+    ]
   }
 } as const
 
@@ -268,39 +239,9 @@ const activePrompt = ref(prompt.value)
 const providerId = ref<ProviderId>('openai')
 const activeProvider = computed(() => t.value.providers.find((provider) => provider.id === providerId.value) ?? t.value.providers[0])
 const setupGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
+const quickStartLink = computed(() => isZh.value ? '/zh/guide/quick-start.html' : '/guide/quick-start.html')
 let disposeQore: (() => Element) | null = null
 let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
-
-const setupCode = computed(() => `// server: provider key stays here
-const provider = ${activeProvider.value.factory}
-
-// browser: call your backend proxy
-const answer = ${activeProvider.value.ui}`)
-
-const qoreCode = `import { h, stream, text, createOpenAI } from '@qorejs/qore'
-
-const chat = createOpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
-
-const answer = stream(chat.chat(prompt))
-
-export function App() {
-  return h('main', { class: 'reply' }, text(() => answer()))
-}`
-
-const manualCode = `const [value, setValue] = useState('')
-const [status, setStatus] = useState('idle')
-const [error, setError] = useState(null)
-
-const controller = new AbortController()
-setStatus('streaming')
-
-for await (const token of aiStream({ signal: controller.signal })) {
-  setValue(prev => prev + token)
-}
-
-return <Markdown>{value}</Markdown>`
 
 function makeDemoTokens() {
   return [...activeProvider.value.tokens]
@@ -314,35 +255,23 @@ function renderDemo(value = activePrompt.value) {
   activeAnswer?.abort()
   disposeQore?.()
 
-  const provider = activeProvider.value
-  const answer = stream.paced(makeDemoTokens(), 38)
+  const answer = stream.paced(makeDemoTokens(), 42)
   activeAnswer = answer
 
   disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell' },
-    h('div', { class: 'runtime-topline' },
+    h('div', { class: 'runtime-header' },
       h('span', { class: 'runtime-dot' }),
-      h('span', {}, t.value.runtimeTitle)
+      h('strong', {}, activeProvider.value.name),
+      h('small', {}, activeProvider.value.badge)
     ),
-    h('div', { class: 'runtime-route' },
-      h('span', {}, provider.name),
-      h('span', {}, provider.proxy),
-      h('span', {}, 'QoreStream')
+    h('p', { class: 'runtime-prompt' }, `${t.value.promptPrefix}: ${value}`),
+    h('div', { class: 'runtime-line' },
+      h('span', {}, 'const answer = stream(chat.chat(prompt))')
     ),
-    h('p', { class: 'runtime-prompt' }, `${t.value.runtimePromptPrefix}: ${value}`),
-    h('div', { class: 'runtime-code-line' },
-      h('span', {}, 'const answer = stream(chat.chat(prompt))'),
-      h('strong', {}, 'text(() => answer())')
-    ),
+    h('div', { class: 'runtime-output-label' }, t.value.runtimeLabel),
     h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting)),
-    h('div', { class: 'runtime-token-line' }, text(() => {
-      const tokens = answer.chunks().slice(-4).map((chunk) => chunk.trim() || '↵')
-      return tokens.length > 0 ? tokens.join('  ·  ') : t.value.tokenRailFallback
-    })),
     h('div', { class: 'runtime-meta' }, text(() => {
-      const status = answer.status()
-      const chunks = answer.chunkCount()
-      const buffered = answer.buffered()
-      return `${status} / ${chunks} chunks / ${buffered} buffered`
+      return `${t.value.statusPrefix}: ${answer.status()}  /  ${t.value.chunksPrefix}: ${answer.chunkCount()}`
     }))
   ))
 }
@@ -385,144 +314,122 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="home-page" :class="{ visible: isVisible }">
-    <section class="hero-section">
-      <div class="aurora aurora-one"></div>
-      <div class="aurora aurora-two"></div>
+    <section class="hero">
       <div class="hero-copy">
         <p class="eyebrow">{{ t.eyebrow }}</p>
-        <h1>
-          <span>{{ t.headlineTop }}</span>
-          <span>{{ t.headlineBottom }}</span>
-        </h1>
-        <p class="tagline">{{ t.taglinePrefix }} <code>{{ t.tagline }}</code>.</p>
+        <h1>{{ t.headline }}</h1>
+        <p class="signal-chip">{{ t.streamEqualsSignal }}</p>
         <p class="summary">{{ t.summary }}</p>
+
         <div class="actions">
           <a class="primary-action" href="#live-demo">{{ t.primaryAction }}</a>
-          <a class="secondary-action" :href="isZh ? '/zh/guide/quick-start.html' : '/guide/quick-start.html'">{{ t.quickStart }}</a>
-          <a class="secondary-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.github }}</a>
+          <a class="secondary-action" :href="quickStartLink">{{ t.secondaryAction }}</a>
+          <a class="ghost-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.tertiaryAction }}</a>
         </div>
-        <div class="install-strip" :aria-label="t.installLabel">
-          <span>{{ t.installLabel }}</span>
-          <code>{{ t.installCommand }}</code>
-        </div>
-        <nav class="release-strip" :aria-label="t.releaseLabel">
-          <a v-for="link in t.releaseLinks" :key="link[0]" :href="link[1]" target="_blank" rel="noreferrer">
-            {{ link[0] }}
-          </a>
-        </nav>
-        <div class="hero-stat-grid" aria-label="Qore runtime highlights">
-          <div v-for="stat in t.heroStats" :key="stat[0]">
-            <strong>{{ stat[0] }}</strong>
-            <span>{{ stat[1] }}</span>
+
+        <div class="meta-strip">
+          <div class="meta-card install-card">
+            <span>{{ t.installLabel }}</span>
+            <code>{{ t.installCommand }}</code>
           </div>
-        </div>
-        <div class="provider-cloud" aria-label="Built-in provider coverage">
-          <span v-for="provider in t.providerCloud" :key="provider">{{ provider }}</span>
+          <a class="meta-card release-card" :href="t.releaseHref" target="_blank" rel="noreferrer">
+            <span>{{ t.releaseLabel }}</span>
+            <strong>{{ t.releaseValue }}</strong>
+          </a>
         </div>
       </div>
 
-      <div class="demo-card">
-        <div class="card-heading">
+      <section id="live-demo" class="demo-panel">
+        <div class="demo-heading">
           <div>
-            <div class="card-label">{{ t.cardLabel }}</div>
-            <p class="demo-subtitle">{{ t.demoSubtitle }}</p>
+            <p class="eyebrow">{{ t.demoEyebrow }}</p>
+            <h2>{{ t.demoTitle }}</h2>
           </div>
-          <a class="setup-link" :href="setupGuideLink">{{ t.docsAction }}</a>
+          <a class="inline-link" :href="setupGuideLink">{{ t.setupGuide }}</a>
         </div>
 
-        <div class="signal-map" aria-label="stream to signal pipeline">
-          <div v-for="step in t.signalSteps" :key="step[0]" class="signal-node">
-            <span>{{ step[0] }}</span>
-            <strong>{{ step[1] }}</strong>
+        <p class="demo-summary">{{ t.demoSummary }}</p>
+
+        <div class="provider-tabs" role="tablist" :aria-label="t.providersLabel">
+          <button
+            v-for="provider in t.providers"
+            :key="provider.id"
+            type="button"
+            role="tab"
+            :aria-selected="provider.id === providerId"
+            :class="{ active: provider.id === providerId }"
+            @click="selectProvider(provider.id)"
+          >
+            {{ provider.name }}
+          </button>
+        </div>
+
+        <div class="provider-info">
+          <div>
+            <span>env</span>
+            <strong>{{ activeProvider.env }}</strong>
+          </div>
+          <div>
+            <span>factory</span>
+            <strong>{{ activeProvider.factory }}</strong>
           </div>
         </div>
 
-        <section class="provider-panel" :aria-label="t.providerLabel">
-          <div class="provider-tabs" role="tablist" :aria-label="t.providerLabel">
-            <button
-              v-for="provider in t.providers"
-              :key="provider.id"
-              type="button"
-              role="tab"
-              :aria-selected="provider.id === providerId"
-              :class="{ active: provider.id === providerId }"
-              @click="selectProvider(provider.id)"
-            >
-              {{ provider.name }}
-            </button>
-          </div>
+        <p class="provider-description">{{ activeProvider.description }}</p>
 
-          <div class="setup-grid">
-            <div class="setup-cell">
-              <span>{{ t.serverKeyLabel }}</span>
-              <strong>{{ activeProvider.env }}</strong>
-            </div>
-            <div class="setup-cell">
-              <span>{{ t.proxyLabel }}</span>
-              <strong>{{ activeProvider.proxy }}</strong>
-            </div>
-            <div class="setup-cell">
-              <span>{{ t.uiLabel }}</span>
-              <strong>{{ activeProvider.ui }}</strong>
-            </div>
-          </div>
-
-          <p class="provider-description">{{ activeProvider.description }}</p>
-          <p class="secret-note">{{ t.secretNote }}</p>
-        </section>
-
-        <section class="flow-rail" :aria-label="t.flowLabel">
-          <div v-for="step in t.flowSteps" :key="step[0]">
-            <span>{{ step[0] }}</span>
-            <strong>{{ step[1] }}</strong>
-          </div>
-        </section>
-
-        <pre class="setup-code"><code>{{ setupCode }}</code></pre>
-
-        <form id="live-demo" class="demo-prompt" @submit.prevent="runDemo">
+        <form class="prompt-row" @submit.prevent="runDemo">
           <input v-model="prompt" :aria-label="t.promptLabel" autocomplete="off" />
-          <button type="submit">{{ t.streamButton }}</button>
+          <button type="submit">{{ t.promptButton }}</button>
         </form>
-        <div class="preset-row" :aria-label="t.presetLabel">
+
+        <div class="preset-row" :aria-label="t.presetsLabel">
           <button v-for="item in t.presets" :key="item" type="button" @click="usePreset(item)">
             {{ item }}
           </button>
         </div>
-        <div ref="qoreRoot" class="qore-root"></div>
-      </div>
+
+        <div class="runtime-root" ref="qoreRoot"></div>
+      </section>
     </section>
 
-    <section class="pillars-section" aria-label="Qore pillars">
-      <a v-for="pillar in t.pillars" :key="pillar[0]" class="pillar-card" :href="isZh ? '/zh/guide/streaming.html' : '/guide/streaming.html'">
-        <span>{{ pillar[0] }}</span>
-        <p>{{ pillar[1] }}</p>
-      </a>
+    <section class="feature-grid" :aria-label="t.featureEyebrow">
+      <article v-for="feature in t.features" :key="feature[0]" class="feature-card">
+        <h3>{{ feature[0] }}</h3>
+        <p>{{ feature[1] }}</p>
+      </article>
     </section>
 
-    <section class="compare-section">
-      <div class="compare-copy">
-        <p class="eyebrow">{{ t.pointEyebrow }}</p>
-        <h2>{{ t.pointTitle }}</h2>
-        <p>{{ t.pointSummary }}</p>
-        <div class="proof-strip" aria-label="Qore comparison summary">
-          <div v-for="point in t.proofPoints" :key="point[0]">
+    <section class="proof-layout">
+      <article class="code-card">
+        <p class="eyebrow">{{ t.codeEyebrow }}</p>
+        <h2>{{ t.codeTitle }}</h2>
+        <p class="section-summary">{{ t.codeSummary }}</p>
+        <pre><code>{{ t.codeSample }}</code></pre>
+      </article>
+
+      <article class="proof-card">
+        <p class="eyebrow">{{ t.proofEyebrow }}</p>
+        <h2>{{ t.proofTitle }}</h2>
+        <p class="section-summary">{{ t.proofSummary }}</p>
+
+        <div class="proof-grid">
+          <div v-for="point in t.proofPoints" :key="point[0]" class="proof-item">
             <span>{{ point[0] }}</span>
             <strong>{{ point[1] }}</strong>
             <small>{{ point[2] }}</small>
           </div>
         </div>
-      </div>
-      <div class="code-grid">
-        <article class="code-card featured-code">
-          <div class="code-title">{{ t.qoreTitle }}</div>
-          <pre><code>{{ qoreCode }}</code></pre>
-        </article>
-        <article class="code-card muted-code">
-          <div class="code-title">{{ t.manualTitle }}</div>
-          <pre><code>{{ manualCode }}</code></pre>
-        </article>
-      </div>
+
+        <div class="architecture-card">
+          <span class="architecture-label">{{ t.architectureLabel }}</span>
+          <div class="architecture-list">
+            <div v-for="item in t.architecture" :key="item[0]">
+              <strong>{{ item[0] }}</strong>
+              <span>{{ item[1] }}</span>
+            </div>
+          </div>
+        </div>
+      </article>
     </section>
   </main>
 </template>
@@ -530,11 +437,12 @@ onBeforeUnmount(() => {
 <style scoped>
 :global(.VPContent.is-home) {
   padding-top: 0;
-  background: #020605;
+  background: #07100d;
 }
 
-:global(.VPContent.is-home .VPHome) {
-  background: #020605;
+:global(.VPContent.is-home .VPHome),
+:global(.VPFooter) {
+  background: #07100d;
 }
 
 :global(.VPContent.is-home .VPHome > .vp-doc.container) {
@@ -551,84 +459,81 @@ onBeforeUnmount(() => {
 :global(.VPFooter) {
   margin-top: 0 !important;
   border-top: 0 !important;
-  background: #020605 !important;
 }
 
 :global(.VPFooter .message),
 :global(.VPFooter .copyright) {
-  color: rgba(243, 255, 247, 0.56) !important;
+  color: rgba(238, 248, 241, 0.56) !important;
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBar),
 :global(body:has(.VPContent.is-home) .VPNavBar .content-body) {
-  background: rgba(2, 6, 5, 0.74) !important;
-  backdrop-filter: blur(20px);
+  background: rgba(7, 16, 13, 0.82) !important;
+  backdrop-filter: blur(16px);
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBar .divider-line) {
-  background: rgba(143, 255, 193, 0.12) !important;
+  background: rgba(172, 255, 223, 0.08) !important;
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBarTitle span),
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink),
 :global(body:has(.VPContent.is-home) .VPSocialLink),
 :global(body:has(.VPContent.is-home) .VPNavBarExtra .button) {
-  color: rgba(243, 255, 247, 0.84) !important;
+  color: rgba(246, 252, 248, 0.82) !important;
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink.active) {
-  color: #8fffc1 !important;
+  color: #9df7d0 !important;
 }
 
 :global(body:has(.VPContent.is-home) .DocSearch-Button) {
-  color: rgba(243, 255, 247, 0.72);
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(143, 255, 193, 0.16);
+  color: rgba(246, 252, 248, 0.72);
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(172, 255, 223, 0.14);
 }
 
 :global(body:has(.VPContent.is-home) .DocSearch-Button-Placeholder),
 :global(body:has(.VPContent.is-home) .DocSearch-Search-Icon),
 :global(body:has(.VPContent.is-home) .DocSearch-Button-Key) {
-  color: rgba(243, 255, 247, 0.72) !important;
-}
-
-:global(body:has(.VPContent.is-home) .DocSearch-Button-Key) {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border-color: rgba(143, 255, 193, 0.14) !important;
-  box-shadow: none !important;
-}
-
-:global(.VPNavBar.has-sidebar .content) {
-  border-bottom: none;
+  color: rgba(246, 252, 248, 0.72) !important;
 }
 
 .home-page {
-  --qore-bg: #06100d;
-  --qore-panel: rgba(236, 255, 241, 0.075);
-  --qore-panel-strong: rgba(236, 255, 241, 0.14);
-  --qore-line: rgba(164, 255, 207, 0.22);
-  --qore-text: #f3fff7;
-  --qore-muted: rgba(243, 255, 247, 0.68);
-  --qore-accent: #8fffc1;
-  --qore-cyan: #74f7ff;
-  --qore-amber: #ffd36e;
+  --bg: #07100d;
+  --panel: rgba(255, 255, 255, 0.055);
+  --panel-strong: rgba(255, 255, 255, 0.08);
+  --line: rgba(172, 255, 223, 0.12);
+  --text: #f6fcf8;
+  --muted: rgba(246, 252, 248, 0.68);
+  --accent: #9df7d0;
+  --accent-strong: #63f0ff;
   position: relative;
-  overflow: hidden;
-  min-height: 100vh;
-  box-sizing: border-box;
-  width: 100vw;
+  width: 100%;
   max-width: 100%;
   margin-top: -64px;
-  padding: 118px clamp(18px, 4vw, 76px) 104px;
-  color: var(--qore-text);
+  padding: 112px clamp(20px, 4vw, 72px) 96px;
+  color: var(--text);
   background:
-    radial-gradient(circle at 8% 8%, rgba(116, 247, 255, 0.24), transparent 27%),
-    radial-gradient(circle at 92% 12%, rgba(143, 255, 193, 0.25), transparent 30%),
-    radial-gradient(circle at 54% 112%, rgba(255, 211, 110, 0.12), transparent 34%),
-    linear-gradient(135deg, #06100d 0%, #10231d 48%, #020504 100%);
+    radial-gradient(circle at 0% 0%, rgba(99, 240, 255, 0.18), transparent 26%),
+    radial-gradient(circle at 100% 0%, rgba(157, 247, 208, 0.18), transparent 28%),
+    linear-gradient(180deg, #07100d 0%, #0b1411 46%, #07100d 100%);
   opacity: 0;
-  transform: translateY(12px);
-  transition: opacity 700ms ease, transform 700ms ease;
+  transform: translateY(10px);
+  transition: opacity 500ms ease, transform 500ms ease;
+  overflow: hidden;
+}
+
+.home-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(172, 255, 223, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(172, 255, 223, 0.035) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
 }
 
 .home-page.visible {
@@ -636,419 +541,196 @@ onBeforeUnmount(() => {
   transform: translateY(0);
 }
 
-.home-page::before {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  content: '';
-  background-image:
-    linear-gradient(rgba(143, 255, 193, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 255, 193, 0.08) 1px, transparent 1px);
-  background-size: 44px 44px;
-  mask-image: linear-gradient(to bottom, black, transparent 75%);
-}
-
-.aurora {
-  position: absolute;
-  width: 460px;
-  height: 460px;
-  filter: blur(70px);
-  border-radius: 999px;
-  opacity: 0.45;
-  animation: drift 12s ease-in-out infinite alternate;
-}
-
-.aurora-one {
-  top: 80px;
-  left: -120px;
-  background: #1ee6a8;
-}
-
-.aurora-two {
-  right: -160px;
-  bottom: 140px;
-  background: #42e8ff;
-  animation-delay: -4s;
-}
-
-.hero-section,
-.pillars-section,
-.compare-section {
+.hero,
+.feature-grid,
+.proof-layout {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1640px;
+  max-width: 1380px;
   margin: 0 auto;
 }
 
-.hero-section {
+.hero {
   display: grid;
-  grid-template-columns: minmax(0, 0.82fr) minmax(440px, 1fr);
-  gap: clamp(30px, 5vw, 88px);
-  align-items: center;
-  min-height: clamp(760px, calc(100vh - 56px), 920px);
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
 }
 
 .hero-copy {
   display: grid;
   gap: 20px;
-  max-width: 780px;
+  max-width: 700px;
+  padding-top: 18px;
 }
 
-.eyebrow,
-.card-label,
-.code-title {
+.eyebrow {
   margin: 0;
-  color: var(--qore-accent);
-  font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: var(--accent);
+  font: 800 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
 
-.home-page h1,
-.home-page h2,
-.tagline,
-.summary {
+h1,
+h2,
+h3,
+.summary,
+.demo-summary,
+.provider-description,
+.section-summary,
+.feature-card p {
   margin: 0;
 }
 
-.home-page h1 {
-  display: grid;
-  gap: 2px;
-  font-family: "Iowan Old Style", "Palatino Linotype", Georgia, serif;
-  font-size: clamp(64px, 9.8vw, 148px) !important;
-  font-weight: 950;
-  line-height: 0.82;
-  letter-spacing: -0.11em;
+h1 {
+  max-width: 11ch;
+  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+  font-size: clamp(58px, 8vw, 104px);
+  line-height: 0.92;
+  letter-spacing: -0.08em;
   color: transparent;
-  background: linear-gradient(110deg, #ffffff 0%, #b4ffd5 48%, #73f7ff 100%);
+  background: linear-gradient(115deg, #ffffff 0%, #d7fff0 52%, #8cf5ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
-  text-shadow: 0 0 54px rgba(143, 255, 193, 0.28);
 }
 
-.home-page h1 span {
-  font: inherit;
-  font-size: inherit !important;
-  line-height: inherit !important;
+h2 {
+  font-size: clamp(28px, 3vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
 }
 
-.tagline {
-  max-width: 760px;
-  font-size: clamp(28px, 3.2vw, 48px);
-  font-weight: 800;
-  line-height: 1.06;
-  letter-spacing: -0.06em;
-}
-
-.tagline code {
-  display: inline-flex;
-  padding: 0.08em 0.24em 0.12em;
-  border: 1px solid rgba(143, 255, 193, 0.2);
-  border-radius: 0.28em;
-  color: #06100d;
-  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
-  font: 800 0.8em/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+h3 {
+  font-size: 22px;
+  line-height: 1.08;
   letter-spacing: -0.04em;
-  vertical-align: 0.04em;
+}
+
+.signal-chip {
+  display: inline-flex;
+  width: max-content;
+  max-width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(157, 247, 208, 0.18);
+  border-radius: 999px;
+  color: #06110d;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  font: 900 clamp(18px, 2vw, 28px)/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.05em;
 }
 
 .summary,
-.compare-copy p,
-.pillar-card p,
-.demo-subtitle,
+.demo-summary,
 .provider-description,
-.secret-note {
-  color: var(--qore-muted);
+.section-summary,
+.feature-card p {
+  color: var(--muted);
   font-size: 17px;
   line-height: 1.8;
-}
-
-.summary {
-  max-width: 620px;
 }
 
 .actions {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  padding-top: 8px;
-}
-
-.release-strip {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: -8px;
-}
-
-.install-strip {
-  display: inline-flex;
-  align-items: center;
-  width: max-content;
-  max-width: 100%;
-  min-height: 46px;
-  margin-top: -4px;
-  overflow: hidden;
-  border: 1px solid rgba(143, 255, 193, 0.22);
-  border-radius: 999px;
-  background: rgba(0, 0, 0, 0.26);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-}
-
-.install-strip span,
-.install-strip code {
-  padding: 0 15px;
-}
-
-.install-strip span {
-  display: inline-flex;
-  align-items: center;
-  align-self: stretch;
-  color: #06100d;
-  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
-  font: 900 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.install-strip code {
-  min-width: 0;
-  overflow: auto;
-  color: #eafff1;
-  font: 850 14px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  white-space: nowrap;
-}
-
-.release-strip a,
-.setup-link {
-  display: inline-flex;
-  align-items: center;
-  min-height: 30px;
-  padding: 0 11px;
-  border: 1px solid rgba(143, 255, 193, 0.18);
-  border-radius: 999px;
-  color: rgba(243, 255, 247, 0.72);
-  background: rgba(255, 255, 255, 0.045);
-  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  text-decoration: none;
-  transition: color 180ms ease, border-color 180ms ease, background 180ms ease, transform 180ms ease;
-}
-
-.release-strip a:first-child {
-  color: #052019;
-  border-color: transparent;
-  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
-}
-
-.release-strip a:hover,
-.setup-link:hover {
-  color: var(--qore-text);
-  border-color: rgba(143, 255, 193, 0.48);
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.release-strip a:first-child:hover {
-  color: #052019;
 }
 
 .primary-action,
-.secondary-action {
+.secondary-action,
+.ghost-action,
+.inline-link {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
-  padding: 0 20px;
+  min-height: 44px;
+  padding: 0 18px;
   border-radius: 999px;
-  font-weight: 800;
   text-decoration: none;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  font-weight: 800;
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
 }
 
 .primary-action {
-  color: #052019;
-  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
-  box-shadow: 0 18px 60px rgba(116, 247, 255, 0.24);
+  color: #06110d;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  box-shadow: 0 18px 56px rgba(99, 240, 255, 0.18);
 }
 
-.secondary-action {
-  color: var(--qore-text);
-  border: 1px solid var(--qore-line);
-  background: rgba(255, 255, 255, 0.04);
+.secondary-action,
+.ghost-action,
+.inline-link {
+  color: var(--text);
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .primary-action:hover,
 .secondary-action:hover,
-.pillar-card:hover,
-.setup-link:hover {
+.ghost-action:hover,
+.inline-link:hover,
+.provider-tabs button:hover,
+.preset-row button:hover,
+.prompt-row button:hover {
   transform: translateY(-2px);
 }
 
-.hero-stat-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
-  margin-top: 4px;
-}
-
-.provider-cloud {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: -2px;
-}
-
-.provider-cloud span {
-  display: inline-flex;
-  align-items: center;
-  min-height: 28px;
-  padding: 0 10px;
-  border: 1px solid rgba(143, 255, 193, 0.14);
-  border-radius: 999px;
-  color: rgba(243, 255, 247, 0.72);
-  background: rgba(255, 255, 255, 0.035);
-  font: 800 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.hero-stat-grid div {
-  min-width: 0;
-  padding: 14px;
-  border: 1px solid rgba(143, 255, 193, 0.15);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.045);
-}
-
-.hero-stat-grid strong,
-.hero-stat-grid span {
-  display: block;
-}
-
-.hero-stat-grid strong {
-  color: var(--qore-text);
-  font-size: 18px;
-  font-weight: 950;
-  letter-spacing: -0.04em;
-}
-
-.hero-stat-grid span {
-  margin-top: 4px;
-  color: var(--qore-muted);
-  font: 800 11px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.demo-card,
-.pillar-card,
-.code-card {
-  box-sizing: border-box;
-  border: 1px solid var(--qore-line);
-  background: linear-gradient(180deg, var(--qore-panel-strong), var(--qore-panel));
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.36);
-  backdrop-filter: blur(24px);
-}
-
-.demo-card {
+.meta-strip {
   display: grid;
   gap: 12px;
-  align-self: center;
-  justify-self: stretch;
-  max-width: 820px;
-  padding: clamp(16px, 2vw, 24px);
-  border-radius: 34px;
-  transform: rotate(0.35deg);
-  position: relative;
-  overflow: hidden;
+  max-width: 560px;
 }
 
-.demo-card::before {
-  position: absolute;
-  inset: -1px;
-  pointer-events: none;
-  content: '';
-  background:
-    linear-gradient(120deg, rgba(255, 255, 255, 0.12), transparent 36%),
-    radial-gradient(circle at 82% 18%, rgba(116, 247, 255, 0.18), transparent 26%);
-}
-
-.demo-card > * {
-  position: relative;
-  z-index: 1;
-}
-
-.card-heading {
-  display: flex;
-  gap: 16px;
-  align-items: start;
-  justify-content: space-between;
-}
-
-.demo-subtitle,
-.provider-description,
-.secret-note {
-  margin: 6px 0 0;
-  font-size: 13px;
-  line-height: 1.55;
-}
-
-.signal-map {
+.meta-card {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
   gap: 8px;
-}
-
-.signal-node {
-  position: relative;
-  min-width: 0;
-  padding: 14px;
-  border: 1px solid rgba(143, 255, 193, 0.16);
+  padding: 16px 18px;
+  border: 1px solid var(--line);
   border-radius: 20px;
-  background: rgba(1, 10, 8, 0.42);
+  background: rgba(255, 255, 255, 0.035);
+  text-decoration: none;
 }
 
-.signal-node:not(:last-child)::after {
-  position: absolute;
-  top: 50%;
-  right: -12px;
-  z-index: 2;
-  width: 16px;
-  height: 2px;
-  border-radius: 999px;
-  content: '';
-  background: linear-gradient(90deg, var(--qore-accent), var(--qore-cyan));
-  box-shadow: 0 0 18px rgba(116, 247, 255, 0.5);
-}
-
-.signal-node span,
-.signal-node strong {
-  display: block;
-}
-
-.signal-node span {
-  color: rgba(243, 255, 247, 0.5);
-  font: 900 10px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.12em;
+.meta-card span {
+  color: rgba(246, 252, 248, 0.54);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
 }
 
-.signal-node strong {
-  margin-top: 8px;
-  overflow: hidden;
-  color: var(--qore-text);
-  font-size: 18px;
-  font-weight: 950;
-  letter-spacing: -0.045em;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.meta-card code,
+.meta-card strong {
+  color: var(--text);
+  font: 800 15px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-.provider-panel {
+.demo-panel,
+.feature-card,
+.code-card,
+.proof-card {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(18px);
+}
+
+.demo-panel {
   display: grid;
-  gap: 12px;
-  padding: 14px;
-  border: 1px solid rgba(143, 255, 193, 0.17);
-  border-radius: 24px;
-  background:
-    linear-gradient(135deg, rgba(143, 255, 193, 0.08), rgba(116, 247, 255, 0.03)),
-    rgba(1, 10, 8, 0.34);
+  gap: 16px;
+  padding: 24px;
+}
+
+.demo-heading {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.demo-heading h2 {
+  max-width: 10ch;
 }
 
 .provider-tabs {
@@ -1058,118 +740,88 @@ onBeforeUnmount(() => {
 }
 
 .provider-tabs button,
-.demo-prompt input,
-.demo-prompt button,
+.prompt-row input,
+.prompt-row button,
 .preset-row button {
-  border: 1px solid rgba(143, 255, 193, 0.2);
+  border: 1px solid rgba(157, 247, 208, 0.16);
   font: 800 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .provider-tabs button {
-  min-height: 38px;
+  min-height: 40px;
   padding: 0 10px;
-  border-radius: 15px;
-  color: rgba(243, 255, 247, 0.76);
-  background: rgba(255, 255, 255, 0.045);
+  border-radius: 14px;
+  color: rgba(246, 252, 248, 0.72);
+  background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
 }
 
-.provider-tabs button.active {
-  color: #052019;
+.provider-tabs button.active,
+.prompt-row button {
+  color: #06110d;
   border-color: transparent;
-  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
-  box-shadow: 0 14px 34px rgba(116, 247, 255, 0.16);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
 }
 
-.setup-grid {
+.provider-info {
   display: grid;
-  grid-template-columns: 0.85fr 0.8fr 1.35fr;
   gap: 8px;
 }
 
-.setup-cell,
-.flow-rail div {
-  min-width: 0;
-  padding: 12px;
-  border: 1px solid rgba(143, 255, 193, 0.14);
-  border-radius: 16px;
-  background: rgba(0, 0, 0, 0.18);
+.provider-info div,
+.architecture-card {
+  padding: 14px 16px;
+  border: 1px solid rgba(157, 247, 208, 0.12);
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.16);
 }
 
-.setup-cell span,
-.flow-rail span {
+.provider-info span,
+.architecture-label,
+.proof-item span,
+.proof-item small {
   display: block;
-  margin-bottom: 6px;
-  color: rgba(243, 255, 247, 0.48);
-  font: 800 10px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  color: rgba(246, 252, 248, 0.52);
+  font: 800 10px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.setup-cell strong,
-.flow-rail strong {
+.provider-info strong,
+.proof-item strong {
   display: block;
-  overflow: hidden;
-  color: var(--qore-text);
-  font: 850 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  margin-top: 8px;
+  color: var(--text);
+  font-size: 16px;
+  line-height: 1.45;
+  word-break: break-word;
 }
 
-.secret-note {
-  padding-left: 12px;
-  border-left: 2px solid var(--qore-accent);
-  color: rgba(180, 255, 213, 0.78);
-}
-
-.flow-rail {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-
-.flow-rail div {
-  position: relative;
-}
-
-.setup-code {
-  margin: 0;
-  padding: 14px;
-  overflow: auto;
-  border: 1px solid rgba(143, 255, 193, 0.14);
-  border-radius: 18px;
-  color: #eafff1;
-  background: rgba(1, 10, 8, 0.62);
-  font: 750 12px/1.62 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.demo-prompt {
+.prompt-row {
   display: grid;
   grid-template-columns: 1fr auto;
   gap: 10px;
 }
 
-.demo-prompt input {
+.prompt-row input {
   min-width: 0;
-  height: 44px;
+  height: 46px;
   padding: 0 14px;
-  border-radius: 16px;
-  color: var(--qore-text);
-  background: rgba(1, 10, 8, 0.58);
+  border-radius: 14px;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.2);
   outline: none;
 }
 
-.demo-prompt input:focus {
-  border-color: rgba(143, 255, 193, 0.72);
-  box-shadow: 0 0 0 4px rgba(143, 255, 193, 0.12);
+.prompt-row input:focus {
+  border-color: rgba(157, 247, 208, 0.52);
+  box-shadow: 0 0 0 4px rgba(157, 247, 208, 0.08);
 }
 
-.demo-prompt button {
-  height: 44px;
-  padding: 0 16px;
-  border-radius: 16px;
-  color: #052019;
-  background: linear-gradient(135deg, var(--qore-accent), var(--qore-cyan));
+.prompt-row button {
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 14px;
   cursor: pointer;
 }
 
@@ -1183,336 +835,198 @@ onBeforeUnmount(() => {
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
-  color: rgba(243, 255, 247, 0.72);
-  background: rgba(255, 255, 255, 0.05);
+  color: rgba(246, 252, 248, 0.7);
+  background: rgba(255, 255, 255, 0.03);
   cursor: pointer;
 }
 
-.preset-row button:hover {
-  color: var(--qore-text);
-  border-color: rgba(143, 255, 193, 0.5);
-}
-
-.qore-root {
-  min-height: 274px;
+.runtime-root {
+  min-height: 252px;
 }
 
 :deep(.runtime-shell) {
   display: grid;
-  gap: 14px;
-  height: 100%;
-  min-height: 274px;
-  padding: clamp(18px, 2.2vw, 24px);
-  border-radius: 28px;
-  background:
-    linear-gradient(135deg, rgba(5, 24, 19, 0.94), rgba(3, 8, 8, 0.98)),
-    radial-gradient(circle at 20% 20%, rgba(143, 255, 193, 0.22), transparent 36%);
-  border: 1px solid rgba(143, 255, 193, 0.2);
+  gap: 12px;
+  min-height: 252px;
+  padding: 18px;
+  border: 1px solid rgba(157, 247, 208, 0.14);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(4, 10, 8, 0.96), rgba(7, 16, 13, 0.9));
 }
 
-:deep(.runtime-topline),
-:deep(.runtime-route) {
+:deep(.runtime-header) {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--qore-muted);
-  font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
+  color: var(--muted);
+  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-:deep(.runtime-route) {
-  flex-wrap: wrap;
-  gap: 7px;
-  letter-spacing: 0;
-  text-transform: none;
+:deep(.runtime-header strong) {
+  color: var(--text);
 }
 
-:deep(.runtime-route span) {
-  padding: 6px 9px;
-  border: 1px solid rgba(143, 255, 193, 0.14);
+:deep(.runtime-header small) {
+  padding: 4px 8px;
+  border: 1px solid rgba(157, 247, 208, 0.14);
   border-radius: 999px;
-  color: rgba(243, 255, 247, 0.72);
-  background: rgba(255, 255, 255, 0.045);
-}
-
-:deep(.runtime-prompt) {
-  min-width: 0;
-  margin: 0;
-  overflow: hidden;
-  color: rgba(234, 255, 241, 0.6);
-  font: 800 12px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-:deep(.runtime-code-line),
-:deep(.runtime-token-line) {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  min-width: 0;
-  padding: 10px;
-  border: 1px solid rgba(143, 255, 193, 0.14);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.045);
-  color: rgba(234, 255, 241, 0.68);
-  font: 800 12px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-:deep(.runtime-code-line strong) {
-  color: var(--qore-accent);
-}
-
-:deep(.runtime-token-line) {
-  color: var(--qore-amber);
-  min-height: 40px;
+  color: rgba(246, 252, 248, 0.58);
 }
 
 :deep(.runtime-dot) {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
   border-radius: 999px;
-  background: var(--qore-accent);
-  box-shadow: 0 0 24px var(--qore-accent);
+  background: var(--accent);
+  box-shadow: 0 0 22px var(--accent);
+}
+
+:deep(.runtime-prompt),
+:deep(.runtime-line),
+:deep(.runtime-output-label),
+:deep(.runtime-meta) {
+  color: rgba(246, 252, 248, 0.64);
+  font: 800 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+:deep(.runtime-line) {
+  padding: 10px 12px;
+  border: 1px solid rgba(157, 247, 208, 0.1);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 :deep(.runtime-output) {
   min-height: 112px;
   margin: 0;
   white-space: pre-wrap;
-  color: #eafff1;
-  font: 700 clamp(19px, 2vw, 30px)/1.24 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
-  letter-spacing: -0.035em;
+  color: #f4fff8;
+  font: 700 clamp(21px, 2vw, 30px)/1.18 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  letter-spacing: -0.03em;
 }
 
-:deep(.runtime-meta) {
-  align-self: end;
-  color: rgba(234, 255, 241, 0.64);
-  font: 700 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.pillars-section {
+.feature-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  margin-top: 20px;
+  margin-top: 24px;
 }
 
-.pillar-card {
+.feature-card {
   display: grid;
   gap: 10px;
-  min-height: 160px;
   padding: 22px;
-  border-radius: 24px;
-  color: inherit;
-  text-decoration: none;
-  transition: transform 180ms ease, border-color 180ms ease;
 }
 
-.pillar-card:hover {
-  border-color: rgba(143, 255, 193, 0.58);
-}
-
-.pillar-card span {
-  color: var(--qore-text);
-  font-size: 24px;
-  font-weight: 900;
-  letter-spacing: -0.04em;
-}
-
-.pillar-card p {
-  margin: 0;
-}
-
-.compare-section {
+.proof-layout {
   display: grid;
-  grid-template-columns: 0.8fr 1.2fr;
-  gap: 26px;
-  align-items: start;
-  margin-top: 80px;
-}
-
-.compare-copy h2 {
-  margin-top: 14px;
-  font-size: clamp(34px, 4vw, 58px);
-  line-height: 1.06;
-  letter-spacing: -0.07em;
-}
-
-.proof-strip {
-  display: grid;
-  gap: 10px;
+  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+  gap: 18px;
   margin-top: 28px;
 }
 
-.proof-strip div {
-  display: grid;
-  grid-template-columns: 94px 1fr;
-  gap: 4px 14px;
-  align-items: baseline;
-  padding: 14px 16px;
-  border: 1px solid rgba(143, 255, 193, 0.16);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.04);
-}
-
-.proof-strip span,
-.proof-strip small {
-  color: var(--qore-muted);
-  font: 800 12px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  text-transform: uppercase;
-}
-
-.proof-strip strong {
-  color: var(--qore-text);
-  font-size: 18px;
-}
-
-.proof-strip small {
-  grid-column: 2;
-  text-transform: none;
-  opacity: 0.72;
-}
-
-.code-grid {
+.code-card,
+.proof-card {
   display: grid;
   gap: 16px;
-}
-
-.code-card {
-  overflow: hidden;
-  border-radius: 24px;
-}
-
-.code-title {
-  padding: 16px 18px 0;
+  padding: 24px;
 }
 
 .code-card pre {
   margin: 0;
-  padding: 18px;
   overflow: auto;
-  color: #eafff1;
-  font: 700 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  padding: 18px;
+  border: 1px solid rgba(157, 247, 208, 0.12);
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.18);
+  color: #f4fff8;
+  font: 800 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-.featured-code {
-  border-color: rgba(143, 255, 193, 0.45);
+.proof-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
 }
 
-.muted-code {
-  opacity: 0.7;
+.proof-item {
+  padding: 14px 16px;
+  border: 1px solid rgba(157, 247, 208, 0.12);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.03);
 }
 
-@keyframes drift {
-  from {
-    transform: translate3d(0, 0, 0) scale(1);
-  }
+.proof-item small {
+  margin-top: 6px;
+  text-transform: none;
+  letter-spacing: 0;
+}
 
-  to {
-    transform: translate3d(42px, -28px, 0) scale(1.12);
-  }
+.architecture-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.architecture-list div {
+  display: grid;
+  gap: 4px;
+}
+
+.architecture-list strong {
+  font-size: 17px;
+  letter-spacing: -0.03em;
+}
+
+.architecture-list span {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.7;
 }
 
 @media (max-width: 1100px) {
-  .hero-section {
+  .hero,
+  .proof-layout,
+  .feature-grid {
     grid-template-columns: 1fr;
-  }
-
-  .demo-card {
-    max-width: none;
   }
 }
 
-@media (max-width: 920px) {
+@media (max-width: 900px) {
   .home-page {
     margin-top: -56px;
-    padding: 112px 18px 64px;
+    padding: 106px 18px 72px;
   }
 
-  .compare-section,
-  .pillars-section {
+  .demo-heading,
+  .prompt-row,
+  .provider-tabs,
+  .proof-grid {
     grid-template-columns: 1fr;
   }
 
-  .hero-section {
-    min-height: auto;
-  }
-
-  .demo-card {
-    transform: none;
-  }
-
-  .card-heading,
-  .demo-prompt {
-    grid-template-columns: 1fr;
-  }
-
-  .card-heading {
+  .demo-heading {
     display: grid;
   }
 
-  .setup-link,
-  .demo-prompt button {
+  .inline-link,
+  .prompt-row button {
     width: 100%;
-    justify-content: center;
-  }
-
-  .provider-tabs,
-  .setup-grid,
-  .flow-rail,
-  .signal-map,
-  .hero-stat-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .signal-node:not(:last-child)::after {
-    top: auto;
-    right: auto;
-    bottom: -10px;
-    left: 24px;
-    width: 2px;
-    height: 14px;
   }
 
   .preset-row {
     display: none;
   }
-
-  .setup-code {
-    font-size: 11px;
-  }
-
-  .qore-root {
-    min-height: 292px;
-  }
-
-  :deep(.runtime-shell) {
-    min-height: 292px;
-  }
-
-  :deep(.runtime-output) {
-    min-height: 126px;
-  }
-
-  .proof-strip div {
-    grid-template-columns: 1fr;
-  }
-
-  .proof-strip small {
-    grid-column: 1;
-  }
 }
 
 @media (max-width: 640px) {
-  .home-page h1 {
-    font-size: clamp(58px, 21vw, 86px) !important;
+  h1 {
+    max-width: 8ch;
+    font-size: clamp(48px, 18vw, 72px);
   }
 
-  .tagline {
-    font-size: clamp(27px, 8vw, 38px);
+  .signal-chip {
+    font-size: 18px;
   }
 }
 </style>
