@@ -13,9 +13,7 @@ type ProviderId = 'openai' | 'anthropic' | 'sse'
 type ProviderCopy = {
   id: ProviderId
   name: string
-  badge: string
   env: string
-  factory: string
   description: string
   tokens: readonly string[]
 }
@@ -23,67 +21,46 @@ type ProviderCopy = {
 const copy = {
   en: {
     eyebrow: 'Qore 1.0',
-    headline: 'Streaming UI, reduced to one primitive.',
-    summary: 'Qore turns streamed data into reactive interface state. No string shuffling, no broad rerenders, no special-case streaming layer.',
-    streamEqualsSignal: 'stream = signal',
-    primaryAction: 'Open the live demo',
-    secondaryAction: 'Read the quick start',
-    tertiaryAction: 'GitHub',
+    headline: 'Turn streamed data into reactive UI.',
+    summary: 'Qore is a runtime for AI and realtime interfaces. Its core idea is simple: stream = signal.',
+    codeLabel: 'The whole idea',
+    codeSample: `const answer = stream(chat.chat(prompt))\nreturn h('main', {}, text(() => answer()))`,
     installLabel: 'Install',
     installCommand: 'npm i @qorejs/qore',
-    releaseLabel: 'Stable release',
+    releaseLabel: 'Stable',
     releaseValue: 'v1.0.0',
-    releaseHref: 'https://github.com/qorejs/qore/releases/tag/v1.0.0',
-    demoEyebrow: 'Live demo',
-    demoTitle: 'One provider in. One signal out.',
-    demoSummary: 'Pick a provider, send one prompt, and watch Qore update a single text node as tokens arrive.',
-    promptLabel: 'Prompt',
-    promptButton: 'Stream',
-    presetsLabel: 'Presets',
-    runtimeLabel: 'Runtime output',
+    primaryAction: 'See the demo',
+    secondaryAction: 'Quick start',
+    tertiaryAction: 'GitHub',
+    whyTitle: 'Why Qore',
+    whyCards: [
+      ['Streams are not snapshots', 'AI output arrives over time. Qore treats that as the default.'],
+      ['The stream is the state', 'You do not copy tokens into another state layer.'],
+      ['The UI updates narrowly', 'Only the node that reads the signal needs to change.']
+    ],
+    flowTitle: 'How it works',
+    flowSteps: [
+      ['1', 'Server calls the model'],
+      ['2', 'Qore exposes one readonly signal'],
+      ['3', 'The bound text node updates as chunks arrive']
+    ],
+    demoTitle: 'Live demo',
+    demoSummary: 'Choose a provider and stream one response.',
+    demoPromptLabel: 'Prompt',
+    demoButton: 'Stream',
+    presetLabel: 'Presets',
+    providerLabel: 'Provider',
     waiting: 'waiting for the first token...',
     promptPrefix: 'prompt',
     statusPrefix: 'status',
     chunksPrefix: 'chunks',
-    providersLabel: 'Providers',
-    setupGuide: 'Provider guide',
-    architectureLabel: 'Architecture',
-    architecture: [
-      ['Server', 'provider key stays here'],
-      ['Runtime', 'readonly signal + async iterable'],
-      ['DOM', 'only the bound text node updates']
-    ],
-    codeEyebrow: 'Three lines',
-    codeTitle: 'The product story should fit in one glance.',
-    codeSummary: 'This is the center of Qore. The rest of the runtime exists to keep this path reliable in real products.',
-    codeSample: `import { h, stream, text } from '@qorejs/qore'
-
-const answer = stream(chat.chat(prompt))
-
-return h('main', {}, text(() => answer()))`,
-    featureEyebrow: 'Why it lands',
-    features: [
-      ['Composable streams', 'merge, concat, pipe, race, retryable, and switchMap are built into the runtime.'],
-      ['Provider-complete', 'OpenAI, Anthropic, OpenRouter, DeepSeek, Ollama, and generic SSE share the same UI surface.'],
-      ['Server to browser', 'createSSEResponse keeps the backend and the browser on one streaming contract.']
-    ],
-    proofEyebrow: 'What ships',
-    proofTitle: 'A focused 1.0 runtime, not another bulky framework.',
-    proofSummary: 'Qore keeps the promise narrow: streams, signals, DOM binding, providers, and the server glue that makes streaming UI practical.',
-    proofPoints: [
-      ['1 primitive', 'stream = signal'],
-      ['6 providers', 'OpenAI to Ollama'],
-      ['retry + resume', 'SSE-ready'],
-      ['browser + server', 'one toolkit']
-    ],
+    guideAction: 'Provider guide',
     providers: [
       {
         id: 'openai',
         name: 'OpenAI',
-        badge: 'cloud',
         env: 'OPENAI_API_KEY',
-        factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
-        description: 'Stream from OpenAI on the server and bind the browser to one readonly signal.',
+        description: 'Server-side OpenAI stream, one browser-side signal.',
         tokens: [
           'OpenAI selected. ',
           'The API key stays server-side. ',
@@ -94,24 +71,20 @@ return h('main', {}, text(() => answer()))`,
       {
         id: 'anthropic',
         name: 'Anthropic',
-        badge: 'cloud',
         env: 'ANTHROPIC_API_KEY',
-        factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
-        description: 'Change providers without changing the browser-side binding or UI rendering model.',
+        description: 'Swap providers without changing the UI model.',
         tokens: [
           'Anthropic selected. ',
           'Claude streams from the server. ',
           'The browser receives safe chunks. ',
-          'The same text node keeps updating.'
+          'The same UI binding keeps working.'
         ]
       },
       {
         id: 'sse',
         name: 'Generic SSE',
-        badge: 'custom',
         env: 'CUSTOM_AI_API_KEY',
-        factory: "createSSEAdapter({ url: '/api/chat' })",
-        description: 'Wrap your current SSE backend once and reuse the same stream surface everywhere.',
+        description: 'Wrap your current SSE route once and reuse the same primitive.',
         tokens: [
           'Generic SSE selected. ',
           'Your backend owns the vendor call. ',
@@ -122,73 +95,52 @@ return h('main', {}, text(() => answer()))`,
     ] satisfies readonly ProviderCopy[],
     presets: [
       'Explain stream = signal',
-      'Show a tiny AI chat reply',
+      'Show a tiny AI reply',
       'Why does token-level UI matter?'
     ]
   },
   zh: {
     eyebrow: 'Qore 1.0',
-    headline: '把流式 UI 收敛成一个原语。',
-    summary: 'Qore 把流式数据直接变成响应式界面状态。不再手动拼字符串，不再整片重渲染，也不需要再额外发明一层 streaming 状态系统。',
-    streamEqualsSignal: 'stream = signal',
-    primaryAction: '打开实时演示',
-    secondaryAction: '阅读快速开始',
-    tertiaryAction: 'GitHub',
+    headline: '把流式数据直接变成响应式 UI。',
+    summary: 'Qore 是一个面向 AI 与实时界面的运行时。它的核心想法很简单：stream = signal。',
+    codeLabel: '核心就是这两行',
+    codeSample: `const answer = stream(chat.chat(prompt))\nreturn h('main', {}, text(() => answer()))`,
     installLabel: '安装',
     installCommand: 'npm i @qorejs/qore',
-    releaseLabel: '稳定版本',
+    releaseLabel: '稳定版',
     releaseValue: 'v1.0.0',
-    releaseHref: 'https://github.com/qorejs/qore/releases/tag/v1.0.0',
-    demoEyebrow: '实时演示',
-    demoTitle: '一次 provider 调用，得到一条 signal。',
-    demoSummary: '选择模型厂商，发送一个 prompt，然后看 Qore 如何在 token 抵达时只更新一个 text node。',
-    promptLabel: '提示词',
-    promptButton: 'Stream',
-    presetsLabel: '预设',
-    runtimeLabel: '运行时输出',
+    primaryAction: '查看演示',
+    secondaryAction: '快速开始',
+    tertiaryAction: 'GitHub',
+    whyTitle: '为什么是 Qore',
+    whyCards: [
+      ['流不是快照', 'AI 输出是逐步抵达的，Qore 把这件事当成默认前提。'],
+      ['流本身就是状态', '你不需要再把 token 手动搬进另一层状态系统。'],
+      ['UI 精准更新', '只有真正读取 signal 的那个节点需要变化。']
+    ],
+    flowTitle: '它如何工作',
+    flowSteps: [
+      ['1', '服务端调用模型'],
+      ['2', 'Qore 暴露一条只读 signal'],
+      ['3', '绑定的 text node 随 chunk 抵达持续更新']
+    ],
+    demoTitle: '实时演示',
+    demoSummary: '选择一个 provider，流式输出一段响应。',
+    demoPromptLabel: '提示词',
+    demoButton: 'Stream',
+    presetLabel: '预设',
+    providerLabel: 'Provider',
     waiting: '等待第一个 token...',
     promptPrefix: '提示词',
     statusPrefix: '状态',
     chunksPrefix: 'chunks',
-    providersLabel: 'Providers',
-    setupGuide: 'Provider 指南',
-    architectureLabel: '架构',
-    architecture: [
-      ['Server', 'provider key 留在这里'],
-      ['Runtime', '只读 signal + async iterable'],
-      ['DOM', '只更新绑定的 text node']
-    ],
-    codeEyebrow: '三行代码',
-    codeTitle: '产品表达应该一眼就能读懂。',
-    codeSummary: '这就是 Qore 的核心。其余运行时能力，都是为了让这条路径在真实产品里足够可靠。',
-    codeSample: `import { h, stream, text } from '@qorejs/qore'
-
-const answer = stream(chat.chat(prompt))
-
-return h('main', {}, text(() => answer()))`,
-    featureEyebrow: '为什么成立',
-    features: [
-      ['可编排的流', 'merge、concat、pipe、race、retryable 与 switchMap 已内建进运行时。'],
-      ['完整 provider 面', 'OpenAI、Anthropic、OpenRouter、DeepSeek、Ollama 与通用 SSE 共用同一套 UI 表达。'],
-      ['从服务端到浏览器', 'createSSEResponse 让后端输出与浏览器消费使用同一条流式契约。']
-    ],
-    proofEyebrow: '1.0 包含什么',
-    proofTitle: '一个聚焦的 1.0 运行时，而不是又一个臃肿框架。',
-    proofSummary: 'Qore 把承诺压得很窄：streams、signals、DOM binding、providers，以及让 streaming UI 真正能上线的服务端胶水。',
-    proofPoints: [
-      ['1 primitive', 'stream = signal'],
-      ['6 providers', 'OpenAI 到 Ollama'],
-      ['retry + resume', 'SSE 级韧性'],
-      ['browser + server', '一套工具链']
-    ],
+    guideAction: 'Provider 指南',
     providers: [
       {
         id: 'openai',
         name: 'OpenAI',
-        badge: 'cloud',
         env: 'OPENAI_API_KEY',
-        factory: 'createOpenAI({ apiKey: process.env.OPENAI_API_KEY })',
-        description: 'OpenAI 留在服务端，浏览器只依赖一条只读 signal。',
+        description: 'OpenAI 留在服务端，浏览器只依赖一条 signal。',
         tokens: [
           '已选择 OpenAI。',
           'API key 留在服务端。',
@@ -199,24 +151,20 @@ return h('main', {}, text(() => answer()))`,
       {
         id: 'anthropic',
         name: 'Anthropic',
-        badge: 'cloud',
         env: 'ANTHROPIC_API_KEY',
-        factory: 'createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY })',
-        description: '切换 provider，不需要改浏览器侧绑定，也不需要改 UI 更新模型。',
+        description: '切换 provider，不需要改变 UI 更新模型。',
         tokens: [
           '已选择 Anthropic。',
           'Claude 在服务端流式输出。',
           '浏览器只接收安全 chunk。',
-          '同一个 text node 持续更新。'
+          '同一个 UI 绑定持续工作。'
         ]
       },
       {
         id: 'sse',
         name: 'Generic SSE',
-        badge: 'custom',
         env: 'CUSTOM_AI_API_KEY',
-        factory: "createSSEAdapter({ url: '/api/chat' })",
-        description: '把你现有的 SSE 后端接进来一次，之后整条 UI 流式路径都复用同一套表面。',
+        description: '把你现有的 SSE 路由接进来一次即可。',
         tokens: [
           '已选择通用 SSE。',
           '厂商调用由你的后端负责。',
@@ -238,8 +186,8 @@ const prompt = ref(t.value.presets[0])
 const activePrompt = ref(prompt.value)
 const providerId = ref<ProviderId>('openai')
 const activeProvider = computed(() => t.value.providers.find((provider) => provider.id === providerId.value) ?? t.value.providers[0])
-const setupGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
 const quickStartLink = computed(() => isZh.value ? '/zh/guide/quick-start.html' : '/guide/quick-start.html')
+const providerGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
 let disposeQore: (() => Element) | null = null
 let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
 
@@ -259,20 +207,10 @@ function renderDemo(value = activePrompt.value) {
   activeAnswer = answer
 
   disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell' },
-    h('div', { class: 'runtime-header' },
-      h('span', { class: 'runtime-dot' }),
-      h('strong', {}, activeProvider.value.name),
-      h('small', {}, activeProvider.value.badge)
-    ),
+    h('div', { class: 'runtime-provider' }, activeProvider.value.name),
     h('p', { class: 'runtime-prompt' }, `${t.value.promptPrefix}: ${value}`),
-    h('div', { class: 'runtime-line' },
-      h('span', {}, 'const answer = stream(chat.chat(prompt))')
-    ),
-    h('div', { class: 'runtime-output-label' }, t.value.runtimeLabel),
     h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting)),
-    h('div', { class: 'runtime-meta' }, text(() => {
-      return `${t.value.statusPrefix}: ${answer.status()}  /  ${t.value.chunksPrefix}: ${answer.chunkCount()}`
-    }))
+    h('div', { class: 'runtime-meta' }, text(() => `${t.value.statusPrefix}: ${answer.status()}  /  ${t.value.chunksPrefix}: ${answer.chunkCount()}`))
   ))
 }
 
@@ -318,39 +256,40 @@ onBeforeUnmount(() => {
       <div class="hero-copy">
         <p class="eyebrow">{{ t.eyebrow }}</p>
         <h1>{{ t.headline }}</h1>
-        <p class="signal-chip">{{ t.streamEqualsSignal }}</p>
         <p class="summary">{{ t.summary }}</p>
+
+        <div class="code-intro">
+          <span>{{ t.codeLabel }}</span>
+          <pre><code>{{ t.codeSample }}</code></pre>
+        </div>
+
+        <div class="meta-row">
+          <div class="meta-pill">
+            <span>{{ t.installLabel }}</span>
+            <code>{{ t.installCommand }}</code>
+          </div>
+          <div class="meta-pill">
+            <span>{{ t.releaseLabel }}</span>
+            <strong>{{ t.releaseValue }}</strong>
+          </div>
+        </div>
 
         <div class="actions">
           <a class="primary-action" href="#live-demo">{{ t.primaryAction }}</a>
           <a class="secondary-action" :href="quickStartLink">{{ t.secondaryAction }}</a>
           <a class="ghost-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.tertiaryAction }}</a>
         </div>
-
-        <div class="meta-strip">
-          <div class="meta-card install-card">
-            <span>{{ t.installLabel }}</span>
-            <code>{{ t.installCommand }}</code>
-          </div>
-          <a class="meta-card release-card" :href="t.releaseHref" target="_blank" rel="noreferrer">
-            <span>{{ t.releaseLabel }}</span>
-            <strong>{{ t.releaseValue }}</strong>
-          </a>
-        </div>
       </div>
 
       <section id="live-demo" class="demo-panel">
-        <div class="demo-heading">
-          <div>
-            <p class="eyebrow">{{ t.demoEyebrow }}</p>
-            <h2>{{ t.demoTitle }}</h2>
-          </div>
-          <a class="inline-link" :href="setupGuideLink">{{ t.setupGuide }}</a>
+        <div class="demo-header">
+          <h2>{{ t.demoTitle }}</h2>
+          <a class="inline-link" :href="providerGuideLink">{{ t.guideAction }}</a>
         </div>
 
         <p class="demo-summary">{{ t.demoSummary }}</p>
 
-        <div class="provider-tabs" role="tablist" :aria-label="t.providersLabel">
+        <div class="provider-tabs" role="tablist" :aria-label="t.providerLabel">
           <button
             v-for="provider in t.providers"
             :key="provider.id"
@@ -364,72 +303,49 @@ onBeforeUnmount(() => {
           </button>
         </div>
 
-        <div class="provider-info">
-          <div>
-            <span>env</span>
-            <strong>{{ activeProvider.env }}</strong>
-          </div>
-          <div>
-            <span>factory</span>
-            <strong>{{ activeProvider.factory }}</strong>
-          </div>
+        <div class="provider-card">
+          <span>env</span>
+          <strong>{{ activeProvider.env }}</strong>
+          <p>{{ activeProvider.description }}</p>
         </div>
 
-        <p class="provider-description">{{ activeProvider.description }}</p>
-
         <form class="prompt-row" @submit.prevent="runDemo">
-          <input v-model="prompt" :aria-label="t.promptLabel" autocomplete="off" />
-          <button type="submit">{{ t.promptButton }}</button>
+          <input v-model="prompt" :aria-label="t.demoPromptLabel" autocomplete="off" />
+          <button type="submit">{{ t.demoButton }}</button>
         </form>
 
-        <div class="preset-row" :aria-label="t.presetsLabel">
+        <div class="preset-row" :aria-label="t.presetLabel">
           <button v-for="item in t.presets" :key="item" type="button" @click="usePreset(item)">
             {{ item }}
           </button>
         </div>
 
-        <div class="runtime-root" ref="qoreRoot"></div>
+        <div ref="qoreRoot" class="runtime-root"></div>
       </section>
     </section>
 
-    <section class="feature-grid" :aria-label="t.featureEyebrow">
-      <article v-for="feature in t.features" :key="feature[0]" class="feature-card">
-        <h3>{{ feature[0] }}</h3>
-        <p>{{ feature[1] }}</p>
-      </article>
+    <section class="why-section">
+      <div class="section-intro">
+        <h2>{{ t.whyTitle }}</h2>
+      </div>
+      <div class="why-grid">
+        <article v-for="card in t.whyCards" :key="card[0]" class="info-card">
+          <h3>{{ card[0] }}</h3>
+          <p>{{ card[1] }}</p>
+        </article>
+      </div>
     </section>
 
-    <section class="proof-layout">
-      <article class="code-card">
-        <p class="eyebrow">{{ t.codeEyebrow }}</p>
-        <h2>{{ t.codeTitle }}</h2>
-        <p class="section-summary">{{ t.codeSummary }}</p>
-        <pre><code>{{ t.codeSample }}</code></pre>
-      </article>
-
-      <article class="proof-card">
-        <p class="eyebrow">{{ t.proofEyebrow }}</p>
-        <h2>{{ t.proofTitle }}</h2>
-        <p class="section-summary">{{ t.proofSummary }}</p>
-
-        <div class="proof-grid">
-          <div v-for="point in t.proofPoints" :key="point[0]" class="proof-item">
-            <span>{{ point[0] }}</span>
-            <strong>{{ point[1] }}</strong>
-            <small>{{ point[2] }}</small>
-          </div>
-        </div>
-
-        <div class="architecture-card">
-          <span class="architecture-label">{{ t.architectureLabel }}</span>
-          <div class="architecture-list">
-            <div v-for="item in t.architecture" :key="item[0]">
-              <strong>{{ item[0] }}</strong>
-              <span>{{ item[1] }}</span>
-            </div>
-          </div>
-        </div>
-      </article>
+    <section class="flow-section">
+      <div class="section-intro">
+        <h2>{{ t.flowTitle }}</h2>
+      </div>
+      <div class="flow-grid">
+        <article v-for="step in t.flowSteps" :key="step[0]" class="flow-card">
+          <span>{{ step[0] }}</span>
+          <p>{{ step[1] }}</p>
+        </article>
+      </div>
     </section>
   </main>
 </template>
@@ -468,7 +384,7 @@ onBeforeUnmount(() => {
 
 :global(body:has(.VPContent.is-home) .VPNavBar),
 :global(body:has(.VPContent.is-home) .VPNavBar .content-body) {
-  background: rgba(7, 16, 13, 0.82) !important;
+  background: rgba(7, 16, 13, 0.84) !important;
   backdrop-filter: blur(16px);
 }
 
@@ -500,27 +416,25 @@ onBeforeUnmount(() => {
 }
 
 .home-page {
-  --bg: #07100d;
-  --panel: rgba(255, 255, 255, 0.055);
-  --panel-strong: rgba(255, 255, 255, 0.08);
-  --line: rgba(172, 255, 223, 0.12);
-  --text: #f6fcf8;
-  --muted: rgba(246, 252, 248, 0.68);
+  --text: #f5fbf7;
+  --muted: rgba(245, 251, 247, 0.7);
+  --line: rgba(163, 248, 214, 0.12);
+  --panel: rgba(255, 255, 255, 0.045);
   --accent: #9df7d0;
-  --accent-strong: #63f0ff;
+  --accent-strong: #67f1ff;
   position: relative;
   width: 100%;
   max-width: 100%;
   margin-top: -64px;
-  padding: 112px clamp(20px, 4vw, 72px) 96px;
+  padding: 112px clamp(20px, 4vw, 72px) 92px;
   color: var(--text);
   background:
-    radial-gradient(circle at 0% 0%, rgba(99, 240, 255, 0.18), transparent 26%),
-    radial-gradient(circle at 100% 0%, rgba(157, 247, 208, 0.18), transparent 28%),
+    radial-gradient(circle at 0% 0%, rgba(103, 241, 255, 0.12), transparent 24%),
+    radial-gradient(circle at 100% 0%, rgba(157, 247, 208, 0.14), transparent 26%),
     linear-gradient(180deg, #07100d 0%, #0b1411 46%, #07100d 100%);
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 500ms ease, transform 500ms ease;
+  transform: translateY(8px);
+  transition: opacity 400ms ease, transform 400ms ease;
   overflow: hidden;
 }
 
@@ -530,10 +444,10 @@ onBeforeUnmount(() => {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(172, 255, 223, 0.035) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(172, 255, 223, 0.035) 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: linear-gradient(to bottom, black, transparent 78%);
+    linear-gradient(rgba(163, 248, 214, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(163, 248, 214, 0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: linear-gradient(to bottom, black, transparent 80%);
 }
 
 .home-page.visible {
@@ -542,27 +456,26 @@ onBeforeUnmount(() => {
 }
 
 .hero,
-.feature-grid,
-.proof-layout {
+.why-section,
+.flow-section {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1380px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(420px, 520px);
-  gap: clamp(28px, 4vw, 56px);
+  grid-template-columns: minmax(0, 1.05fr) minmax(380px, 480px);
+  gap: clamp(28px, 4vw, 64px);
   align-items: start;
 }
 
 .hero-copy {
   display: grid;
   gap: 20px;
-  max-width: 700px;
-  padding-top: 18px;
+  max-width: 720px;
 }
 
 .eyebrow {
@@ -576,29 +489,25 @@ onBeforeUnmount(() => {
 h1,
 h2,
 h3,
-.summary,
-.demo-summary,
-.provider-description,
-.section-summary,
-.feature-card p {
+p {
   margin: 0;
 }
 
 h1 {
-  max-width: 11ch;
+  max-width: 9ch;
   font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  font-size: clamp(58px, 8vw, 104px);
+  font-size: clamp(60px, 8vw, 112px);
   line-height: 0.92;
   letter-spacing: -0.08em;
   color: transparent;
-  background: linear-gradient(115deg, #ffffff 0%, #d7fff0 52%, #8cf5ff 100%);
+  background: linear-gradient(115deg, #ffffff 0%, #d7fff0 55%, #96f8ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
 }
 
 h2 {
   font-size: clamp(28px, 3vw, 42px);
-  line-height: 1.05;
+  line-height: 1.06;
   letter-spacing: -0.05em;
 }
 
@@ -608,27 +517,75 @@ h3 {
   letter-spacing: -0.04em;
 }
 
-.signal-chip {
-  display: inline-flex;
-  width: max-content;
-  max-width: 100%;
-  padding: 10px 14px;
-  border: 1px solid rgba(157, 247, 208, 0.18);
-  border-radius: 999px;
-  color: #06110d;
-  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  font: 900 clamp(18px, 2vw, 28px)/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: -0.05em;
-}
-
 .summary,
+.code-intro span,
 .demo-summary,
-.provider-description,
-.section-summary,
-.feature-card p {
+.provider-card p,
+.info-card p,
+.flow-card p {
   color: var(--muted);
   font-size: 17px;
   line-height: 1.8;
+}
+
+.code-intro,
+.meta-pill,
+.demo-panel,
+.provider-card,
+.info-card,
+.flow-card {
+  border: 1px solid var(--line);
+  background: var(--panel);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.24);
+  backdrop-filter: blur(16px);
+}
+
+.code-intro {
+  display: grid;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 22px;
+}
+
+.code-intro span {
+  font-size: 13px;
+}
+
+.code-intro pre {
+  margin: 0;
+  overflow: auto;
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(0, 0, 0, 0.18);
+  color: var(--text);
+  font: 800 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.meta-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  max-width: 560px;
+}
+
+.meta-pill {
+  display: grid;
+  gap: 8px;
+  padding: 16px 18px;
+  border-radius: 20px;
+}
+
+.meta-pill span {
+  color: rgba(245, 251, 247, 0.54);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.meta-pill code,
+.meta-pill strong {
+  color: var(--text);
+  font: 800 15px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .actions {
@@ -649,13 +606,12 @@ h3 {
   border-radius: 999px;
   text-decoration: none;
   font-weight: 800;
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease, color 180ms ease;
+  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
 }
 
 .primary-action {
-  color: #06110d;
+  color: #07100d;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
-  box-shadow: 0 18px 56px rgba(99, 240, 255, 0.18);
 }
 
 .secondary-action,
@@ -663,7 +619,7 @@ h3 {
 .inline-link {
   color: var(--text);
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .primary-action:hover,
@@ -676,61 +632,18 @@ h3 {
   transform: translateY(-2px);
 }
 
-.meta-strip {
-  display: grid;
-  gap: 12px;
-  max-width: 560px;
-}
-
-.meta-card {
-  display: grid;
-  gap: 8px;
-  padding: 16px 18px;
-  border: 1px solid var(--line);
-  border-radius: 20px;
-  background: rgba(255, 255, 255, 0.035);
-  text-decoration: none;
-}
-
-.meta-card span {
-  color: rgba(246, 252, 248, 0.54);
-  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-
-.meta-card code,
-.meta-card strong {
-  color: var(--text);
-  font: 800 15px/1.4 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.demo-panel,
-.feature-card,
-.code-card,
-.proof-card {
-  border: 1px solid var(--line);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(18px);
-}
-
 .demo-panel {
   display: grid;
   gap: 16px;
-  padding: 24px;
+  padding: 22px;
+  border-radius: 28px;
 }
 
-.demo-heading {
+.demo-header {
   display: flex;
-  align-items: start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-}
-
-.demo-heading h2 {
-  max-width: 10ch;
 }
 
 .provider-tabs {
@@ -743,7 +656,7 @@ h3 {
 .prompt-row input,
 .prompt-row button,
 .preset-row button {
-  border: 1px solid rgba(157, 247, 208, 0.16);
+  border: 1px solid rgba(157, 247, 208, 0.15);
   font: 800 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -751,50 +664,36 @@ h3 {
   min-height: 40px;
   padding: 0 10px;
   border-radius: 14px;
-  color: rgba(246, 252, 248, 0.72);
-  background: rgba(255, 255, 255, 0.03);
+  color: rgba(245, 251, 247, 0.72);
+  background: rgba(255, 255, 255, 0.025);
   cursor: pointer;
 }
 
 .provider-tabs button.active,
 .prompt-row button {
-  color: #06110d;
+  color: #07100d;
   border-color: transparent;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
 }
 
-.provider-info {
+.provider-card {
   display: grid;
   gap: 8px;
-}
-
-.provider-info div,
-.architecture-card {
-  padding: 14px 16px;
-  border: 1px solid rgba(157, 247, 208, 0.12);
+  padding: 16px;
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.16);
 }
 
-.provider-info span,
-.architecture-label,
-.proof-item span,
-.proof-item small {
-  display: block;
-  color: rgba(246, 252, 248, 0.52);
-  font: 800 10px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+.provider-card span,
+.flow-card span {
+  color: rgba(245, 251, 247, 0.52);
+  font: 800 10px/1.3 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.provider-info strong,
-.proof-item strong {
-  display: block;
-  margin-top: 8px;
+.provider-card strong {
   color: var(--text);
-  font-size: 16px;
-  line-height: 1.45;
-  word-break: break-word;
+  font: 800 15px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .prompt-row {
@@ -809,13 +708,8 @@ h3 {
   padding: 0 14px;
   border-radius: 14px;
   color: var(--text);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.18);
   outline: none;
-}
-
-.prompt-row input:focus {
-  border-color: rgba(157, 247, 208, 0.52);
-  box-shadow: 0 0 0 4px rgba(157, 247, 208, 0.08);
 }
 
 .prompt-row button {
@@ -835,159 +729,83 @@ h3 {
   min-height: 30px;
   padding: 0 10px;
   border-radius: 999px;
-  color: rgba(246, 252, 248, 0.7);
-  background: rgba(255, 255, 255, 0.03);
+  color: rgba(245, 251, 247, 0.72);
+  background: rgba(255, 255, 255, 0.025);
   cursor: pointer;
 }
 
 .runtime-root {
-  min-height: 252px;
+  min-height: 220px;
 }
 
 :deep(.runtime-shell) {
   display: grid;
   gap: 12px;
-  min-height: 252px;
+  min-height: 220px;
   padding: 18px;
-  border: 1px solid rgba(157, 247, 208, 0.14);
+  border: 1px solid rgba(157, 247, 208, 0.12);
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(4, 10, 8, 0.96), rgba(7, 16, 13, 0.9));
+  background: rgba(0, 0, 0, 0.24);
 }
 
-:deep(.runtime-header) {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--muted);
-  font: 800 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-:deep(.runtime-header strong) {
-  color: var(--text);
-}
-
-:deep(.runtime-header small) {
-  padding: 4px 8px;
-  border: 1px solid rgba(157, 247, 208, 0.14);
-  border-radius: 999px;
-  color: rgba(246, 252, 248, 0.58);
-}
-
-:deep(.runtime-dot) {
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
-  background: var(--accent);
-  box-shadow: 0 0 22px var(--accent);
-}
-
+:deep(.runtime-provider),
 :deep(.runtime-prompt),
-:deep(.runtime-line),
-:deep(.runtime-output-label),
 :deep(.runtime-meta) {
-  color: rgba(246, 252, 248, 0.64);
+  color: rgba(245, 251, 247, 0.66);
   font: 800 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-:deep(.runtime-line) {
-  padding: 10px 12px;
-  border: 1px solid rgba(157, 247, 208, 0.1);
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.03);
+:deep(.runtime-provider) {
+  color: var(--accent);
 }
 
 :deep(.runtime-output) {
   min-height: 112px;
   margin: 0;
   white-space: pre-wrap;
-  color: #f4fff8;
-  font: 700 clamp(21px, 2vw, 30px)/1.18 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  color: var(--text);
+  font: 700 clamp(20px, 2vw, 30px)/1.18 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
   letter-spacing: -0.03em;
 }
 
-.feature-grid {
+.why-section,
+.flow-section {
+  display: grid;
+  gap: 18px;
+  margin-top: 34px;
+}
+
+.section-intro {
+  max-width: 520px;
+}
+
+.why-grid,
+.flow-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  margin-top: 24px;
 }
 
-.feature-card {
+.info-card,
+.flow-card {
   display: grid;
   gap: 10px;
   padding: 22px;
+  border-radius: 22px;
 }
 
-.proof-layout {
-  display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-  gap: 18px;
-  margin-top: 28px;
+.flow-card {
+  gap: 14px;
 }
 
-.code-card,
-.proof-card {
-  display: grid;
-  gap: 16px;
-  padding: 24px;
-}
-
-.code-card pre {
-  margin: 0;
-  overflow: auto;
-  padding: 18px;
-  border: 1px solid rgba(157, 247, 208, 0.12);
-  border-radius: 18px;
-  background: rgba(0, 0, 0, 0.18);
-  color: #f4fff8;
-  font: 800 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-}
-
-.proof-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
-}
-
-.proof-item {
-  padding: 14px 16px;
-  border: 1px solid rgba(157, 247, 208, 0.12);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.03);
-}
-
-.proof-item small {
-  margin-top: 6px;
-  text-transform: none;
-  letter-spacing: 0;
-}
-
-.architecture-list {
-  display: grid;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.architecture-list div {
-  display: grid;
-  gap: 4px;
-}
-
-.architecture-list strong {
-  font-size: 17px;
-  letter-spacing: -0.03em;
-}
-
-.architecture-list span {
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.7;
+.flow-card span {
+  color: var(--accent);
 }
 
 @media (max-width: 1100px) {
   .hero,
-  .proof-layout,
-  .feature-grid {
+  .why-grid,
+  .flow-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -998,14 +816,13 @@ h3 {
     padding: 106px 18px 72px;
   }
 
-  .demo-heading,
-  .prompt-row,
+  .meta-row,
   .provider-tabs,
-  .proof-grid {
+  .prompt-row {
     grid-template-columns: 1fr;
   }
 
-  .demo-heading {
+  .demo-header {
     display: grid;
   }
 
@@ -1022,11 +839,7 @@ h3 {
 @media (max-width: 640px) {
   h1 {
     max-width: 8ch;
-    font-size: clamp(48px, 18vw, 72px);
-  }
-
-  .signal-chip {
-    font-size: 18px;
+    font-size: clamp(50px, 18vw, 72px);
   }
 }
 </style>
