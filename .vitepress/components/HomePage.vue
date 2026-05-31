@@ -207,10 +207,24 @@ function renderDemo(value = activePrompt.value) {
   activeAnswer = answer
 
   disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell' },
-    h('div', { class: 'runtime-provider' }, activeProvider.value.name),
-    h('p', { class: 'runtime-prompt' }, `${t.value.promptPrefix}: ${value}`),
-    h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting)),
-    h('div', { class: 'runtime-meta' }, text(() => `${t.value.statusPrefix}: ${answer.status()}  /  ${t.value.chunksPrefix}: ${answer.chunkCount()}`))
+    h('div', { class: 'runtime-topline' },
+      h('div', { class: 'runtime-provider' }, activeProvider.value.name),
+      h('div', { class: 'runtime-meta runtime-meta-inline' }, text(() => `${t.value.statusPrefix}: ${answer.status()}`))
+    ),
+    h('div', { class: 'runtime-thread' },
+      h('article', { class: 'runtime-bubble runtime-bubble-user' },
+        h('span', { class: 'runtime-bubble-label' }, 'You'),
+        h('p', { class: 'runtime-prompt' }, `${t.value.promptPrefix}: ${value}`)
+      ),
+      h('article', { class: 'runtime-bubble runtime-bubble-assistant' },
+        h('span', { class: 'runtime-bubble-label' }, activeProvider.value.name),
+        h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting))
+      )
+    ),
+    h('div', { class: 'runtime-footer' },
+      h('div', { class: 'runtime-meta' }, text(() => `${t.value.chunksPrefix}: ${answer.chunkCount()}`)),
+      h('div', { class: 'runtime-meta' }, 'QoreStream')
+    )
   ))
 }
 
@@ -284,6 +298,7 @@ onBeforeUnmount(() => {
 
         <div class="demo-header">
           <h2>{{ t.demoTitle }}</h2>
+          <p class="demo-note">{{ activeProvider.description }}</p>
         </div>
 
         <div class="provider-tabs" role="tablist" :aria-label="t.providerLabel">
@@ -396,7 +411,7 @@ onBeforeUnmount(() => {
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink),
 :global(body:has(.VPContent.is-home) .VPSocialLink),
 :global(body:has(.VPContent.is-home) .VPNavBarExtra .button) {
-  color: rgba(246, 252, 248, 0.82) !important;
+  color: rgba(246, 252, 248, 0.78) !important;
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink.active) {
@@ -404,9 +419,10 @@ onBeforeUnmount(() => {
 }
 
 :global(body:has(.VPContent.is-home) .DocSearch-Button) {
-  color: rgba(246, 252, 248, 0.72);
-  background: rgba(255, 255, 255, 0.04);
-  border-color: rgba(173, 255, 225, 0.12);
+  color: rgba(246, 252, 248, 0.66);
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(173, 255, 225, 0.09);
+  box-shadow: none;
 }
 
 :global(body:has(.VPContent.is-home) .DocSearch-Button-Placeholder),
@@ -637,10 +653,22 @@ h1 {
   border-bottom: 1px solid rgba(143, 247, 209, 0.1);
 }
 
+.demo-header {
+  display: grid;
+  gap: 10px;
+}
+
 .demo-header h2 {
   font-size: clamp(26px, 3vw, 38px);
   line-height: 1.04;
   letter-spacing: -0.05em;
+}
+
+.demo-note {
+  max-width: 40ch;
+  color: rgba(244, 251, 247, 0.62);
+  font-size: 15px;
+  line-height: 1.7;
 }
 
 .provider-tabs {
@@ -720,36 +748,72 @@ h1 {
 }
 
 .runtime-root {
-  min-height: 272px;
+  min-height: 300px;
 }
 
 :deep(.runtime-shell) {
   display: grid;
   gap: 14px;
-  min-height: 272px;
+  min-height: 300px;
   padding: 18px;
   border: 1px solid rgba(143, 247, 209, 0.1);
   border-radius: 24px;
-  background: rgba(7, 12, 18, 0.78);
+  background: linear-gradient(180deg, rgba(8, 13, 20, 0.9), rgba(8, 13, 20, 0.78));
+}
+
+:deep(.runtime-topline),
+:deep(.runtime-footer) {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+:deep(.runtime-thread) {
+  display: grid;
+  gap: 12px;
+}
+
+:deep(.runtime-bubble) {
+  display: grid;
+  gap: 10px;
+  padding: 14px;
+  border-radius: 18px;
+}
+
+:deep(.runtime-bubble-user) {
+  border: 1px solid rgba(143, 247, 209, 0.08);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+:deep(.runtime-bubble-assistant) {
+  border: 1px solid rgba(107, 231, 255, 0.08);
+  background: rgba(11, 14, 22, 0.92);
 }
 
 :deep(.runtime-provider),
 :deep(.runtime-prompt),
-:deep(.runtime-meta) {
+:deep(.runtime-meta),
+:deep(.runtime-bubble-label) {
   color: rgba(244, 251, 247, 0.68);
   font: 800 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
-:deep(.runtime-provider) {
+:deep(.runtime-provider),
+:deep(.runtime-bubble-label) {
   color: var(--accent);
 }
 
+:deep(.runtime-meta-inline) {
+  color: rgba(244, 251, 247, 0.5);
+}
+
 :deep(.runtime-output) {
-  min-height: 132px;
+  min-height: 128px;
   margin: 0;
   white-space: pre-wrap;
   color: var(--text);
-  font: 700 clamp(21px, 2vw, 30px)/1.1 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font: 700 clamp(21px, 2vw, 30px)/1.08 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
   letter-spacing: -0.03em;
 }
 
