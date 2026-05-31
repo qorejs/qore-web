@@ -20,42 +20,46 @@ type ProviderCopy = {
 
 const copy = {
   en: {
-    eyebrow: 'Qore 1.0',
     headline: 'Turn streamed data into reactive UI.',
-    summary: 'Qore is a runtime for AI and realtime interfaces. Its core claim is simple: stream = signal.',
+    summary: 'In Qore, a stream is a signal. As data flows in, your UI stays in sync automatically, precisely, and with almost no ceremony.',
+    primaryAction: 'See it run',
+    secondaryAction: 'Quick start',
+    tertiaryAction: 'GitHub',
     codeLabel: 'The whole idea',
     codeSample: `const answer = stream(chat.chat(prompt))\nreturn h('main', {}, text(() => answer()))`,
-    installLabel: 'Install',
-    installCommand: 'npm i @qorejs/qore',
-    releaseLabel: 'Stable',
-    releaseValue: 'v1.0.0',
-    signalLabel: 'Core primitive',
-    signalValue: 'stream = signal',
-    proofTitle: 'Why it feels different',
-    proofCards: [
-      ['One source of truth', 'The stream is already your state.'],
-      ['No token plumbing', 'You do not shuttle chunks through extra state layers.'],
-      ['Narrow DOM work', 'Only the node reading the signal needs to update.']
+    meta: [
+      ['Core primitive', 'stream = signal'],
+      ['Install', 'npm i @qorejs/qore'],
+      ['Stable', 'v1.0.0']
     ],
-    flowTitle: 'How it works',
-    flowSteps: [
-      ['01', 'The server streams tokens from the model.'],
-      ['02', 'Qore exposes one readonly signal in the browser.'],
-      ['03', 'Your bound text node updates as data arrives.']
-    ],
-    demoTitle: 'See it run',
-    demoSummary: 'Choose a provider and stream one response.',
+    demoEyebrow: 'Qore Live Demo',
+    demoTitle: 'Choose a provider and stream one response.',
+    providerLabel: 'Provider',
     demoPromptLabel: 'Prompt',
     demoButton: 'Stream',
-    presetLabel: 'Presets',
-    providerLabel: 'Provider',
-    waiting: 'waiting for the first token...',
     promptPrefix: 'prompt',
     statusPrefix: 'status',
     chunksPrefix: 'chunks',
+    waiting: 'waiting for the first token...',
     guideAction: 'Provider guide',
-    quickStartAction: 'Quick start',
-    githubAction: 'GitHub',
+    presetLabel: 'Presets',
+    presets: [
+      'Explain stream = signal',
+      'Show a tiny AI reply',
+      'Why does token-level UI matter?'
+    ],
+    whyTitle: 'Why it feels different',
+    whyCards: [
+      ['Built for streams', 'Streaming data is not an edge case. It is the native path.'],
+      ['Fine-grained by default', 'Only what changes, changes. No virtual DOM rerender loop.'],
+      ['Minimal and composable', 'A small core, zero noise, and primitives that stack cleanly.']
+    ],
+    flowTitle: 'How it works',
+    flowSteps: [
+      ['1', 'Stream', 'The server streams tokens from the model.'],
+      ['2', 'Signal', 'Qore exposes one readonly signal in the browser.'],
+      ['3', 'UI updates', 'Your bound text node updates as data arrives.']
+    ],
     providers: [
       {
         id: 'openai',
@@ -93,50 +97,49 @@ const copy = {
           'The UI stays declarative.'
         ]
       }
-    ] satisfies readonly ProviderCopy[],
-    presets: [
-      'Explain stream = signal',
-      'Show a tiny AI reply',
-      'Why does token-level UI matter?'
-    ]
+    ] satisfies readonly ProviderCopy[]
   },
   zh: {
-    eyebrow: 'Qore 1.0',
     headline: '把流式数据直接变成响应式 UI。',
-    summary: 'Qore 是一个面向 AI 与实时界面的运行时。它的核心主张很简单：stream = signal。',
+    summary: '在 Qore 里，stream 本身就是 signal。数据一边流动，UI 一边自动同步，精准更新，不再需要额外搬运状态。',
+    primaryAction: '直接看效果',
+    secondaryAction: '快速开始',
+    tertiaryAction: 'GitHub',
     codeLabel: '核心就是这两行',
     codeSample: `const answer = stream(chat.chat(prompt))\nreturn h('main', {}, text(() => answer()))`,
-    installLabel: '安装',
-    installCommand: 'npm i @qorejs/qore',
-    releaseLabel: '稳定版',
-    releaseValue: 'v1.0.0',
-    signalLabel: '核心原语',
-    signalValue: 'stream = signal',
-    proofTitle: '为什么它不一样',
-    proofCards: [
-      ['一条状态源', '这条流本身就是你的状态。'],
-      ['不再手搬 token', '不需要再把 chunk 搬进额外的状态层。'],
-      ['DOM 精准更新', '只有读取 signal 的节点需要变化。']
+    meta: [
+      ['核心原语', 'stream = signal'],
+      ['安装', 'npm i @qorejs/qore'],
+      ['稳定版', 'v1.0.0']
     ],
-    flowTitle: '它如何工作',
-    flowSteps: [
-      ['01', '服务端从模型持续输出 token。'],
-      ['02', 'Qore 在浏览器里暴露一条只读 signal。'],
-      ['03', '绑定的 text node 会随着数据抵达持续更新。']
-    ],
-    demoTitle: '直接看效果',
-    demoSummary: '选择一个 provider，流式输出一段响应。',
+    demoEyebrow: 'Qore 实时演示',
+    demoTitle: '选择一个 provider，流式输出一段响应。',
+    providerLabel: 'Provider',
     demoPromptLabel: '提示词',
     demoButton: 'Stream',
-    presetLabel: '预设',
-    providerLabel: 'Provider',
-    waiting: '等待第一个 token...',
     promptPrefix: '提示词',
     statusPrefix: '状态',
     chunksPrefix: 'chunks',
+    waiting: '等待第一个 token...',
     guideAction: 'Provider 指南',
-    quickStartAction: '快速开始',
-    githubAction: 'GitHub',
+    presetLabel: '预设',
+    presets: [
+      '解释 stream = signal',
+      '展示一段简短 AI 回复',
+      '为什么 token 级 UI 很重要？'
+    ],
+    whyTitle: '为什么它不一样',
+    whyCards: [
+      ['为流而生', '流式数据不是边缘场景，而是它默认面对的路径。'],
+      ['天然细粒度', '只有真正变化的部分才更新，不走整轮重渲染。'],
+      ['极小且可组合', '核心很小，噪音很少，原语之间可以自然拼接。']
+    ],
+    flowTitle: '它如何工作',
+    flowSteps: [
+      ['1', 'Stream', '服务端持续从模型输出 token。'],
+      ['2', 'Signal', 'Qore 在浏览器里暴露一条只读 signal。'],
+      ['3', 'UI 更新', '绑定的 text node 会随着数据抵达持续更新。']
+    ],
     providers: [
       {
         id: 'openai',
@@ -174,12 +177,7 @@ const copy = {
           'UI 依旧保持声明式。'
         ]
       }
-    ] satisfies readonly ProviderCopy[],
-    presets: [
-      '解释 stream = signal',
-      '展示一段简短 AI 回复',
-      '为什么 token 级 UI 很重要？'
-    ]
+    ] satisfies readonly ProviderCopy[]
   }
 } as const
 
@@ -254,24 +252,15 @@ onBeforeUnmount(() => {
 
 <template>
   <main class="home-page" :class="{ visible: isVisible }">
-    <section class="hero-shell">
+    <section class="hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">{{ t.eyebrow }}</p>
         <h1>{{ t.headline }}</h1>
         <p class="summary">{{ t.summary }}</p>
 
         <div class="hero-meta">
-          <div class="hero-pill">
-            <span>{{ t.signalLabel }}</span>
-            <strong>{{ t.signalValue }}</strong>
-          </div>
-          <div class="hero-pill">
-            <span>{{ t.installLabel }}</span>
-            <code>{{ t.installCommand }}</code>
-          </div>
-          <div class="hero-pill">
-            <span>{{ t.releaseLabel }}</span>
-            <strong>{{ t.releaseValue }}</strong>
+          <div v-for="item in t.meta" :key="item[0]" class="hero-pill">
+            <span>{{ item[0] }}</span>
+            <strong>{{ item[1] }}</strong>
           </div>
         </div>
 
@@ -281,19 +270,20 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="hero-actions">
-          <a class="primary-action" href="#live-demo">{{ t.demoTitle }}</a>
-          <a class="secondary-action" :href="quickStartLink">{{ t.quickStartAction }}</a>
-          <a class="ghost-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.githubAction }}</a>
+          <a class="primary-action" href="#live-demo">{{ t.primaryAction }}</a>
+          <a class="secondary-action" :href="quickStartLink">{{ t.secondaryAction }}</a>
+          <a class="ghost-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.tertiaryAction }}</a>
         </div>
       </div>
 
       <section id="live-demo" class="demo-panel">
-        <div class="demo-panel-head">
-          <div>
-            <p class="demo-kicker">{{ t.demoTitle }}</p>
-            <h2>{{ t.demoSummary }}</h2>
-          </div>
+        <div class="demo-topbar">
+          <p>{{ t.demoEyebrow }}</p>
           <a class="inline-link" :href="providerGuideLink">{{ t.guideAction }}</a>
+        </div>
+
+        <div class="demo-header">
+          <h2>{{ t.demoTitle }}</h2>
         </div>
 
         <div class="provider-tabs" role="tablist" :aria-label="t.providerLabel">
@@ -311,7 +301,7 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="provider-card">
-          <span>env</span>
+          <span>Environment</span>
           <strong>{{ activeProvider.env }}</strong>
           <p>{{ activeProvider.description }}</p>
         </div>
@@ -331,30 +321,31 @@ onBeforeUnmount(() => {
       </section>
     </section>
 
-    <section class="proof-section">
-      <div class="section-head">
-        <p class="section-label">Qore</p>
-        <h2>{{ t.proofTitle }}</h2>
-      </div>
-      <div class="proof-grid">
-        <article v-for="card in t.proofCards" :key="card[0]" class="proof-card">
-          <h3>{{ card[0] }}</h3>
-          <p>{{ card[1] }}</p>
-        </article>
-      </div>
-    </section>
+    <section class="story-grid">
+      <section class="story-panel">
+        <div class="section-head">
+          <h2>{{ t.whyTitle }}</h2>
+        </div>
+        <div class="proof-grid">
+          <article v-for="card in t.whyCards" :key="card[0]" class="proof-card">
+            <h3>{{ card[0] }}</h3>
+            <p>{{ card[1] }}</p>
+          </article>
+        </div>
+      </section>
 
-    <section class="flow-section">
-      <div class="section-head">
-        <p class="section-label">Flow</p>
-        <h2>{{ t.flowTitle }}</h2>
-      </div>
-      <div class="flow-grid">
-        <article v-for="step in t.flowSteps" :key="step[0]" class="flow-card">
-          <span>{{ step[0] }}</span>
-          <p>{{ step[1] }}</p>
-        </article>
-      </div>
+      <section class="story-panel flow-panel">
+        <div class="section-head">
+          <h2>{{ t.flowTitle }}</h2>
+        </div>
+        <div class="flow-grid">
+          <article v-for="step in t.flowSteps" :key="step[0]" class="flow-card">
+            <span>{{ step[0] }}</span>
+            <h3>{{ step[1] }}</h3>
+            <p>{{ step[2] }}</p>
+          </article>
+        </div>
+      </section>
     </section>
   </main>
 </template>
@@ -393,7 +384,7 @@ onBeforeUnmount(() => {
 
 :global(body:has(.VPContent.is-home) .VPNavBar),
 :global(body:has(.VPContent.is-home) .VPNavBar .content-body) {
-  background: rgba(9, 17, 15, 0.84) !important;
+  background: rgba(9, 17, 15, 0.86) !important;
   backdrop-filter: blur(16px);
 }
 
@@ -409,7 +400,7 @@ onBeforeUnmount(() => {
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink.active) {
-  color: #9df7d0 !important;
+  color: #8ef7d1 !important;
 }
 
 :global(body:has(.VPContent.is-home) .DocSearch-Button) {
@@ -426,21 +417,22 @@ onBeforeUnmount(() => {
 
 .home-page {
   --text: #f4fbf7;
-  --muted: rgba(244, 251, 247, 0.7);
-  --line: rgba(173, 255, 225, 0.12);
+  --muted: rgba(244, 251, 247, 0.72);
+  --line: rgba(143, 247, 209, 0.12);
   --panel: rgba(255, 255, 255, 0.045);
-  --accent: #9df7d0;
-  --accent-strong: #6ae9ff;
+  --panel-strong: rgba(255, 255, 255, 0.06);
+  --accent: #8ef7d1;
+  --accent-strong: #6be7ff;
   position: relative;
   width: 100%;
   max-width: 100%;
   margin-top: -64px;
-  padding: 112px clamp(20px, 4vw, 72px) 96px;
+  padding: 112px clamp(18px, 4vw, 72px) 96px;
   color: var(--text);
   background:
-    radial-gradient(circle at top left, rgba(106, 233, 255, 0.1), transparent 26%),
-    radial-gradient(circle at 82% 0%, rgba(157, 247, 208, 0.14), transparent 30%),
-    linear-gradient(180deg, #09110f 0%, #0d1613 48%, #09110f 100%);
+    radial-gradient(circle at 0% 0%, rgba(107, 231, 255, 0.1), transparent 25%),
+    radial-gradient(circle at 100% 0%, rgba(142, 247, 209, 0.12), transparent 26%),
+    linear-gradient(180deg, #09110f 0%, #0c1512 45%, #09110f 100%);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 360ms ease, transform 360ms ease;
@@ -453,9 +445,9 @@ onBeforeUnmount(() => {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(173, 255, 225, 0.025) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(173, 255, 225, 0.025) 1px, transparent 1px);
-  background-size: 80px 80px;
+    linear-gradient(rgba(143, 247, 209, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 247, 209, 0.025) 1px, transparent 1px);
+  background-size: 78px 78px;
   mask-image: linear-gradient(to bottom, black, transparent 82%);
 }
 
@@ -464,40 +456,26 @@ onBeforeUnmount(() => {
   transform: translateY(0);
 }
 
-.hero-shell,
-.proof-section,
-.flow-section {
+.hero-grid,
+.story-grid {
   position: relative;
   z-index: 1;
   width: 100%;
-  max-width: 1240px;
+  max-width: 1280px;
   margin: 0 auto;
 }
 
-.hero-shell {
+.hero-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 460px);
-  gap: clamp(28px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1.08fr) minmax(390px, 470px);
+  gap: clamp(28px, 4vw, 60px);
   align-items: start;
 }
 
 .hero-copy {
   display: grid;
-  gap: 22px;
-  max-width: 720px;
-}
-
-.eyebrow,
-.section-label,
-.demo-kicker,
-.provider-card span,
-.flow-card span,
-.hero-pill span {
-  margin: 0;
-  color: rgba(244, 251, 247, 0.54);
-  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
+  gap: 24px;
+  max-width: 760px;
 }
 
 h1,
@@ -510,25 +488,13 @@ p {
 h1 {
   max-width: 9ch;
   font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  font-size: clamp(58px, 8vw, 108px);
-  line-height: 0.92;
-  letter-spacing: -0.08em;
+  font-size: clamp(62px, 8.6vw, 118px);
+  line-height: 0.9;
+  letter-spacing: -0.09em;
   color: transparent;
-  background: linear-gradient(115deg, #ffffff 0%, #e1fff2 56%, #9ff4ff 100%);
+  background: linear-gradient(118deg, #ffffff 0%, #ebfff4 50%, #9af2ff 100%);
   -webkit-background-clip: text;
   background-clip: text;
-}
-
-h2 {
-  font-size: clamp(24px, 3vw, 38px);
-  line-height: 1.05;
-  letter-spacing: -0.05em;
-}
-
-h3 {
-  font-size: 22px;
-  line-height: 1.08;
-  letter-spacing: -0.04em;
 }
 
 .summary,
@@ -536,16 +502,8 @@ h3 {
 .flow-card p,
 .provider-card p {
   color: var(--muted);
-  font-size: 17px;
-  line-height: 1.8;
-}
-
-.hero-meta,
-.hero-actions,
-.proof-grid,
-.flow-grid {
-  display: grid;
-  gap: 14px;
+  font-size: 18px;
+  line-height: 1.75;
 }
 
 .hero-meta {
@@ -559,10 +517,11 @@ h3 {
 .demo-panel,
 .provider-card,
 .proof-card,
-.flow-card {
+.flow-card,
+.story-panel {
   border: 1px solid var(--line);
   background: var(--panel);
-  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.24);
+  box-shadow: 0 22px 70px rgba(0, 0, 0, 0.24);
   backdrop-filter: blur(16px);
 }
 
@@ -574,9 +533,20 @@ h3 {
   border-radius: 18px;
 }
 
+.hero-pill span,
+.code-block span,
+.demo-topbar p,
+.provider-card span,
+.flow-card span {
+  color: rgba(244, 251, 247, 0.54);
+  font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
 .hero-pill strong,
-.hero-pill code,
-.provider-card strong {
+.provider-card strong,
+.hero-pill code {
   color: var(--text);
   font: 800 15px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -584,7 +554,7 @@ h3 {
 .code-block {
   display: grid;
   gap: 12px;
-  max-width: 720px;
+  max-width: 740px;
   padding: 18px;
   border-radius: 24px;
 }
@@ -593,8 +563,9 @@ h3 {
   margin: 0;
   overflow: auto;
   padding: 18px;
+  border: 1px solid rgba(143, 247, 209, 0.1);
   border-radius: 18px;
-  background: rgba(0, 0, 0, 0.22);
+  background: rgba(0, 0, 0, 0.2);
   color: var(--text);
   font: 800 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
@@ -648,15 +619,28 @@ h3 {
   gap: 18px;
   position: sticky;
   top: 88px;
-  padding: 22px;
-  border-radius: 28px;
+  padding: 20px;
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.04));
 }
 
-.demo-panel-head {
+.demo-topbar,
+.demo-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
+}
+
+.demo-topbar {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(143, 247, 209, 0.1);
+}
+
+.demo-header h2 {
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.04;
+  letter-spacing: -0.05em;
 }
 
 .provider-tabs {
@@ -669,12 +653,12 @@ h3 {
 .prompt-row input,
 .prompt-row button,
 .preset-row button {
-  border: 1px solid rgba(157, 247, 208, 0.15);
+  border: 1px solid rgba(143, 247, 209, 0.15);
   font: 800 13px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 .provider-tabs button {
-  min-height: 40px;
+  min-height: 42px;
   padding: 0 10px;
   border-radius: 14px;
   color: rgba(244, 251, 247, 0.72);
@@ -693,7 +677,8 @@ h3 {
   display: grid;
   gap: 8px;
   padding: 16px;
-  border-radius: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.035);
 }
 
 .prompt-row {
@@ -726,8 +711,8 @@ h3 {
 }
 
 .preset-row button {
-  min-height: 30px;
-  padding: 0 10px;
+  min-height: 32px;
+  padding: 0 12px;
   border-radius: 999px;
   color: rgba(244, 251, 247, 0.72);
   background: rgba(255, 255, 255, 0.025);
@@ -735,23 +720,23 @@ h3 {
 }
 
 .runtime-root {
-  min-height: 220px;
+  min-height: 272px;
 }
 
 :deep(.runtime-shell) {
   display: grid;
-  gap: 12px;
-  min-height: 220px;
+  gap: 14px;
+  min-height: 272px;
   padding: 18px;
-  border: 1px solid rgba(157, 247, 208, 0.12);
-  border-radius: 22px;
-  background: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(143, 247, 209, 0.1);
+  border-radius: 24px;
+  background: rgba(7, 12, 18, 0.78);
 }
 
 :deep(.runtime-provider),
 :deep(.runtime-prompt),
 :deep(.runtime-meta) {
-  color: rgba(244, 251, 247, 0.66);
+  color: rgba(244, 251, 247, 0.68);
   font: 800 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -760,31 +745,41 @@ h3 {
 }
 
 :deep(.runtime-output) {
-  min-height: 112px;
+  min-height: 132px;
   margin: 0;
   white-space: pre-wrap;
   color: var(--text);
-  font: 700 clamp(20px, 2vw, 28px)/1.18 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
+  font: 700 clamp(21px, 2vw, 30px)/1.1 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
   letter-spacing: -0.03em;
 }
 
-.proof-section,
-.flow-section {
+.story-grid {
   display: grid;
-  gap: 18px;
-  margin-top: 46px;
+  grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr);
+  gap: 22px;
+  margin-top: 42px;
 }
 
-.section-head {
+.story-panel {
   display: grid;
-  gap: 8px;
-  max-width: 560px;
-  padding-top: 6px;
-  border-top: 1px solid rgba(173, 255, 225, 0.12);
+  gap: 20px;
+  padding: 20px;
+  border-radius: 28px;
+}
+
+.section-head h2 {
+  font-size: clamp(28px, 3vw, 44px);
+  line-height: 1.04;
+  letter-spacing: -0.05em;
 }
 
 .proof-grid,
 .flow-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.proof-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -792,17 +787,30 @@ h3 {
 .flow-card {
   display: grid;
   gap: 12px;
-  min-height: 156px;
+  min-height: 170px;
   padding: 22px;
   border-radius: 22px;
+  background: var(--panel-strong);
+}
+
+.flow-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.flow-card h3,
+.proof-card h3 {
+  font-size: 18px;
+  line-height: 1.15;
+  letter-spacing: -0.03em;
 }
 
 .flow-card span {
   color: var(--accent);
 }
 
-@media (max-width: 1100px) {
-  .hero-shell,
+@media (max-width: 1180px) {
+  .hero-grid,
+  .story-grid,
   .proof-grid,
   .flow-grid {
     grid-template-columns: 1fr;
@@ -820,11 +828,14 @@ h3 {
   }
 
   .provider-tabs,
-  .prompt-row {
+  .prompt-row,
+  .proof-grid,
+  .flow-grid {
     grid-template-columns: 1fr;
   }
 
-  .demo-panel-head {
+  .demo-topbar,
+  .demo-header {
     display: grid;
   }
 
@@ -841,7 +852,12 @@ h3 {
 @media (max-width: 640px) {
   h1 {
     max-width: 8ch;
-    font-size: clamp(50px, 18vw, 72px);
+    font-size: clamp(50px, 18vw, 76px);
+  }
+
+  .hero-meta {
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }
 </style>
