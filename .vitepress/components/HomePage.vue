@@ -261,15 +261,15 @@ onBeforeUnmount(() => {
         <p class="summary">{{ t.summary }}</p>
 
         <div class="hero-meta">
-          <div class="hero-chip">
+          <div class="hero-pill">
             <span>{{ t.signalLabel }}</span>
             <strong>{{ t.signalValue }}</strong>
           </div>
-          <div class="hero-chip">
+          <div class="hero-pill">
             <span>{{ t.installLabel }}</span>
             <code>{{ t.installCommand }}</code>
           </div>
-          <div class="hero-chip">
+          <div class="hero-pill">
             <span>{{ t.releaseLabel }}</span>
             <strong>{{ t.releaseValue }}</strong>
           </div>
@@ -492,7 +492,7 @@ onBeforeUnmount(() => {
 .demo-kicker,
 .provider-card span,
 .flow-card span,
-.hero-chip span {
+.hero-pill span {
   margin: 0;
   color: rgba(244, 251, 247, 0.54);
   font: 800 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -549,10 +549,12 @@ h3 {
 }
 
 .hero-meta {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.hero-chip,
+.hero-pill,
 .code-block,
 .demo-panel,
 .provider-card,
@@ -564,16 +566,16 @@ h3 {
   backdrop-filter: blur(16px);
 }
 
-.hero-chip {
-  display: grid;
-  gap: 10px;
-  min-height: 92px;
-  padding: 16px 18px;
-  border-radius: 20px;
+.hero-pill {
+  display: inline-grid;
+  gap: 8px;
+  min-width: 170px;
+  padding: 14px 16px;
+  border-radius: 18px;
 }
 
-.hero-chip strong,
-.hero-chip code,
+.hero-pill strong,
+.hero-pill code,
 .provider-card strong {
   color: var(--text);
   font: 800 15px/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -582,6 +584,7 @@ h3 {
 .code-block {
   display: grid;
   gap: 12px;
+  max-width: 720px;
   padding: 18px;
   border-radius: 24px;
 }
@@ -643,6 +646,8 @@ h3 {
 .demo-panel {
   display: grid;
   gap: 18px;
+  position: sticky;
+  top: 88px;
   padding: 22px;
   border-radius: 28px;
 }
@@ -767,13 +772,15 @@ h3 {
 .flow-section {
   display: grid;
   gap: 18px;
-  margin-top: 34px;
+  margin-top: 46px;
 }
 
 .section-head {
   display: grid;
   gap: 8px;
   max-width: 560px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(173, 255, 225, 0.12);
 }
 
 .proof-grid,
@@ -785,6 +792,7 @@ h3 {
 .flow-card {
   display: grid;
   gap: 12px;
+  min-height: 156px;
   padding: 22px;
   border-radius: 22px;
 }
@@ -796,9 +804,12 @@ h3 {
 @media (max-width: 1100px) {
   .hero-shell,
   .proof-grid,
-  .flow-grid,
-  .hero-meta {
+  .flow-grid {
     grid-template-columns: 1fr;
+  }
+
+  .demo-panel {
+    position: static;
   }
 }
 
