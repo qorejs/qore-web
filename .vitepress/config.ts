@@ -175,7 +175,7 @@ export default defineConfig({
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
     ['meta', { property: 'og:title', content: 'Qore - Reactive Stream Runtime' }],
-    ['meta', { property: 'og:description', content: 'stream becomes signal, so tokens, tools, and status events flow straight into UI state.' }],
+    ['meta', { property: 'og:description', content: 'Reactive Stream Runtime for AI-native interfaces. Make streams first-class state.' }],
   ],
 
   themeConfig: {
