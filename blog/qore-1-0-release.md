@@ -5,7 +5,7 @@ description: Qore 1.0 ships a focused runtime for streaming UI.
 
 # Qore 1.0 Release
 
-Qore 1.0 is the first stable release of the streaming UI runtime.
+Qore 1.0 is the first stable release of the reactive stream runtime for AI-native interfaces.
 
 The core idea is still the same:
 

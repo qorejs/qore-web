@@ -1,6 +1,6 @@
 # Qore Web
 
-Qore 官方网站与文档仓库。Qore 的核心定位是：**流式响应框架，让 `stream` 成为 `signal`**。
+Qore 官方网站与文档仓库。Qore 的核心定位是：**面向 AI-native interface 的 reactive stream runtime**。
 
 默认语言是英文，简体中文内容位于 `/zh/`。
 

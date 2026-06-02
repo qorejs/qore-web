@@ -2,7 +2,7 @@
   "name": "qore-web",
   "version": "1.0.0",
   "private": true,
-  "description": "Official website for Qore, the streaming-response framework.",
+  "description": "Official website for Qore, the reactive stream runtime for AI-native interfaces.",
   "type": "module",
   "scripts": {
     "dev": "vitepress dev",

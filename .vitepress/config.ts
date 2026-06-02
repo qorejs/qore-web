@@ -165,7 +165,7 @@ const chineseSidebar = {
 export default defineConfig({
   lang: 'en-US',
   title: 'Qore',
-  description: 'Qore 1.0 is the streaming UI runtime where stream becomes signal.',
+  description: 'Qore is the reactive stream runtime for AI-native interfaces.',
   base: '/',
 
   head: [
@@ -174,8 +174,8 @@ export default defineConfig({
     ['meta', { name: 'theme-color', content: '#07110f' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
-    ['meta', { property: 'og:title', content: 'Qore 1.0 - Streaming UI Runtime' }],
-    ['meta', { property: 'og:description', content: 'stream becomes signal, so AI tokens flow straight into interface state.' }],
+    ['meta', { property: 'og:title', content: 'Qore - Reactive Stream Runtime' }],
+    ['meta', { property: 'og:description', content: 'stream becomes signal, so tokens, tools, and status events flow straight into UI state.' }],
   ],
 
   themeConfig: {
@@ -230,7 +230,7 @@ export default defineConfig({
 
     footer: {
       message: 'Released under the MIT License.',
-      copyright: 'Copyright © 2026 Qore Framework',
+      copyright: 'Copyright © 2026 Qore Runtime',
     },
 
     editLink: {
@@ -259,13 +259,13 @@ export default defineConfig({
       label: 'English',
       lang: 'en-US',
       title: 'Qore',
-      description: 'Qore 1.0 is the streaming UI runtime where stream becomes signal.',
+      description: 'Qore is the reactive stream runtime for AI-native interfaces.',
     },
     zh: {
       label: '简体中文',
       lang: 'zh-CN',
       title: 'Qore',
-      description: '流式响应框架：stream becomes signal.',
+      description: 'Qore 是面向 AI-native interface 的 reactive stream runtime.',
       themeConfig: {
         nav: chineseNav,
         sidebar: chineseSidebar,

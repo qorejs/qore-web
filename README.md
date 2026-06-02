@@ -1,6 +1,6 @@
 # Qore Web
 
-Official website and documentation for Qore: the streaming-response framework where `stream` becomes `signal`.
+Official website and documentation for Qore: the reactive stream runtime for AI-native interfaces.
 
 The default site language is English. Simplified Chinese docs live under `/zh/`.
 

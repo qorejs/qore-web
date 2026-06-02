@@ -20,20 +20,23 @@ type ProviderCopy = {
 
 const copy = {
   en: {
-    headline: 'Turn streamed data into reactive UI.',
-    summary: 'In Qore, a stream is a signal. As data flows in, your UI stays in sync automatically, precisely, and with almost no ceremony.',
+    headline: 'Reactive streams. Native UI.',
+    summary: 'Qore is a reactive stream runtime for AI-native interfaces. It turns tokens, tool calls, and status events into readonly signals your UI can bind to directly.',
     primaryAction: 'See it run',
     secondaryAction: 'Quick start',
     tertiaryAction: 'GitHub',
-    codeLabel: 'The whole idea',
-    codeSample: `const answer = stream(chat.chat(prompt))\nreturn h('main', {}, text(() => answer()))`,
+    codeLabel: 'The runtime path',
+    codeSample: `const answer = stream(openai.chat(prompt))\nreturn h('p', {}, text(() => answer()))`,
+    comparisonTitle: 'Why it is different',
+    reactPath: 'React / Vercel AI SDK: Token -> Hook state -> Component render -> Reconcile',
+    qorePath: 'Qore: Token -> Stream signal -> Text node',
     meta: [
-      ['Core primitive', 'stream = signal'],
+      ['Positioning', 'Reactive Stream Runtime'],
+      ['Primitive', 'stream = signal'],
       ['Install', 'npm i @qorejs/qore'],
-      ['Stable', 'v1.0.0']
     ],
-    demoEyebrow: 'Qore Live Demo',
-    demoTitle: 'Choose a provider and stream one response.',
+    demoEyebrow: 'Agent Event Stream',
+    demoTitle: 'Stream one agent run without rewriting the transcript.',
     providerLabel: 'Provider',
     demoPromptLabel: 'Prompt',
     demoButton: 'Stream',
@@ -42,78 +45,82 @@ const copy = {
     chunksPrefix: 'chunks',
     waiting: 'waiting for the first token...',
     guideAction: 'Provider guide',
+    safetyNote: 'Provider keys belong in your server or trusted runtime. Browsers should consume your own SSE or NDJSON endpoint.',
     presetLabel: 'Presets',
     presets: [
       'Explain stream = signal',
-      'Show a tiny AI reply',
-      'Why does token-level UI matter?'
+      'Show an agent event stream',
+      'Why avoid transcript rewrites?'
     ],
     whyTitle: 'Why it feels different',
     whyCards: [
-      ['Built for streams', 'Streaming data is not an edge case. It is the native path.'],
-      ['Fine-grained by default', 'Only what changes, changes. No virtual DOM rerender loop.'],
-      ['Minimal and composable', 'A small core, zero noise, and primitives that stack cleanly.']
+      ['Streams are first-class', 'Streaming data is not a special case. It is the runtime input.'],
+      ['Signals are readonly', 'The UI can observe stream state without mutating the stream runtime.'],
+      ['Transcript stays stable', 'Qore avoids snapshot-style transcript rewrites while chunks arrive.']
     ],
     flowTitle: 'How it works',
     flowSteps: [
-      ['1', 'Stream', 'The server streams tokens from the model.'],
-      ['2', 'Signal', 'Qore exposes one readonly signal in the browser.'],
-      ['3', 'UI updates', 'Your bound text node updates as data arrives.']
+      ['1', 'Provider', 'Your server streams model, tool, or custom SSE events.'],
+      ['2', 'Runtime', 'Qore reduces events into one signal plus lifecycle state.'],
+      ['3', 'Binding', 'Only the bound DOM text or region updates as chunks arrive.']
     ],
     providers: [
       {
         id: 'openai',
         name: 'OpenAI',
         env: 'OPENAI_API_KEY',
-        description: 'Server-side OpenAI stream, one browser-side signal.',
+        description: 'Server-side OpenAI stream, one browser-side QoreStream signal.',
         tokens: [
-          'OpenAI selected. ',
-          'The API key stays server-side. ',
-          'Tokens stream through your route. ',
-          'Qore updates one signal.'
+          'status: routing request\\n',
+          'tool.search: reading provider notes\\n',
+          'token: stream = signal\\n',
+          'done: text node updated without transcript rewrite'
         ]
       },
       {
         id: 'anthropic',
         name: 'Anthropic',
         env: 'ANTHROPIC_API_KEY',
-        description: 'Swap providers without changing the UI model.',
+        description: 'Swap Anthropic into the same reactive stream runtime.',
         tokens: [
-          'Anthropic selected. ',
-          'Claude streams from the server. ',
-          'The browser receives safe chunks. ',
-          'The same UI binding keeps working.'
+          'status: connecting to Claude\\n',
+          'tool.plan: composing answer shape\\n',
+          'token: provider changed, UI model did not\\n',
+          'done: QoreStream completed'
         ]
       },
       {
         id: 'sse',
         name: 'Generic SSE',
         env: 'CUSTOM_AI_API_KEY',
-        description: 'Wrap your current SSE route once and reuse the same primitive.',
+        description: 'Wrap any SSE endpoint once and keep the UI primitive unchanged.',
         tokens: [
-          'Generic SSE selected. ',
-          'Your backend owns the vendor call. ',
-          'Qore consumes the stream. ',
-          'The UI stays declarative.'
+          'status: consuming custom SSE\\n',
+          'tool.call: vendor event normalized\\n',
+          'token: your endpoint becomes a signal\\n',
+          'done: same binding, different source'
         ]
       }
     ] satisfies readonly ProviderCopy[]
   },
   zh: {
-    headline: '把流式数据直接变成响应式 UI。',
-    summary: '在 Qore 里，stream 本身就是 signal。数据一边流动，UI 一边自动同步，精准更新，不再需要额外搬运状态。',
+    headline: '响应式流。原生 UI。',
+    summary: 'Qore 是面向 AI-native interface 的 reactive stream runtime。它把 token、tool call、状态事件变成只读 signal，让 UI 直接绑定。',
     primaryAction: '直接看效果',
     secondaryAction: '快速开始',
     tertiaryAction: 'GitHub',
-    codeLabel: '核心就是这两行',
-    codeSample: `const answer = stream(chat.chat(prompt))\nreturn h('main', {}, text(() => answer()))`,
+    codeLabel: '运行路径',
+    codeSample: `const answer = stream(openai.chat(prompt))\nreturn h('p', {}, text(() => answer()))`,
+    comparisonTitle: '差异在哪里',
+    reactPath: 'React / Vercel AI SDK: Token -> Hook state -> Component render -> Reconcile',
+    qorePath: 'Qore: Token -> Stream signal -> Text node',
     meta: [
-      ['核心原语', 'stream = signal'],
+      ['定位', 'Reactive Stream Runtime'],
+      ['原语', 'stream = signal'],
       ['安装', 'npm i @qorejs/qore'],
-      ['稳定版', 'v1.0.0']
     ],
-    demoEyebrow: 'Qore 实时演示',
-    demoTitle: '选择一个 provider，流式输出一段响应。',
+    demoEyebrow: 'Agent Event Stream',
+    demoTitle: '流式跑一次 agent，不重写整段 transcript。',
     providerLabel: 'Provider',
     demoPromptLabel: '提示词',
     demoButton: 'Stream',
@@ -122,59 +129,60 @@ const copy = {
     chunksPrefix: 'chunks',
     waiting: '等待第一个 token...',
     guideAction: 'Provider 指南',
+    safetyNote: 'Provider key 应放在服务端或可信运行时。浏览器应消费你自己的 SSE 或 NDJSON endpoint。',
     presetLabel: '预设',
     presets: [
       '解释 stream = signal',
-      '展示一段简短 AI 回复',
-      '为什么 token 级 UI 很重要？'
+      '展示 agent event stream',
+      '为什么避免 transcript rewrite？'
     ],
     whyTitle: '为什么它不一样',
     whyCards: [
-      ['为流而生', '流式数据不是边缘场景，而是它默认面对的路径。'],
-      ['天然细粒度', '只有真正变化的部分才更新，不走整轮重渲染。'],
-      ['极小且可组合', '核心很小，噪音很少，原语之间可以自然拼接。']
+      ['Stream 是一等公民', '流式数据不是特殊情况，而是运行时的输入。'],
+      ['Signal 只读暴露', 'UI 可以观察 stream state，但不能破坏运行时状态机。'],
+      ['Transcript 保持稳定', 'chunk 抵达时，Qore 避免 snapshot-style transcript rewrite。']
     ],
     flowTitle: '它如何工作',
     flowSteps: [
-      ['1', 'Stream', '服务端持续从模型输出 token。'],
-      ['2', 'Signal', 'Qore 在浏览器里暴露一条只读 signal。'],
-      ['3', 'UI 更新', '绑定的 text node 会随着数据抵达持续更新。']
+      ['1', 'Provider', '服务端流式输出模型、tool 或自定义 SSE 事件。'],
+      ['2', 'Runtime', 'Qore 把事件 reduce 成一个 signal 和生命周期状态。'],
+      ['3', 'Binding', 'chunk 到达时，只有绑定的 DOM 文本或区域更新。']
     ],
     providers: [
       {
         id: 'openai',
         name: 'OpenAI',
         env: 'OPENAI_API_KEY',
-        description: 'OpenAI 留在服务端，浏览器只依赖一条 signal。',
+        description: 'OpenAI 留在服务端，浏览器拿到一条 QoreStream signal。',
         tokens: [
-          '已选择 OpenAI。',
-          'API key 留在服务端。',
-          'Token 通过你的路由流向前端。',
-          'Qore 只更新一个 signal。'
+          'status: routing request\\n',
+          'tool.search: reading provider notes\\n',
+          'token: stream = signal\\n',
+          'done: text node updated without transcript rewrite'
         ]
       },
       {
         id: 'anthropic',
         name: 'Anthropic',
         env: 'ANTHROPIC_API_KEY',
-        description: '切换 provider，不需要改变 UI 更新模型。',
+        description: '切到 Anthropic，也不改变 UI 更新模型。',
         tokens: [
-          '已选择 Anthropic。',
-          'Claude 在服务端流式输出。',
-          '浏览器只接收安全 chunk。',
-          '同一个 UI 绑定持续工作。'
+          'status: connecting to Claude\\n',
+          'tool.plan: composing answer shape\\n',
+          'token: provider changed, UI model did not\\n',
+          'done: QoreStream completed'
         ]
       },
       {
         id: 'sse',
         name: 'Generic SSE',
         env: 'CUSTOM_AI_API_KEY',
-        description: '把你现有的 SSE 路由接进来一次即可。',
+        description: '把任意 SSE endpoint 包装一次，UI 原语保持不变。',
         tokens: [
-          '已选择通用 SSE。',
-          '厂商调用由你的后端负责。',
-          'Qore 消费这条流。',
-          'UI 依旧保持声明式。'
+          'status: consuming custom SSE\\n',
+          'tool.call: vendor event normalized\\n',
+          'token: your endpoint becomes a signal\\n',
+          'done: same binding, different source'
         ]
       }
     ] satisfies readonly ProviderCopy[]
@@ -283,6 +291,12 @@ onBeforeUnmount(() => {
           <pre><code>{{ t.codeSample }}</code></pre>
         </div>
 
+        <div class="path-card" aria-label="Runtime comparison">
+          <span>{{ t.comparisonTitle }}</span>
+          <p class="path-line path-line-muted">{{ t.reactPath }}</p>
+          <p class="path-line path-line-strong">{{ t.qorePath }}</p>
+        </div>
+
         <div class="hero-actions">
           <a class="primary-action" href="#live-demo">{{ t.primaryAction }}</a>
           <a class="secondary-action" :href="quickStartLink">{{ t.secondaryAction }}</a>
@@ -319,6 +333,7 @@ onBeforeUnmount(() => {
           <span>Environment</span>
           <strong>{{ activeProvider.env }}</strong>
           <p>{{ activeProvider.description }}</p>
+          <p class="safety-note">{{ t.safetyNote }}</p>
         </div>
 
         <form class="prompt-row" @submit.prevent="runDemo">
@@ -530,6 +545,7 @@ h1 {
 
 .hero-pill,
 .code-block,
+.path-card,
 .demo-panel,
 .provider-card,
 .proof-card,
@@ -551,6 +567,7 @@ h1 {
 
 .hero-pill span,
 .code-block span,
+.path-card span,
 .demo-topbar p,
 .provider-card span,
 .flow-card span {
@@ -584,6 +601,27 @@ h1 {
   background: rgba(0, 0, 0, 0.2);
   color: var(--text);
   font: 800 13px/1.75 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.path-card {
+  display: grid;
+  gap: 10px;
+  max-width: 740px;
+  padding: 16px 18px;
+  border-radius: 22px;
+}
+
+.path-line {
+  color: rgba(244, 251, 247, 0.68);
+  font: 800 13px/1.6 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.path-line-strong {
+  color: var(--accent);
+}
+
+.path-line-muted {
+  color: rgba(244, 251, 247, 0.48);
 }
 
 .hero-actions {
@@ -707,6 +745,14 @@ h1 {
   padding: 16px;
   border-radius: 20px;
   background: rgba(255, 255, 255, 0.035);
+}
+
+.provider-card .safety-note {
+  padding-top: 10px;
+  border-top: 1px solid rgba(143, 247, 209, 0.08);
+  color: rgba(244, 251, 247, 0.58);
+  font-size: 13px;
+  line-height: 1.6;
 }
 
 .prompt-row {
