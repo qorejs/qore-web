@@ -655,7 +655,7 @@ onBeforeUnmount(() => {
   grid-template-columns: minmax(0, 1.05fr) minmax(380px, 0.72fr);
   gap: clamp(30px, 5vw, 72px);
   align-items: center;
-  min-height: calc(100vh - 72px);
+  min-height: min(940px, calc(100vh - 72px));
 }
 
 .hero-copy,
@@ -1310,7 +1310,6 @@ pre,
 }
 
 @media (max-width: 1180px) {
-  .hero-section,
   .surfaces-layout,
   .comparison-grid,
   .architecture-rail,
@@ -1332,6 +1331,60 @@ pre,
 
   .provider-cloud {
     grid-column: auto;
+  }
+}
+
+@media (max-width: 1180px) and (min-width: 981px) {
+  .hero-section {
+    grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
+    gap: 28px;
+  }
+
+  .surfaces-layout {
+    grid-template-columns: minmax(0, 0.92fr) minmax(390px, 0.78fr);
+    gap: 18px;
+  }
+
+  .hero-section h1 {
+    font-size: clamp(60px, 6.7vw, 78px);
+  }
+
+  .summary {
+    max-width: 620px;
+    font-size: clamp(18px, 1.85vw, 22px);
+  }
+
+  .why-card {
+    padding: 24px;
+  }
+
+  .why-card h2 {
+    font-size: clamp(30px, 3.5vw, 42px);
+  }
+
+  .why-card p {
+    font-size: 15px;
+  }
+
+  .why-card pre {
+    padding: 16px;
+    font-size: 12px;
+  }
+
+  .surface-card {
+    min-height: 160px;
+    padding: 20px;
+  }
+
+  .demo-panel {
+    padding: 18px;
+  }
+}
+
+@media (max-width: 980px) {
+  .hero-section {
+    grid-template-columns: 1fr;
+    min-height: auto;
   }
 }
 
