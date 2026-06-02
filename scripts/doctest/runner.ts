@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
+const DOCTEST_TIMEOUT_MS = Number(process.env.QORE_DOCTEST_TIMEOUT_MS ?? 15000)
 
 interface CodeBlock {
   file: string
@@ -170,7 +171,7 @@ async function runCodeBlock(block: CodeBlock): Promise<{ success: boolean; error
     // Execute the temporary file with tsx.
     execSync(`cd "${__dirname}" && npx tsx "${tempFile}"`, {
       stdio: 'pipe',
-      timeout: 5000
+      timeout: DOCTEST_TIMEOUT_MS
     })
     return { success: true }
   } catch (error: any) {

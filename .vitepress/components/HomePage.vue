@@ -24,6 +24,7 @@ const copy = {
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
     summary: 'AI interfaces should not treat streaming as a special case. In Qore, a stream is readable state, an async iterable, and lifecycle metadata at the same time.',
+    categoryLine: 'Not an AI SDK. Not another UI framework. Qore is the runtime layer for streaming interface state.',
     proofLine: 'Stream is state. Stream is UI.',
     primaryAction: 'See the surfaces',
     secondaryAction: 'Quick start',
@@ -40,6 +41,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'A QoreStream is deliberately more than a string. It exposes the three surfaces an AI interface actually needs.',
+    surfacesTakeaway: 'One primitive. Three ways to consume it. No adapter changes in your UI.',
     surfaces: [
       ['Signal', 'Bind current accumulated value directly into UI.', `answer()`],
       ['AsyncIterable', 'Observe every token, tool call, or event in control flow.', `for await (const event of events) {}`],
@@ -64,12 +66,14 @@ return h('p', {}, text(() => answer()))`,
     ],
     comparisonTitle: 'React vs Qore',
     comparisonLead: 'React treats streaming as state synchronization. Qore treats streaming as the state source.',
+    comparisonTakeaway: 'Token -> signal -> DOM is the shorter path.',
     reactTitle: 'React / AI SDK path',
     qoreTitle: 'Qore path',
     reactSteps: ['token', 'hook state', 'component render', 'reconcile', 'DOM'],
     qoreSteps: ['token', 'stream signal', 'DOM'],
     architectureTitle: 'Architecture',
     architectureLead: 'Providers are inputs. The runtime is the product.',
+    architectureTakeaway: 'Providers can change. Runtime semantics stay stable.',
     architectureSteps: [
       ['Provider', 'OpenAI, Anthropic, Ollama, custom SSE, or NDJSON.'],
       ['Stream Runtime', 'Backpressure, lifecycle, retry, event selection, and reducers.'],
@@ -78,6 +82,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     benchmarkTitle: 'Benchmark',
     benchmarkLead: 'The honest comparison is not Qore versus React as brands. It is update model versus update model.',
+    benchmarkTakeaway: 'Measure rewritten work, not brand names.',
     benchmarkLines: ['Fine-grained stream updates', 'vs', 'snapshot transcript rewrites'],
     benchmarkDetails: [
       ['Mutation target', 'Text node / selected region'],
@@ -86,6 +91,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     providersTitle: 'Providers',
     providersLead: 'Adapters are entry points into the runtime, not the headline. Bring any streaming source and keep the same UI primitive.',
+    providersTakeaway: 'The provider story can grow without changing the interface primitive.',
     providerNames: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE', 'NDJSON'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
     finalLead: 'Reactive Stream Runtime for AI-native interfaces. stream = signal.',
@@ -133,6 +139,7 @@ return h('p', {}, text(() => answer()))`,
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
     summary: 'AI interface 不应该把 streaming 当成特殊情况。在 Qore 里，一条 stream 同时是可读状态、async iterable 和生命周期元数据。',
+    categoryLine: 'Qore 不是 AI SDK，也不是又一个 UI framework。它是 streaming interface state 的 runtime layer。',
     proofLine: 'Stream is state. Stream is UI.',
     primaryAction: '看三种表面',
     secondaryAction: '快速开始',
@@ -149,6 +156,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'QoreStream 不只是字符串。它暴露 AI interface 真正需要的三种表面。',
+    surfacesTakeaway: '一个 primitive，三种消费方式，UI 不需要随着 adapter 改。',
     surfaces: [
       ['Signal', '把当前累积值直接绑定到 UI。', `answer()`],
       ['AsyncIterable', '在控制流里观察每个 token、tool call 或事件。', `for await (const event of events) {}`],
@@ -173,12 +181,14 @@ return h('p', {}, text(() => answer()))`,
     ],
     comparisonTitle: 'React vs Qore',
     comparisonLead: 'React 把 streaming 变成状态同步问题。Qore 把 streaming 作为状态源。',
+    comparisonTakeaway: 'Token -> signal -> DOM 是更短的路径。',
     reactTitle: 'React / AI SDK path',
     qoreTitle: 'Qore path',
     reactSteps: ['token', 'hook state', 'component render', 'reconcile', 'DOM'],
     qoreSteps: ['token', 'stream signal', 'DOM'],
     architectureTitle: 'Architecture',
     architectureLead: 'Provider 是入口。Runtime 才是产品。',
+    architectureTakeaway: 'Provider 可以换，runtime 语义保持稳定。',
     architectureSteps: [
       ['Provider', 'OpenAI、Anthropic、Ollama、自定义 SSE 或 NDJSON。'],
       ['Stream Runtime', 'Backpressure、lifecycle、retry、event selection 和 reducer。'],
@@ -187,6 +197,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     benchmarkTitle: 'Benchmark',
     benchmarkLead: '诚实的比较不是 Qore 和 React 两个品牌，而是两种更新模型。',
+    benchmarkTakeaway: '衡量被重写的工作量，而不是比较品牌名。',
     benchmarkLines: ['Fine-grained stream updates', 'vs', 'snapshot transcript rewrites'],
     benchmarkDetails: [
       ['Mutation target', 'Text node / selected region'],
@@ -195,6 +206,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     providersTitle: 'Providers',
     providersLead: 'Adapter 是 runtime 的入口，不是首页主角。带来任意 streaming source，UI primitive 保持一致。',
+    providersTakeaway: 'Provider story 可以继续扩展，但 interface primitive 不变。',
     providerNames: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE', 'NDJSON'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
     finalLead: 'Reactive Stream Runtime for AI-native interfaces. stream = signal.',
@@ -332,6 +344,7 @@ onBeforeUnmount(() => {
         </h1>
         <p class="tagline"><code>{{ t.tagline }}</code></p>
         <p class="summary">{{ t.summary }}</p>
+        <p class="category-line">{{ t.categoryLine }}</p>
         <p class="proof-line">{{ t.proofLine }}</p>
 
         <div class="hero-actions">
@@ -409,6 +422,8 @@ onBeforeUnmount(() => {
           <div ref="qoreRoot" class="runtime-root"></div>
         </section>
       </div>
+
+      <p class="takeaway">{{ t.surfacesTakeaway }}</p>
     </section>
 
     <section id="comparison" class="home-section comparison-section">
@@ -432,6 +447,8 @@ onBeforeUnmount(() => {
           </ol>
         </article>
       </div>
+
+      <p class="takeaway">{{ t.comparisonTakeaway }}</p>
     </section>
 
     <section id="architecture" class="home-section architecture-section">
@@ -447,6 +464,8 @@ onBeforeUnmount(() => {
           <p>{{ step[1] }}</p>
         </article>
       </div>
+
+      <p class="takeaway">{{ t.architectureTakeaway }}</p>
     </section>
 
     <section id="benchmark" class="home-section benchmark-section">
@@ -467,6 +486,8 @@ onBeforeUnmount(() => {
           </article>
         </div>
       </div>
+
+      <p class="takeaway">{{ t.benchmarkTakeaway }}</p>
     </section>
 
     <section id="providers" class="home-section providers-section">
@@ -487,6 +508,8 @@ onBeforeUnmount(() => {
           <p class="safety-note">{{ t.safetyNote }}</p>
         </article>
       </div>
+
+      <p class="takeaway">{{ t.providersTakeaway }}</p>
     </section>
 
     <section class="home-section final-section">
@@ -500,6 +523,16 @@ onBeforeUnmount(() => {
 :global(.VPContent.is-home) {
   padding-top: 0;
   background: #08110f;
+}
+
+:global(html:has(.VPContent.is-home)) {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :global(html:has(.VPContent.is-home)) {
+    scroll-behavior: auto;
+  }
 }
 
 :global(.VPContent.is-home .VPHome),
@@ -610,6 +643,7 @@ onBeforeUnmount(() => {
   z-index: 1;
   width: min(100%, 1280px);
   margin: 0 auto;
+  scroll-margin-top: 112px;
 }
 
 .home-section + .home-section {
@@ -708,6 +742,17 @@ pre,
   font-size: clamp(20px, 2.1vw, 28px);
   line-height: 1.42;
   letter-spacing: -0.035em;
+}
+
+.category-line {
+  max-width: 710px;
+  padding-left: 18px;
+  border-left: 2px solid rgba(154, 245, 215, 0.52);
+  color: rgba(245, 251, 248, 0.68);
+  font-size: clamp(16px, 1.7vw, 20px);
+  font-weight: 760;
+  line-height: 1.55;
+  letter-spacing: -0.03em;
 }
 
 .proof-line {
@@ -877,6 +922,21 @@ pre,
   padding: 20px;
   border-radius: 30px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.04));
+}
+
+.takeaway {
+  width: fit-content;
+  max-width: min(100%, 780px);
+  margin-top: 22px;
+  padding: 13px 16px;
+  border: 1px solid rgba(154, 245, 215, 0.18);
+  border-radius: 999px;
+  color: rgba(245, 251, 248, 0.82);
+  background: linear-gradient(135deg, rgba(154, 245, 215, 0.12), rgba(107, 220, 255, 0.08));
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1.35;
+  letter-spacing: -0.025em;
 }
 
 .demo-topbar,
@@ -1285,6 +1345,11 @@ pre,
     min-height: auto;
   }
 
+  .category-line {
+    padding-left: 14px;
+    font-size: 15px;
+  }
+
   .provider-tabs,
   .prompt-row,
   .benchmark-grid {
@@ -1308,7 +1373,24 @@ pre,
 
 @media (max-width: 640px) {
   h1 {
-    font-size: clamp(46px, 15vw, 70px);
+    font-size: clamp(42px, 13.5vw, 62px);
+  }
+
+  .home-page {
+    padding-top: 92px;
+  }
+
+  .hero-copy {
+    gap: 18px;
+  }
+
+  .summary {
+    font-size: 18px;
+    line-height: 1.45;
+  }
+
+  .proof-line {
+    font-size: 23px;
   }
 
   .hero-actions {
@@ -1329,6 +1411,11 @@ pre,
   .provider-card,
   .final-section {
     border-radius: 24px;
+  }
+
+  .takeaway {
+    width: 100%;
+    border-radius: 22px;
   }
 }
 </style>
