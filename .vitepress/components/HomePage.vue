@@ -23,21 +23,20 @@ const copy = {
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'AI interfaces should not treat streaming as a special case. In Qore, a stream is readable state, an async iterable, and lifecycle metadata at the same time.',
-    categoryLine: 'Not an AI SDK. Not another UI framework. Qore is the runtime layer for streaming interface state.',
-    proofLine: 'Stream is state. Stream is UI.',
+    summary: 'Qore makes streams first-class state: tokens, tools, status, and errors flow into UI without transcript rewrites.',
+    categoryLine: 'Not an AI SDK. Not another UI framework. A runtime layer for streaming interface state.',
     primaryAction: 'See the surfaces',
     secondaryAction: 'Quick start',
     tertiaryAction: 'GitHub',
     whyTitle: 'Why Qore exists',
-    whyLead: 'Traditional UI frameworks start from snapshots. AI interfaces start from motion: tokens, tool calls, reasoning, retries, and artifacts arriving over time.',
+    whyLead: 'AI interfaces are not snapshots. They are live streams of tokens, tools, status, retries, and artifacts.',
     whyCode: `const answer = stream(openai.chat('hello'))
 
 return h('p', {}, text(() => answer()))`,
     whyPoints: [
       ['No transcript rewrites', 'The bound text node updates as chunks arrive.'],
       ['No state glue', 'The stream already is the signal your UI reads.'],
-      ['No provider lock-in', 'Adapters feed one runtime instead of one UI stack.']
+      ['No framework lock-in', 'Use the runtime from Qore DOM today, or from framework adapters tomorrow.']
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'A QoreStream is deliberately more than a string. It exposes the three surfaces an AI interface actually needs.',
@@ -138,21 +137,20 @@ return h('p', {}, text(() => answer()))`,
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'AI interface 不应该把 streaming 当成特殊情况。在 Qore 里，一条 stream 同时是可读状态、async iterable 和生命周期元数据。',
-    categoryLine: 'Qore 不是 AI SDK，也不是又一个 UI framework。它是 streaming interface state 的 runtime layer。',
-    proofLine: 'Stream is state. Stream is UI.',
+    summary: 'Qore 让 stream 成为一等状态：token、tool、status、error 自然流入 UI，不再重写 transcript。',
+    categoryLine: '不是 AI SDK，也不是又一个 UI framework，而是 streaming interface state 的 runtime layer。',
     primaryAction: '看三种表面',
     secondaryAction: '快速开始',
     tertiaryAction: 'GitHub',
     whyTitle: 'Qore 为什么存在',
-    whyLead: '传统 UI 框架从快照出发。AI interface 从流动出发：token、tool call、reasoning、retry、artifact 都在持续抵达。',
+    whyLead: 'AI interface 不是快照，而是 token、tool、status、retry、artifact 持续抵达的 live stream。',
     whyCode: `const answer = stream(openai.chat('hello'))
 
 return h('p', {}, text(() => answer()))`,
     whyPoints: [
       ['不重写 transcript', 'chunk 到达时，只更新绑定的 text node。'],
       ['不搬运状态', 'stream 本身就是 UI 读取的 signal。'],
-      ['不锁定 provider', 'adapter 喂给同一个 runtime，而不是绑定某个 UI stack。']
+      ['不锁定 framework', '今天用 Qore DOM，明天也可以接 framework adapter。']
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'QoreStream 不只是字符串。它暴露 AI interface 真正需要的三种表面。',
@@ -345,7 +343,6 @@ onBeforeUnmount(() => {
         <p class="tagline"><code>{{ t.tagline }}</code></p>
         <p class="summary">{{ t.summary }}</p>
         <p class="category-line">{{ t.categoryLine }}</p>
-        <p class="proof-line">{{ t.proofLine }}</p>
 
         <div class="hero-actions">
           <a class="primary-action" href="#surfaces">{{ t.primaryAction }}</a>
@@ -522,7 +519,7 @@ onBeforeUnmount(() => {
 <style scoped>
 :global(.VPContent.is-home) {
   padding-top: 0;
-  background: #08110f;
+  background: #06110f;
 }
 
 :global(html:has(.VPContent.is-home)) {
@@ -537,7 +534,7 @@ onBeforeUnmount(() => {
 
 :global(.VPContent.is-home .VPHome),
 :global(.VPFooter) {
-  background: #08110f;
+  background: #06110f;
 }
 
 :global(.VPContent.is-home .VPHome > .vp-doc.container) {
@@ -563,47 +560,52 @@ onBeforeUnmount(() => {
 
 :global(body:has(.VPContent.is-home) .VPNavBar),
 :global(body:has(.VPContent.is-home) .VPNavBar .content-body) {
-  background: rgba(8, 17, 15, 0.86) !important;
-  backdrop-filter: blur(18px);
+  background: rgba(5, 14, 12, 0.88) !important;
+  backdrop-filter: blur(20px);
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBar .divider-line) {
-  background: rgba(173, 255, 225, 0.08) !important;
+  background: rgba(98, 241, 221, 0.16) !important;
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBarTitle span),
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink),
 :global(body:has(.VPContent.is-home) .VPSocialLink),
 :global(body:has(.VPContent.is-home) .VPNavBarExtra .button) {
-  color: rgba(246, 252, 248, 0.78) !important;
+  color: rgba(247, 255, 252, 0.84) !important;
+}
+
+:global(body:has(.VPContent.is-home) .VPNavBarMenuLink) {
+  font-size: 13px;
+  font-weight: 820;
+  letter-spacing: 0.02em;
 }
 
 :global(body:has(.VPContent.is-home) .VPNavBarMenuLink.active) {
-  color: #9af5d7 !important;
+  color: #66f7df !important;
 }
 
-:global(body:has(.VPContent.is-home) .DocSearch-Button) {
-  color: rgba(246, 252, 248, 0.66);
-  background: rgba(255, 255, 255, 0.026);
-  border-color: rgba(173, 255, 225, 0.09);
-  box-shadow: none;
+:global(body:has(.VPContent.is-home) .VPNavBarSearch) {
+  display: none !important;
 }
 
-:global(body:has(.VPContent.is-home) .DocSearch-Button-Placeholder),
-:global(body:has(.VPContent.is-home) .DocSearch-Search-Icon),
-:global(body:has(.VPContent.is-home) .DocSearch-Button-Key) {
-  color: rgba(246, 252, 248, 0.72) !important;
+:global(body:has(.VPContent.is-home) .VPNavBarTranslations),
+:global(body:has(.VPContent.is-home) .VPNavBarAppearance),
+:global(body:has(.VPContent.is-home) .VPNavBarSocialLinks),
+:global(body:has(.VPContent.is-home) .VPNavBarExtra) {
+  display: none !important;
 }
 
 .home-page {
-  --text: #f5fbf8;
-  --muted: rgba(245, 251, 248, 0.7);
-  --soft: rgba(245, 251, 248, 0.5);
-  --line: rgba(143, 247, 209, 0.13);
-  --panel: rgba(255, 255, 255, 0.046);
-  --panel-strong: rgba(255, 255, 255, 0.072);
-  --accent: #9af5d7;
-  --accent-strong: #6bdcff;
+  --text: #f8fffc;
+  --muted: rgba(248, 255, 252, 0.74);
+  --soft: rgba(248, 255, 252, 0.52);
+  --line: rgba(102, 247, 223, 0.22);
+  --panel: rgba(246, 255, 252, 0.062);
+  --panel-strong: rgba(246, 255, 252, 0.092);
+  --accent: #66f7df;
+  --accent-strong: #31d9ff;
+  --accent-glow: rgba(49, 217, 255, 0.26);
   --amber: #f5d38b;
   position: relative;
   width: 100%;
@@ -612,9 +614,9 @@ onBeforeUnmount(() => {
   padding: 118px clamp(18px, 4vw, 72px) 98px;
   color: var(--text);
   background:
-    radial-gradient(circle at 20% 0%, rgba(107, 220, 255, 0.14), transparent 30%),
-    radial-gradient(circle at 82% 12%, rgba(154, 245, 215, 0.16), transparent 28%),
-    linear-gradient(180deg, #08110f 0%, #0b1815 46%, #08110f 100%);
+    radial-gradient(circle at 20% 0%, rgba(49, 217, 255, 0.22), transparent 30%),
+    radial-gradient(circle at 83% 13%, rgba(102, 247, 223, 0.2), transparent 28%),
+    linear-gradient(180deg, #06110f 0%, #09211c 42%, #06110f 100%);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 360ms ease, transform 360ms ease;
@@ -627,8 +629,8 @@ onBeforeUnmount(() => {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(143, 247, 209, 0.028) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(143, 247, 209, 0.028) 1px, transparent 1px);
+    linear-gradient(rgba(102, 247, 223, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102, 247, 223, 0.045) 1px, transparent 1px);
   background-size: 86px 86px;
   mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 }
@@ -648,6 +650,10 @@ onBeforeUnmount(() => {
 
 .home-section + .home-section {
   margin-top: clamp(74px, 10vw, 132px);
+}
+
+.hero-section + .surfaces-section {
+  margin-top: clamp(108px, 13vw, 178px);
 }
 
 .hero-section {
@@ -670,7 +676,7 @@ onBeforeUnmount(() => {
 .final-section {
   border: 1px solid var(--line);
   background: var(--panel);
-  box-shadow: 0 26px 90px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 30px 110px rgba(0, 0, 0, 0.34);
   backdrop-filter: blur(18px);
 }
 
@@ -691,18 +697,31 @@ p {
   margin: 0;
 }
 
+h1,
+h2,
+h3,
+.primary-action,
+.secondary-action,
+.ghost-action,
+.inline-link {
+  font-family: 'Space Grotesk', 'Avenir Next', 'DIN Alternate', 'Trebuchet MS', sans-serif;
+}
+
 h1 {
   display: grid;
-  gap: 10px;
+  gap: 8px;
   max-width: 980px;
   color: transparent;
-  font-family: 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
-  font-size: clamp(56px, 7.4vw, 112px);
-  line-height: 0.91;
-  letter-spacing: -0.084em;
-  background: linear-gradient(120deg, #ffffff 0%, #effff6 47%, #9beeff 100%);
+  font-family: 'Avenir Next Condensed', 'HelveticaNeue-CondensedBlack', 'DIN Condensed', 'DIN Alternate', 'Space Grotesk', 'Trebuchet MS', sans-serif;
+  font-size: clamp(60px, 6.9vw, 106px);
+  font-stretch: condensed;
+  font-weight: 900;
+  line-height: 0.88;
+  letter-spacing: -0.038em;
+  background: linear-gradient(110deg, #ffffff 0%, #eafff8 42%, var(--accent-strong) 100%);
   -webkit-background-clip: text;
   background-clip: text;
+  text-wrap: balance;
 }
 
 .hero-copy h1 span {
@@ -730,15 +749,16 @@ pre,
   padding: 9px 14px;
   border: 1px solid rgba(154, 245, 215, 0.22);
   border-radius: 999px;
-  color: #08110f;
+  color: #031311;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   font-weight: 900;
   letter-spacing: -0.02em;
+  box-shadow: 0 0 36px rgba(49, 217, 255, 0.2);
 }
 
 .summary {
   max-width: 760px;
-  color: rgba(245, 251, 248, 0.78);
+  color: rgba(248, 255, 252, 0.82);
   font-size: clamp(20px, 2.1vw, 28px);
   line-height: 1.42;
   letter-spacing: -0.035em;
@@ -747,20 +767,12 @@ pre,
 .category-line {
   max-width: 710px;
   padding-left: 18px;
-  border-left: 2px solid rgba(154, 245, 215, 0.52);
-  color: rgba(245, 251, 248, 0.68);
+  border-left: 2px solid rgba(49, 217, 255, 0.72);
+  color: rgba(208, 255, 247, 0.82);
   font-size: clamp(16px, 1.7vw, 20px);
   font-weight: 760;
   line-height: 1.55;
   letter-spacing: -0.03em;
-}
-
-.proof-line {
-  color: var(--text);
-  font-size: clamp(24px, 3vw, 42px);
-  font-weight: 900;
-  line-height: 1.05;
-  letter-spacing: -0.06em;
 }
 
 .hero-actions {
@@ -787,15 +799,16 @@ pre,
 }
 
 .primary-action {
-  color: #08110f;
+  color: #031311;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  box-shadow: 0 0 34px rgba(49, 217, 255, 0.18);
 }
 
 .secondary-action,
 .ghost-action,
 .inline-link {
   border: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(246, 255, 252, 0.048);
 }
 
 .primary-action:hover,
@@ -813,7 +826,13 @@ pre,
   gap: 20px;
   padding: clamp(22px, 3vw, 34px);
   border-radius: 32px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.038));
+  border-color: rgba(102, 247, 223, 0.28);
+  background:
+    radial-gradient(circle at 78% 0%, rgba(49, 217, 255, 0.2), transparent 34%),
+    linear-gradient(180deg, rgba(246, 255, 252, 0.09), rgba(246, 255, 252, 0.046));
+  box-shadow:
+    0 34px 120px rgba(0, 0, 0, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .why-card h2,
@@ -842,25 +861,30 @@ pre,
   margin: 0;
   overflow: auto;
   padding: 18px;
-  border: 1px solid rgba(143, 247, 209, 0.11);
+  border: 1px solid rgba(102, 247, 223, 0.18);
   border-radius: 20px;
   color: var(--text);
-  background: rgba(0, 0, 0, 0.22);
+  background:
+    linear-gradient(90deg, rgba(49, 217, 255, 0.1), transparent 38%),
+    rgba(0, 0, 0, 0.28);
   font-size: 13px;
   font-weight: 800;
   line-height: 1.7;
+  box-shadow: inset 3px 0 0 rgba(49, 217, 255, 0.52);
 }
 
 .why-points {
   display: grid;
-  gap: 12px;
+  gap: 10px;
 }
 
 .why-points article {
   display: grid;
-  gap: 4px;
-  padding: 14px 0 0;
-  border-top: 1px solid rgba(143, 247, 209, 0.1);
+  gap: 5px;
+  padding: 14px 16px;
+  border: 1px solid rgba(102, 247, 223, 0.16);
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.18);
 }
 
 .why-points h3,
@@ -869,6 +893,11 @@ pre,
   font-size: 18px;
   line-height: 1.12;
   letter-spacing: -0.035em;
+}
+
+.why-points h3 {
+  color: var(--accent);
+  font-size: clamp(20px, 2vw, 24px);
 }
 
 .section-copy {
@@ -888,7 +917,7 @@ pre,
 }
 
 .section-index {
-  color: var(--accent);
+  color: var(--accent-strong);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 0.2em;
@@ -912,6 +941,7 @@ pre,
   min-height: 190px;
   padding: 24px;
   border-radius: 28px;
+  border-color: rgba(102, 247, 223, 0.2);
 }
 
 .demo-panel {
@@ -989,7 +1019,7 @@ pre,
 .prompt-row input,
 .prompt-row button,
 .preset-row button {
-  border: 1px solid rgba(143, 247, 209, 0.15);
+  border: 1px solid rgba(102, 247, 223, 0.2);
   font-weight: 850;
 }
 
@@ -997,14 +1027,14 @@ pre,
   min-height: 42px;
   padding: 0 10px;
   border-radius: 14px;
-  color: rgba(244, 251, 247, 0.72);
-  background: rgba(255, 255, 255, 0.025);
+  color: rgba(244, 255, 251, 0.78);
+  background: rgba(246, 255, 252, 0.032);
   cursor: pointer;
 }
 
 .provider-tabs button.active,
 .prompt-row button {
-  color: #08110f;
+  color: #031311;
   border-color: transparent;
   background: linear-gradient(135deg, var(--accent), var(--accent-strong));
 }
@@ -1021,7 +1051,7 @@ pre,
   padding: 0 14px;
   border-radius: 14px;
   color: var(--text);
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(0, 0, 0, 0.26);
   outline: none;
 }
 
@@ -1042,8 +1072,8 @@ pre,
   min-height: 32px;
   padding: 0 12px;
   border-radius: 999px;
-  color: rgba(244, 251, 247, 0.72);
-  background: rgba(255, 255, 255, 0.025);
+  color: rgba(244, 255, 251, 0.72);
+  background: rgba(246, 255, 252, 0.032);
   cursor: pointer;
 }
 
@@ -1056,9 +1086,11 @@ pre,
   gap: 14px;
   min-height: 300px;
   padding: 18px;
-  border: 1px solid rgba(143, 247, 209, 0.1);
+  border: 1px solid rgba(102, 247, 223, 0.18);
   border-radius: 24px;
-  background: linear-gradient(180deg, rgba(8, 13, 20, 0.92), rgba(8, 13, 20, 0.8));
+  background:
+    radial-gradient(circle at 84% 0%, rgba(49, 217, 255, 0.14), transparent 36%),
+    linear-gradient(180deg, rgba(4, 11, 14, 0.95), rgba(5, 13, 15, 0.86));
 }
 
 :deep(.runtime-topline),
@@ -1082,13 +1114,13 @@ pre,
 }
 
 :deep(.runtime-bubble-user) {
-  border: 1px solid rgba(143, 247, 209, 0.08);
-  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(102, 247, 223, 0.14);
+  background: rgba(246, 255, 252, 0.052);
 }
 
 :deep(.runtime-bubble-assistant) {
-  border: 1px solid rgba(107, 231, 255, 0.08);
-  background: rgba(11, 14, 22, 0.92);
+  border: 1px solid rgba(49, 217, 255, 0.18);
+  background: rgba(5, 12, 16, 0.94);
 }
 
 :deep(.runtime-provider),
@@ -1113,8 +1145,8 @@ pre,
   margin: 0;
   white-space: pre-wrap;
   color: var(--text);
-  font: 750 clamp(21px, 2vw, 30px)/1.08 ui-serif, Georgia, Cambria, 'Times New Roman', serif;
-  letter-spacing: -0.03em;
+  font: 840 clamp(20px, 1.9vw, 28px)/1.12 'Space Grotesk', 'Avenir Next', 'DIN Alternate', 'Trebuchet MS', sans-serif;
+  letter-spacing: -0.045em;
 }
 
 .comparison-grid {
@@ -1126,6 +1158,7 @@ pre,
 .path-panel {
   padding: clamp(22px, 3vw, 34px);
   border-radius: 30px;
+  border-color: rgba(102, 247, 223, 0.2);
 }
 
 .path-panel ol {
@@ -1149,7 +1182,7 @@ pre,
   position: absolute;
   left: 8px;
   top: -1px;
-  color: rgba(245, 251, 248, 0.34);
+  color: var(--accent-strong);
 }
 
 .path-panel li:first-child::before {
@@ -1161,8 +1194,10 @@ pre,
 }
 
 .strong-path {
-  border-color: rgba(154, 245, 215, 0.34);
-  background: linear-gradient(180deg, rgba(154, 245, 215, 0.11), rgba(255, 255, 255, 0.046));
+  border-color: rgba(102, 247, 223, 0.38);
+  background:
+    radial-gradient(circle at 82% 0%, rgba(49, 217, 255, 0.16), transparent 38%),
+    linear-gradient(180deg, rgba(102, 247, 223, 0.12), rgba(246, 255, 252, 0.052));
 }
 
 .strong-path h3,
@@ -1181,6 +1216,7 @@ pre,
   min-height: 210px;
   padding: 24px;
   border-radius: 28px;
+  border-color: rgba(102, 247, 223, 0.18);
 }
 
 .architecture-node:not(:last-child)::after {
@@ -1198,7 +1234,7 @@ pre,
 .architecture-node span {
   display: block;
   margin-bottom: 42px;
-  color: var(--text);
+  color: var(--accent);
   font-size: clamp(22px, 2.6vw, 34px);
   font-weight: 900;
   line-height: 1;
@@ -1210,6 +1246,10 @@ pre,
   gap: 24px;
   padding: clamp(22px, 4vw, 42px);
   border-radius: 34px;
+  border-color: rgba(102, 247, 223, 0.22);
+  background:
+    radial-gradient(circle at 82% 10%, rgba(49, 217, 255, 0.16), transparent 34%),
+    rgba(246, 255, 252, 0.062);
 }
 
 .benchmark-statement {
@@ -1223,7 +1263,7 @@ pre,
 }
 
 .benchmark-statement span:nth-child(2) {
-  color: var(--amber);
+  color: var(--accent-strong);
   font-size: clamp(18px, 2.4vw, 28px);
   letter-spacing: -0.02em;
 }
@@ -1239,9 +1279,9 @@ pre,
   display: grid;
   gap: 8px;
   padding: 18px;
-  border: 1px solid rgba(143, 247, 209, 0.1);
+  border: 1px solid rgba(102, 247, 223, 0.18);
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.035);
+  background: rgba(246, 255, 252, 0.046);
 }
 
 .provider-cloud {
@@ -1253,12 +1293,14 @@ pre,
   padding: clamp(22px, 3vw, 34px);
   border: 1px solid var(--line);
   border-radius: 30px;
-  background: rgba(255, 255, 255, 0.04);
+  background:
+    linear-gradient(135deg, rgba(49, 217, 255, 0.075), transparent 44%),
+    rgba(246, 255, 252, 0.052);
 }
 
 .provider-cloud span {
   padding: 10px 12px;
-  border: 1px solid rgba(143, 247, 209, 0.16);
+  border: 1px solid rgba(102, 247, 223, 0.24);
   border-radius: 999px;
   color: rgba(245, 251, 248, 0.82);
   background: rgba(0, 0, 0, 0.16);
@@ -1274,7 +1316,7 @@ pre,
 }
 
 .provider-card strong {
-  color: var(--text);
+  color: var(--accent);
   font: 900 18px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -1293,8 +1335,8 @@ pre,
   border-radius: 36px;
   text-align: center;
   background:
-    radial-gradient(circle at 50% 0%, rgba(154, 245, 215, 0.18), transparent 42%),
-    rgba(255, 255, 255, 0.046);
+    radial-gradient(circle at 50% 0%, rgba(49, 217, 255, 0.22), transparent 42%),
+    rgba(246, 255, 252, 0.062);
 }
 
 .final-section h2 {
@@ -1440,10 +1482,6 @@ pre,
   .summary {
     font-size: 18px;
     line-height: 1.45;
-  }
-
-  .proof-line {
-    font-size: 23px;
   }
 
   .hero-actions {
