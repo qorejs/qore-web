@@ -72,9 +72,16 @@ return h('p', {}, text(() => answer()))`,
     qoreTitle: 'Qore path',
     reactSteps: ['token', 'hook state', 'component render', 'reconcile', 'DOM'],
     qoreSteps: ['token', 'stream signal', 'DOM'],
+    reactWork: ['state glue', 'render pass', 'reconcile pass', 'transcript rewrite'],
+    qoreWork: ['stream signal', 'text node'],
+    reactCaption: 'Every token re-enters component state.',
+    qoreCaption: 'Every token updates the bound node.',
     architectureTitle: 'Architecture',
     architectureLead: 'Providers are inputs. The runtime is the product.',
     architectureTakeaway: 'Providers can change. Runtime semantics stay stable.',
+    runtimeCoreLabel: 'Stable layer',
+    runtimeCoreTitle: 'The runtime owns streaming semantics.',
+    runtimeCapabilities: ['backpressure', 'retry', 'lifecycle', 'reducers', 'event selection'],
     architectureSteps: [
       ['Provider', 'OpenAI, Anthropic, Ollama, custom SSE, or NDJSON.'],
       ['Stream Runtime', 'Backpressure, lifecycle, retry, event selection, and reducers.'],
@@ -90,10 +97,17 @@ return h('p', {}, text(() => answer()))`,
       ['Transcript strategy', 'Append-only stream state'],
       ['Measured signals', 'mutations, added nodes, rewritten bytes']
     ],
+    benchmarkScopes: [
+      ['Qore', 'selected text node', 'scope-low'],
+      ['Snapshot baseline', 'full transcript region', 'scope-high']
+    ],
     providersTitle: 'Providers',
     providersLead: 'Adapters are entry points into the runtime, not the headline. Bring any streaming source and keep the same UI primitive.',
     providersTakeaway: 'The provider story can grow without changing the interface primitive.',
     providerNames: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE', 'NDJSON'],
+    providerCloudNote: 'Adapters normalize source events. Qore keeps the UI primitive stable.',
+    providerBoundaryLabel: 'Server boundary',
+    providerBoundary: ['Browser UI', 'Your SSE / NDJSON endpoint', 'Provider adapter', 'QoreStream signal'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
     finalLead: 'Reactive Stream Runtime for AI-native interfaces. stream = signal.',
     providers: [
@@ -188,9 +202,16 @@ return h('p', {}, text(() => answer()))`,
     qoreTitle: 'Qore path',
     reactSteps: ['token', 'hook state', 'component render', 'reconcile', 'DOM'],
     qoreSteps: ['token', 'stream signal', 'DOM'],
+    reactWork: ['state glue', 'render pass', 'reconcile pass', 'transcript rewrite'],
+    qoreWork: ['stream signal', 'text node'],
+    reactCaption: '每个 token 都重新进入 component state。',
+    qoreCaption: '每个 token 只更新绑定节点。',
     architectureTitle: 'Architecture',
     architectureLead: 'Provider 是入口。Runtime 才是产品。',
     architectureTakeaway: 'Provider 可以换，runtime 语义保持稳定。',
+    runtimeCoreLabel: 'Stable layer',
+    runtimeCoreTitle: 'Runtime 负责 streaming 语义。',
+    runtimeCapabilities: ['backpressure', 'retry', 'lifecycle', 'reducers', 'event selection'],
     architectureSteps: [
       ['Provider', 'OpenAI、Anthropic、Ollama、自定义 SSE 或 NDJSON。'],
       ['Stream Runtime', 'Backpressure、lifecycle、retry、event selection 和 reducer。'],
@@ -206,10 +227,17 @@ return h('p', {}, text(() => answer()))`,
       ['Transcript strategy', 'Append-only stream state'],
       ['Measured signals', 'mutations, added nodes, rewritten bytes']
     ],
+    benchmarkScopes: [
+      ['Qore', 'selected text node', 'scope-low'],
+      ['Snapshot baseline', 'full transcript region', 'scope-high']
+    ],
     providersTitle: 'Providers',
     providersLead: 'Adapter 是 runtime 的入口，不是首页主角。带来任意 streaming source，UI primitive 保持一致。',
     providersTakeaway: 'Provider story 可以继续扩展，但 interface primitive 不变。',
     providerNames: ['OpenAI', 'Anthropic', 'OpenRouter', 'DeepSeek', 'Ollama', 'Generic SSE', 'NDJSON'],
+    providerCloudNote: 'Adapter 只负责规范化 source event，Qore 保持 UI primitive 稳定。',
+    providerBoundaryLabel: '服务端边界',
+    providerBoundary: ['Browser UI', 'Your SSE / NDJSON endpoint', 'Provider adapter', 'QoreStream signal'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
     finalLead: 'Reactive Stream Runtime for AI-native interfaces. stream = signal.',
     providers: [
@@ -447,12 +475,20 @@ onBeforeUnmount(() => {
           <ol>
             <li v-for="step in t.reactSteps" :key="step">{{ step }}</li>
           </ol>
+          <div class="work-meter" aria-label="React streaming work">
+            <span v-for="item in t.reactWork" :key="item">{{ item }}</span>
+          </div>
+          <p class="path-caption">{{ t.reactCaption }}</p>
         </article>
         <article class="path-panel strong-path">
           <h3>{{ t.qoreTitle }}</h3>
           <ol>
             <li v-for="step in t.qoreSteps" :key="step">{{ step }}</li>
           </ol>
+          <div class="work-meter compact-meter" aria-label="Qore streaming work">
+            <span v-for="item in t.qoreWork" :key="item">{{ item }}</span>
+          </div>
+          <p class="path-caption">{{ t.qoreCaption }}</p>
         </article>
       </div>
 
@@ -471,6 +507,14 @@ onBeforeUnmount(() => {
           <span>{{ step[0] }}</span>
           <p>{{ step[1] }}</p>
         </article>
+      </div>
+
+      <div class="runtime-core-card">
+        <span>{{ t.runtimeCoreLabel }}</span>
+        <strong>{{ t.runtimeCoreTitle }}</strong>
+        <div>
+          <em v-for="capability in t.runtimeCapabilities" :key="capability">{{ capability }}</em>
+        </div>
       </div>
 
       <p class="takeaway">{{ t.architectureTakeaway }}</p>
@@ -493,6 +537,13 @@ onBeforeUnmount(() => {
             <strong>{{ detail[1] }}</strong>
           </article>
         </div>
+        <div class="scope-board" aria-label="Streaming update scope comparison">
+          <article v-for="scope in t.benchmarkScopes" :key="scope[0]" :class="scope[2]">
+            <span>{{ scope[0] }}</span>
+            <strong>{{ scope[1] }}</strong>
+            <i></i>
+          </article>
+        </div>
       </div>
 
       <p class="takeaway">{{ t.benchmarkTakeaway }}</p>
@@ -505,9 +556,15 @@ onBeforeUnmount(() => {
         <p>{{ t.providersLead }}</p>
       </div>
 
+      <div class="provider-boundary" aria-label="Provider server boundary">
+        <strong>{{ t.providerBoundaryLabel }}</strong>
+        <span v-for="step in t.providerBoundary" :key="step">{{ step }}</span>
+      </div>
+
       <div class="providers-board">
         <div class="provider-cloud" aria-label="Supported provider adapters">
           <span v-for="name in t.providerNames" :key="name">{{ name }}</span>
+          <p>{{ t.providerCloudNote }}</p>
         </div>
         <article class="provider-card">
           <span>Environment</span>
@@ -535,6 +592,11 @@ onBeforeUnmount(() => {
 
 :global(html:has(.VPContent.is-home)) {
   scroll-behavior: smooth;
+  background: #06110f;
+}
+
+:global(body:has(.VPContent.is-home)) {
+  background: #06110f;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1275,6 +1337,41 @@ pre,
   content: '';
 }
 
+.work-meter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.work-meter span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 30px;
+  padding: 0 10px;
+  border: 1px solid rgba(102, 247, 223, 0.14);
+  border-radius: 999px;
+  color: rgba(248, 255, 252, 0.58);
+  background: rgba(0, 0, 0, 0.18);
+  font: 850 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.01em;
+}
+
+.compact-meter span {
+  color: #031311;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.path-caption {
+  margin-top: 16px;
+  color: rgba(248, 255, 252, 0.6);
+  font-size: 14px;
+  font-weight: 780;
+  line-height: 1.55;
+  letter-spacing: -0.02em;
+}
+
 .muted-path {
   opacity: 0.72;
 }
@@ -1327,6 +1424,51 @@ pre,
   letter-spacing: -0.05em;
 }
 
+.runtime-core-card {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+  padding: clamp(22px, 3vw, 32px);
+  border: 1px solid rgba(102, 247, 223, 0.24);
+  border-radius: 30px;
+  background:
+    linear-gradient(135deg, rgba(49, 217, 255, 0.12), transparent 42%),
+    rgba(0, 0, 0, 0.18);
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.28);
+}
+
+.runtime-core-card > span {
+  color: var(--accent-strong);
+  font: 900 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.runtime-core-card strong {
+  max-width: 720px;
+  color: var(--text);
+  font-family: 'Space Grotesk', 'Avenir Next', 'DIN Alternate', 'Trebuchet MS', sans-serif;
+  font-size: clamp(28px, 4vw, 52px);
+  font-weight: 900;
+  line-height: 0.98;
+  letter-spacing: -0.058em;
+}
+
+.runtime-core-card div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.runtime-core-card em {
+  padding: 10px 12px;
+  border: 1px solid rgba(102, 247, 223, 0.2);
+  border-radius: 999px;
+  color: rgba(248, 255, 252, 0.78);
+  background: rgba(246, 255, 252, 0.045);
+  font: normal 850 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
 .benchmark-board {
   display: grid;
   gap: 24px;
@@ -1370,6 +1512,94 @@ pre,
   background: rgba(246, 255, 252, 0.046);
 }
 
+.scope-board {
+  display: grid;
+  gap: 12px;
+}
+
+.scope-board article {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.scope-board span,
+.scope-board strong {
+  font: 850 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.scope-board span {
+  color: var(--accent);
+}
+
+.scope-board strong {
+  color: rgba(248, 255, 252, 0.74);
+}
+
+.scope-board i {
+  grid-column: 1 / -1;
+  display: block;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.07);
+  overflow: hidden;
+}
+
+.scope-board i::after {
+  content: '';
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent), var(--accent-strong));
+}
+
+.scope-low i::after {
+  width: 28%;
+}
+
+.scope-high i::after {
+  width: 100%;
+  background: linear-gradient(90deg, rgba(245, 211, 139, 0.78), rgba(255, 255, 255, 0.24));
+}
+
+.provider-boundary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin: -6px 0 22px;
+  padding: 10px;
+  border: 1px solid rgba(102, 247, 223, 0.2);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.provider-boundary strong,
+.provider-boundary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font: 850 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.provider-boundary strong {
+  padding: 9px 12px;
+  border-radius: 999px;
+  color: #031311;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
+.provider-boundary span {
+  color: rgba(248, 255, 252, 0.76);
+}
+
+.provider-boundary span:not(:last-child)::after {
+  content: '→';
+  color: var(--accent-strong);
+}
+
 .provider-cloud {
   display: flex;
   flex-wrap: wrap;
@@ -1392,6 +1622,19 @@ pre,
   background: rgba(0, 0, 0, 0.16);
   font-size: 13px;
   font-weight: 850;
+}
+
+.provider-cloud p {
+  flex-basis: 100%;
+  max-width: 620px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(102, 247, 223, 0.13);
+  color: rgba(248, 255, 252, 0.66);
+  font-size: clamp(18px, 2.2vw, 28px);
+  font-weight: 850;
+  line-height: 1.22;
+  letter-spacing: -0.045em;
 }
 
 .provider-card {
@@ -1534,6 +1777,7 @@ pre,
   .provider-tabs,
   .prompt-row,
   .benchmark-grid,
+  .scope-board article,
   :deep(.runtime-lens) {
     grid-template-columns: 1fr;
   }
@@ -1603,6 +1847,29 @@ pre,
 
   .stream-strip span:not(:last-child)::after {
     content: '↓';
+  }
+
+  .provider-boundary {
+    width: 100%;
+    border-radius: 22px;
+  }
+
+  .provider-boundary strong,
+  .provider-boundary span {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .provider-boundary span:not(:last-child)::after {
+    content: '↓';
+  }
+
+  .runtime-core-card strong {
+    letter-spacing: -0.045em;
+  }
+
+  .scope-board i {
+    grid-column: auto;
   }
 
   .takeaway {
