@@ -41,6 +41,8 @@ return h('p', {}, text(() => answer()))`,
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'A QoreStream is deliberately more than a string. It exposes the three surfaces an AI interface actually needs.',
     surfacesTakeaway: 'One primitive. Three ways to consume it. No adapter changes in your UI.',
+    streamPath: ['provider event', 'QoreStream', 'readonly signal', 'text node'],
+    demoPipeline: ['token', 'QoreStream', 'signal', 'text node'],
     surfaces: [
       ['Signal', 'Bind current accumulated value directly into UI.', `answer()`],
       ['AsyncIterable', 'Observe every token, tool call, or event in control flow.', `for await (const event of events) {}`],
@@ -155,6 +157,8 @@ return h('p', {}, text(() => answer()))`,
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'QoreStream 不只是字符串。它暴露 AI interface 真正需要的三种表面。',
     surfacesTakeaway: '一个 primitive，三种消费方式，UI 不需要随着 adapter 改。',
+    streamPath: ['provider event', 'QoreStream', 'readonly signal', 'text node'],
+    demoPipeline: ['token', 'QoreStream', 'signal', 'text node'],
     surfaces: [
       ['Signal', '把当前累积值直接绑定到 UI。', `answer()`],
       ['AsyncIterable', '在控制流里观察每个 token、tool call 或事件。', `for await (const event of events) {}`],
@@ -292,6 +296,9 @@ function renderDemo(value = activePrompt.value) {
     h('div', { class: 'runtime-footer' },
       h('div', { class: 'runtime-meta' }, text(() => `${t.value.chunksPrefix}: ${answer.chunkCount()}`)),
       h('div', { class: 'runtime-meta' }, 'QoreStream')
+    ),
+    h('div', { class: 'runtime-lens' },
+      ...t.value.demoPipeline.map((step, index) => h('span', { class: index === 1 ? 'active' : '' }, step))
     )
   ))
 }
@@ -369,6 +376,10 @@ onBeforeUnmount(() => {
         <p class="section-index">01</p>
         <h2>{{ t.surfacesTitle }}</h2>
         <p>{{ t.surfacesLead }}</p>
+      </div>
+
+      <div class="stream-strip" aria-label="Qore stream path">
+        <span v-for="step in t.streamPath" :key="step">{{ step }}</span>
       </div>
 
       <div class="surfaces-layout">
@@ -935,6 +946,36 @@ pre,
   gap: 16px;
 }
 
+.stream-strip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+  margin: -6px 0 24px;
+  padding: 10px;
+  border: 1px solid rgba(102, 247, 223, 0.2);
+  border-radius: 999px;
+  background:
+    linear-gradient(135deg, rgba(49, 217, 255, 0.09), transparent 46%),
+    rgba(0, 0, 0, 0.2);
+  box-shadow: 0 20px 70px rgba(0, 0, 0, 0.24);
+}
+
+.stream-strip span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: rgba(248, 255, 252, 0.78);
+  font: 850 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: 0.02em;
+}
+
+.stream-strip span:not(:last-child)::after {
+  content: '→';
+  color: var(--accent-strong);
+}
+
 .surface-card {
   display: grid;
   gap: 12px;
@@ -942,6 +983,13 @@ pre,
   padding: 24px;
   border-radius: 28px;
   border-color: rgba(102, 247, 223, 0.2);
+  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.surface-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(49, 217, 255, 0.34);
+  background: rgba(246, 255, 252, 0.078);
 }
 
 .demo-panel {
@@ -951,7 +999,10 @@ pre,
   top: 88px;
   padding: 20px;
   border-radius: 30px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.064), rgba(255, 255, 255, 0.04));
+  border-color: rgba(102, 247, 223, 0.24);
+  background:
+    radial-gradient(circle at 92% 8%, rgba(49, 217, 255, 0.16), transparent 30%),
+    linear-gradient(180deg, rgba(246, 255, 252, 0.076), rgba(246, 255, 252, 0.044));
 }
 
 .takeaway {
@@ -1101,6 +1152,31 @@ pre,
   gap: 12px;
 }
 
+:deep(.runtime-lens) {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+:deep(.runtime-lens span) {
+  display: inline-flex;
+  justify-content: center;
+  min-width: 0;
+  padding: 8px 6px;
+  border: 1px solid rgba(102, 247, 223, 0.14);
+  border-radius: 999px;
+  color: rgba(248, 255, 252, 0.66);
+  background: rgba(246, 255, 252, 0.035);
+  font: 850 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  white-space: nowrap;
+}
+
+:deep(.runtime-lens span.active) {
+  color: #031311;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+}
+
 :deep(.runtime-thread) {
   display: grid;
   gap: 12px;
@@ -1145,8 +1221,8 @@ pre,
   margin: 0;
   white-space: pre-wrap;
   color: var(--text);
-  font: 840 clamp(20px, 1.9vw, 28px)/1.12 'Space Grotesk', 'Avenir Next', 'DIN Alternate', 'Trebuchet MS', sans-serif;
-  letter-spacing: -0.045em;
+  font: 850 clamp(15px, 1.35vw, 19px)/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  letter-spacing: -0.012em;
 }
 
 .comparison-grid {
@@ -1156,9 +1232,19 @@ pre,
 }
 
 .path-panel {
+  position: relative;
+  overflow: hidden;
   padding: clamp(22px, 3vw, 34px);
   border-radius: 30px;
   border-color: rgba(102, 247, 223, 0.2);
+}
+
+.path-panel::after {
+  content: '';
+  position: absolute;
+  inset: auto 24px 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(49, 217, 255, 0.55), transparent);
 }
 
 .path-panel ol {
@@ -1447,7 +1533,8 @@ pre,
 
   .provider-tabs,
   .prompt-row,
-  .benchmark-grid {
+  .benchmark-grid,
+  :deep(.runtime-lens) {
     grid-template-columns: 1fr;
   }
 
@@ -1502,6 +1589,20 @@ pre,
   .provider-card,
   .final-section {
     border-radius: 24px;
+  }
+
+  .stream-strip {
+    width: 100%;
+    border-radius: 22px;
+  }
+
+  .stream-strip span {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .stream-strip span:not(:last-child)::after {
+    content: '↓';
   }
 
   .takeaway {
