@@ -23,13 +23,13 @@ const copy = {
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'Qore makes streams first-class state: tokens, tools, status, and errors flow into UI without transcript rewrites.',
-    categoryLine: 'Not an AI SDK. Not another UI framework. A runtime layer for streaming interface state.',
+    summary: 'AI interfaces should not treat streaming as a special case. Stream is state. Stream is UI.',
+    categoryLine: 'Qore turns provider events into readonly signals that update exactly the UI nodes that read them.',
     primaryAction: 'See the surfaces',
     secondaryAction: 'Quick start',
     tertiaryAction: 'GitHub',
     whyTitle: 'Why Qore exists',
-    whyLead: 'AI interfaces are not snapshots. They are live streams of tokens, tools, status, retries, and artifacts.',
+    whyLead: 'Every token changes the interface. Qore gives that change one runtime path.',
     whyCode: `const answer = stream(openai.chat('hello'))
 
 return h('p', {}, text(() => answer()))`,
@@ -153,13 +153,13 @@ return h('p', {}, text(() => answer()))`,
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'Qore 让 stream 成为一等状态：token、tool、status、error 自然流入 UI，不再重写 transcript。',
-    categoryLine: '不是 AI SDK，也不是又一个 UI framework，而是 streaming interface state 的 runtime layer。',
+    summary: 'AI interface 不应该把 streaming 当成特殊情况。Stream is state. Stream is UI.',
+    categoryLine: 'Qore 把 provider event 转成 readonly signal，只更新真正读取它的 UI node。',
     primaryAction: '看三种表面',
     secondaryAction: '快速开始',
     tertiaryAction: 'GitHub',
     whyTitle: 'Qore 为什么存在',
-    whyLead: 'AI interface 不是快照，而是 token、tool、status、retry、artifact 持续抵达的 live stream。',
+    whyLead: '每个 token 都在改变界面。Qore 给这种变化一条稳定的 runtime path。',
     whyCode: `const answer = stream(openai.chat('hello'))
 
 return h('p', {}, text(() => answer()))`,
@@ -670,6 +670,8 @@ onBeforeUnmount(() => {
 }
 
 .home-page {
+  --font-display: 'Space Grotesk', 'Avenir Next', 'Helvetica Neue', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --text: #f8fffc;
   --muted: rgba(248, 255, 252, 0.74);
   --soft: rgba(248, 255, 252, 0.52);
@@ -694,6 +696,7 @@ onBeforeUnmount(() => {
   transform: translateY(8px);
   transition: opacity 360ms ease, transform 360ms ease;
   overflow: hidden;
+  font-family: var(--font-display);
 }
 
 .home-page::before {
@@ -734,7 +737,7 @@ onBeforeUnmount(() => {
   grid-template-columns: minmax(0, 1.05fr) minmax(380px, 0.72fr);
   gap: clamp(30px, 5vw, 72px);
   align-items: center;
-  min-height: min(940px, calc(100vh - 72px));
+  min-height: min(860px, calc(100svh - 64px));
 }
 
 .hero-copy,
@@ -755,7 +758,7 @@ onBeforeUnmount(() => {
 
 .hero-copy {
   display: grid;
-  gap: 24px;
+  gap: 20px;
   padding: clamp(8px, 2vw, 20px) 0;
   border: 0;
   background: transparent;
@@ -777,24 +780,24 @@ h3,
 .secondary-action,
 .ghost-action,
 .inline-link {
-  font-family: 'Space Grotesk', 'Avenir Next', 'DIN Alternate', 'Trebuchet MS', sans-serif;
+  font-family: var(--font-display);
 }
 
 h1 {
   display: grid;
-  gap: 8px;
-  max-width: 980px;
+  gap: 10px;
+  max-width: 920px;
   color: transparent;
-  font-family: 'Avenir Next Condensed', 'HelveticaNeue-CondensedBlack', 'DIN Condensed', 'DIN Alternate', 'Space Grotesk', 'Trebuchet MS', sans-serif;
-  font-size: clamp(60px, 6.9vw, 106px);
-  font-stretch: condensed;
-  font-weight: 900;
-  line-height: 0.88;
-  letter-spacing: -0.038em;
-  background: linear-gradient(110deg, #ffffff 0%, #eafff8 42%, var(--accent-strong) 100%);
+  font-family: var(--font-display);
+  font-size: clamp(54px, 6.15vw, 92px);
+  font-weight: 800;
+  line-height: 0.9;
+  letter-spacing: -0.076em;
+  background: linear-gradient(112deg, #ffffff 0%, #eafff8 48%, var(--accent) 78%, var(--accent-strong) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   text-wrap: balance;
+  text-shadow: 0 0 44px rgba(102, 247, 223, 0.12);
 }
 
 .hero-copy h1 span {
@@ -813,7 +816,7 @@ pre,
 .section-index,
 .benchmark-statement,
 .provider-cloud span {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
 }
 
 .tagline code {
@@ -830,11 +833,12 @@ pre,
 }
 
 .summary {
-  max-width: 760px;
+  max-width: 720px;
   color: rgba(248, 255, 252, 0.82);
-  font-size: clamp(20px, 2.1vw, 28px);
-  line-height: 1.42;
-  letter-spacing: -0.035em;
+  font-size: clamp(21px, 2vw, 27px);
+  font-weight: 700;
+  line-height: 1.32;
+  letter-spacing: -0.05em;
 }
 
 .category-line {
@@ -842,7 +846,7 @@ pre,
   padding-left: 18px;
   border-left: 2px solid rgba(49, 217, 255, 0.72);
   color: rgba(208, 255, 247, 0.82);
-  font-size: clamp(16px, 1.7vw, 20px);
+  font-size: clamp(15px, 1.45vw, 18px);
   font-weight: 760;
   line-height: 1.55;
   letter-spacing: -0.03em;
@@ -896,8 +900,8 @@ pre,
 
 .why-card {
   display: grid;
-  gap: 20px;
-  padding: clamp(22px, 3vw, 34px);
+  gap: 18px;
+  padding: clamp(20px, 2.7vw, 32px);
   border-radius: 32px;
   border-color: rgba(102, 247, 223, 0.28);
   background:
@@ -954,7 +958,7 @@ pre,
 .why-points article {
   display: grid;
   gap: 5px;
-  padding: 14px 16px;
+  padding: 13px 16px;
   border: 1px solid rgba(102, 247, 223, 0.16);
   border-radius: 18px;
   background: rgba(0, 0, 0, 0.18);
@@ -1029,7 +1033,7 @@ pre,
   align-items: center;
   gap: 10px;
   color: rgba(248, 255, 252, 0.78);
-  font: 850 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 12px/1 var(--font-mono);
   letter-spacing: 0.02em;
 }
 
@@ -1099,7 +1103,7 @@ pre,
 .provider-card span,
 .benchmark-grid span {
   color: rgba(244, 251, 247, 0.54);
-  font: 850 11px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 11px/1.2 var(--font-mono);
   letter-spacing: 0.16em;
   text-transform: uppercase;
 }
@@ -1229,7 +1233,7 @@ pre,
   border-radius: 999px;
   color: rgba(248, 255, 252, 0.66);
   background: rgba(246, 255, 252, 0.035);
-  font: 850 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 11px/1 var(--font-mono);
   white-space: nowrap;
 }
 
@@ -1266,7 +1270,7 @@ pre,
 :deep(.runtime-meta),
 :deep(.runtime-bubble-label) {
   color: rgba(244, 251, 247, 0.68);
-  font: 850 12px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 12px/1.5 var(--font-mono);
 }
 
 :deep(.runtime-provider),
@@ -1283,7 +1287,7 @@ pre,
   margin: 0;
   white-space: pre-wrap;
   color: var(--text);
-  font: 850 clamp(15px, 1.35vw, 19px)/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 clamp(15px, 1.35vw, 19px)/1.55 var(--font-mono);
   letter-spacing: -0.012em;
 }
 
@@ -1321,7 +1325,7 @@ pre,
   position: relative;
   padding: 0 0 0 38px;
   color: var(--text);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-family: var(--font-mono);
   font-weight: 850;
 }
 
@@ -1353,7 +1357,7 @@ pre,
   border-radius: 999px;
   color: rgba(248, 255, 252, 0.58);
   background: rgba(0, 0, 0, 0.18);
-  font: 850 11px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 11px/1 var(--font-mono);
   letter-spacing: 0.01em;
 }
 
@@ -1439,7 +1443,7 @@ pre,
 
 .runtime-core-card > span {
   color: var(--accent-strong);
-  font: 900 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 900 12px/1 var(--font-mono);
   letter-spacing: 0.18em;
   text-transform: uppercase;
 }
@@ -1447,7 +1451,7 @@ pre,
 .runtime-core-card strong {
   max-width: 720px;
   color: var(--text);
-  font-family: 'Space Grotesk', 'Avenir Next', 'DIN Alternate', 'Trebuchet MS', sans-serif;
+  font-family: var(--font-display);
   font-size: clamp(28px, 4vw, 52px);
   font-weight: 900;
   line-height: 0.98;
@@ -1466,7 +1470,7 @@ pre,
   border-radius: 999px;
   color: rgba(248, 255, 252, 0.78);
   background: rgba(246, 255, 252, 0.045);
-  font: normal 850 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: normal 850 12px/1 var(--font-mono);
 }
 
 .benchmark-board {
@@ -1526,7 +1530,7 @@ pre,
 
 .scope-board span,
 .scope-board strong {
-  font: 850 12px/1.2 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 12px/1.2 var(--font-mono);
 }
 
 .scope-board span {
@@ -1581,7 +1585,7 @@ pre,
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  font: 850 12px/1 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 850 12px/1 var(--font-mono);
 }
 
 .provider-boundary strong {
@@ -1646,7 +1650,7 @@ pre,
 
 .provider-card strong {
   color: var(--accent);
-  font: 900 18px/1.35 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font: 900 18px/1.35 var(--font-mono);
 }
 
 .provider-card .safety-note {
@@ -1717,7 +1721,7 @@ pre,
   }
 
   .hero-section h1 {
-    font-size: clamp(60px, 6.7vw, 78px);
+    font-size: clamp(54px, 6.2vw, 76px);
   }
 
   .summary {
@@ -1749,6 +1753,63 @@ pre,
 
   .demo-panel {
     padding: 18px;
+  }
+}
+
+@media (max-height: 760px) and (min-width: 981px) {
+  .home-page {
+    padding-top: 116px;
+  }
+
+  .hero-section {
+    align-items: start;
+    min-height: auto;
+  }
+
+  h1 {
+    font-size: clamp(50px, 5.45vw, 78px);
+    line-height: 0.92;
+  }
+
+  .summary {
+    max-width: 650px;
+    font-size: clamp(18px, 1.72vw, 22px);
+  }
+
+  .category-line {
+    max-width: 640px;
+    font-size: 15px;
+  }
+
+  .why-card {
+    gap: 13px;
+    padding: 22px;
+    border-radius: 26px;
+  }
+
+  .why-card h2 {
+    font-size: clamp(28px, 3.1vw, 42px);
+  }
+
+  .why-card p,
+  .why-points p {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .why-card pre {
+    padding: 14px;
+    font-size: 11px;
+    line-height: 1.55;
+  }
+
+  .why-points article {
+    padding: 10px 12px;
+    border-radius: 15px;
+  }
+
+  .why-points h3 {
+    font-size: 18px;
   }
 }
 
