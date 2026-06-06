@@ -23,10 +23,13 @@ const copy = {
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'AI interfaces should not treat streaming as a special case. Stream is state. Stream is UI.',
+    summary: 'Build streaming AI chat, agent, and realtime UIs without transcript rewrites or rerender loops.',
     categoryLine: 'Qore turns provider events into readonly signals that update exactly the UI nodes that read them.',
-    primaryAction: 'See the surfaces',
-    secondaryAction: 'Quick start',
+    installLabel: 'Install Qore',
+    installCommand: 'pnpm add @qorejs/qore',
+    useCases: ['AI chat', 'agent workspaces', 'realtime logs', 'copilot UI'],
+    primaryAction: 'Start in 5 minutes',
+    secondaryAction: 'Try the demo',
     tertiaryAction: 'GitHub',
     whyTitle: 'Why Qore exists',
     whyLead: 'Every token changes the interface. Qore gives that change one runtime path.',
@@ -153,10 +156,13 @@ return h('p', {}, text(() => answer()))`,
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'AI interface 不应该把 streaming 当成特殊情况。Stream is state. Stream is UI.',
+    summary: '用 Qore 构建 streaming AI chat、agent workspace 和 realtime UI，不再重写 transcript，也不再把 token 搬进组件状态。',
     categoryLine: 'Qore 把 provider event 转成 readonly signal，只更新真正读取它的 UI node。',
-    primaryAction: '看三种表面',
-    secondaryAction: '快速开始',
+    installLabel: '安装 Qore',
+    installCommand: 'pnpm add @qorejs/qore',
+    useCases: ['AI chat', 'agent workspace', 'realtime logs', 'copilot UI'],
+    primaryAction: '5 分钟上手',
+    secondaryAction: '体验 Demo',
     tertiaryAction: 'GitHub',
     whyTitle: 'Qore 为什么存在',
     whyLead: '每个 token 都在改变界面。Qore 给这种变化一条稳定的 runtime path。',
@@ -287,6 +293,7 @@ const activePrompt = ref(prompt.value)
 const providerId = ref<ProviderId>('openai')
 const activeProvider = computed(() => t.value.providers.find((provider) => provider.id === providerId.value) ?? t.value.providers[0])
 const quickStartLink = computed(() => isZh.value ? '/zh/guide/quick-start.html' : '/guide/quick-start.html')
+const demoLink = computed(() => isZh.value ? '/zh/#surfaces' : '/#surfaces')
 const providerGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
 let disposeQore: (() => Element) | null = null
 let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
@@ -379,9 +386,18 @@ onBeforeUnmount(() => {
         <p class="summary">{{ t.summary }}</p>
         <p class="category-line">{{ t.categoryLine }}</p>
 
+        <div class="install-card" aria-label="Install Qore">
+          <span>{{ t.installLabel }}</span>
+          <code>{{ t.installCommand }}</code>
+        </div>
+
+        <div class="use-case-row" aria-label="Qore use cases">
+          <span v-for="item in t.useCases" :key="item">{{ item }}</span>
+        </div>
+
         <div class="hero-actions">
-          <a class="primary-action" href="#surfaces">{{ t.primaryAction }}</a>
-          <a class="secondary-action" :href="quickStartLink">{{ t.secondaryAction }}</a>
+          <a class="primary-action" :href="quickStartLink">{{ t.primaryAction }}</a>
+          <a class="secondary-action" :href="demoLink">{{ t.secondaryAction }}</a>
           <a class="ghost-action" href="https://github.com/qorejs/qore" target="_blank" rel="noreferrer">{{ t.tertiaryAction }}</a>
         </div>
       </div>
@@ -809,6 +825,9 @@ h1 {
 
 .tagline code,
 pre,
+.install-card,
+.install-card code,
+.use-case-row span,
 .provider-tabs button,
 .prompt-row input,
 .prompt-row button,
@@ -850,6 +869,61 @@ pre,
   font-weight: 760;
   line-height: 1.55;
   letter-spacing: -0.03em;
+}
+
+.install-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  width: min(100%, 560px);
+  padding: 12px;
+  border: 1px solid rgba(102, 247, 223, 0.22);
+  border-radius: 18px;
+  background:
+    linear-gradient(135deg, rgba(49, 217, 255, 0.12), transparent 46%),
+    rgba(0, 0, 0, 0.22);
+  box-shadow: 0 22px 80px rgba(0, 0, 0, 0.24);
+}
+
+.install-card span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 10px;
+  border-radius: 12px;
+  color: #031311;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  font-size: 12px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.install-card code {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--text);
+  font-size: clamp(13px, 1.3vw, 16px);
+  font-weight: 850;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.use-case-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.use-case-row span {
+  padding: 8px 10px;
+  border: 1px solid rgba(102, 247, 223, 0.18);
+  border-radius: 999px;
+  color: rgba(248, 255, 252, 0.7);
+  background: rgba(246, 255, 252, 0.04);
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.01em;
 }
 
 .hero-actions {
@@ -1876,8 +1950,29 @@ pre,
     line-height: 1.45;
   }
 
+  .category-line,
+  .use-case-row,
+  .ghost-action {
+    display: none;
+  }
+
   .hero-actions {
     display: grid;
+  }
+
+  .install-card {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .install-card span,
+  .install-card code {
+    width: 100%;
+  }
+
+  .install-card span {
+    justify-content: center;
+    text-align: center;
   }
 
   .primary-action,
