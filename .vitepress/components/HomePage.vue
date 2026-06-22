@@ -67,7 +67,7 @@ return h('p', {}, text(() => answer()))`,
     statusPrefix: 'status',
     chunksPrefix: 'chunks',
     waiting: 'waiting for the first token...',
-    guideAction: 'Provider guide',
+    guideAction: 'View example',
     safetyNote: 'Provider keys belong in your server or trusted runtime. Browsers should consume your own SSE or NDJSON endpoint.',
     presetLabel: 'Presets',
     presets: [
@@ -204,7 +204,7 @@ return h('p', {}, text(() => answer()))`,
     statusPrefix: '状态',
     chunksPrefix: 'chunks',
     waiting: '等待第一个 token...',
-    guideAction: 'Provider 指南',
+    guideAction: '查看示例',
     safetyNote: 'Provider key 应放在服务端或可信运行时。浏览器应消费你自己的 SSE 或 NDJSON endpoint。',
     presetLabel: '预设',
     presets: [
@@ -309,7 +309,7 @@ const providerId = ref<ProviderId>('openai')
 const activeProvider = computed(() => t.value.providers.find((provider) => provider.id === providerId.value) ?? t.value.providers[0])
 const quickStartLink = computed(() => isZh.value ? '/zh/guide/quick-start.html' : '/guide/quick-start.html')
 const demoLink = computed(() => isZh.value ? '/zh/#surfaces' : '/#surfaces')
-const providerGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
+const providerGuideLink = computed(() => isZh.value ? '/zh/examples/agent-event-stream.html' : '/examples/agent-event-stream.html')
 let disposeQore: (() => Element) | null = null
 let activeAnswer: { abort(reason?: unknown): unknown } | null = null
 

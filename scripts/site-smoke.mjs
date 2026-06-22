@@ -180,6 +180,7 @@ async function main() {
     await waitForText(page, 'tools')
     await waitForText(page, 'diff')
     await waitForText(page, 'QoreEventStream')
+    await waitForText(page, 'View example')
     await waitForText(page, 'React vs Qore')
     await waitForText(page, 'React treats streaming as state synchronization.')
     await waitForText(page, 'Token -> signal -> DOM is the shorter path.')
@@ -217,6 +218,11 @@ async function main() {
     })
     await assertNoConsoleErrors(errors, 'English home')
 
+    await page.goto(`${baseUrl}/examples/agent-event-stream.html`, { waitUntil: 'networkidle' })
+    await waitForText(page, 'Agent Event Stream')
+    await waitForText(page, 'agent events -> QoreEventStream -> selectors -> UI surfaces')
+    await waitForText(page, "const events = stream.events<AgentEvent>(agent.run(task))")
+
     await page.goto(`${baseUrl}/guide/quick-start.html`, { waitUntil: 'networkidle' })
     await waitForText(page, 'This guide builds a tiny streaming UI from an empty Vite app')
     await waitForText(page, 'pnpm create vite qore-stream-demo')
@@ -247,6 +253,7 @@ async function main() {
     await waitForText(page, 'tools')
     await waitForText(page, 'diff')
     await waitForText(page, 'QoreEventStream')
+    await waitForText(page, '查看示例')
     await waitForText(page, 'React vs Qore')
     await waitForText(page, 'React 把 streaming 变成状态同步问题。')
     await waitForText(page, 'Token -> signal -> DOM 是更短的路径。')
@@ -282,6 +289,11 @@ async function main() {
       return text.includes('状态: same binding, different source') && text.includes('chunks: 5')
     })
     await assertNoConsoleErrors(errors, 'Chinese home')
+
+    await page.goto(`${baseUrl}/zh/examples/agent-event-stream.html`, { waitUntil: 'networkidle' })
+    await waitForText(page, 'Agent Event Stream')
+    await waitForText(page, 'agent events -> QoreEventStream -> selectors -> UI surfaces')
+    await waitForText(page, "const events = stream.events<AgentEvent>(agent.run(task))")
 
     await page.goto(`${baseUrl}/zh/guide/quick-start.html`, { waitUntil: 'networkidle' })
     await waitForText(page, '构建一个真正可运行的 streaming UI')

@@ -77,6 +77,7 @@ const englishSidebar = {
     {
       text: 'Examples',
       items: [
+        { text: 'Agent Event Stream', link: '/examples/agent-event-stream' },
         { text: 'AI Integration', link: '/examples/ai-integration' },
         { text: 'Basic', link: '/examples/basic' },
         { text: 'Counter', link: '/examples/counter' },
@@ -149,6 +150,7 @@ const chineseSidebar = {
     {
       text: '示例',
       items: [
+        { text: 'Agent Event Stream', link: '/zh/examples/agent-event-stream' },
         { text: 'AI 集成', link: '/zh/examples/ai-integration' },
         { text: '基础示例', link: '/zh/examples/basic' },
         { text: '计数器', link: '/zh/examples/counter' },

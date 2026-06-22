@@ -169,4 +169,5 @@ mount('#app', () => h('article', {},
 - [Why Qore?](/guide/why-qore)
 - [Provider Integration](/guide/ai-native)
 - [Streaming API](/api/streaming)
+- [Agent Event Stream](/examples/agent-event-stream)
 - [Examples](/examples/ai-integration)
