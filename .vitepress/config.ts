@@ -2,17 +2,15 @@ import { defineConfig } from 'vitepress'
 
 const englishNav = [
   { text: 'Why', link: '/guide/why-qore' },
-  { text: 'Quick Start', link: '/guide/quick-start' },
-  { text: 'Examples', link: '/examples/ai-integration' },
-  { text: 'API', link: '/api/streaming' },
+  { text: 'Demo', link: '/#live-demo' },
+  { text: 'Docs', link: '/guide/quick-start' },
   { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
 ]
 
 const chineseNav = [
   { text: '为什么', link: '/zh/guide/why-qore' },
-  { text: '快速开始', link: '/zh/guide/quick-start' },
-  { text: '示例', link: '/zh/examples/ai-integration' },
-  { text: 'API', link: '/zh/api/streaming' },
+  { text: 'Demo', link: '/zh/#live-demo' },
+  { text: '文档', link: '/zh/guide/quick-start' },
   { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
 ]
 

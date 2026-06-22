@@ -175,7 +175,11 @@ async function main() {
     await waitForText(page, 'One Stream Three Surfaces')
     await waitForText(page, 'A QoreStream is deliberately more than a string.')
     await waitForText(page, 'One primitive. Three ways to consume it.')
-    await waitForText(page, 'One stream driving one text node.')
+    await waitForText(page, 'One event stream. Four UI surfaces.')
+    await waitForText(page, 'timeline')
+    await waitForText(page, 'tools')
+    await waitForText(page, 'diff')
+    await waitForText(page, 'QoreEventStream')
     await waitForText(page, 'React vs Qore')
     await waitForText(page, 'React treats streaming as state synchronization.')
     await waitForText(page, 'Token -> signal -> DOM is the shorter path.')
@@ -209,7 +213,7 @@ async function main() {
     await waitForText(page, 'prompt: Browser smoke prompt')
     await page.waitForFunction(() => {
       const text = document.body.textContent ?? ''
-      return text.includes('status: completed') && text.includes('chunks: 4')
+      return text.includes('status: same binding, different source') && text.includes('chunks: 5')
     })
     await assertNoConsoleErrors(errors, 'English home')
 
@@ -238,7 +242,11 @@ async function main() {
     await waitForText(page, 'One Stream Three Surfaces')
     await waitForText(page, 'QoreStream 不只是字符串。')
     await waitForText(page, '一个 primitive，三种消费方式')
-    await waitForText(page, '一条 stream 驱动一个 text node。')
+    await waitForText(page, '一条 event stream，驱动四个 UI surface。')
+    await waitForText(page, 'timeline')
+    await waitForText(page, 'tools')
+    await waitForText(page, 'diff')
+    await waitForText(page, 'QoreEventStream')
     await waitForText(page, 'React vs Qore')
     await waitForText(page, 'React 把 streaming 变成状态同步问题。')
     await waitForText(page, 'Token -> signal -> DOM 是更短的路径。')
@@ -271,7 +279,7 @@ async function main() {
     await waitForText(page, `${zhPromptPrefix}: ${zhPromptValue}`)
     await page.waitForFunction(() => {
       const text = document.body.textContent ?? ''
-      return text.includes('状态: completed') && text.includes('chunks: 4')
+      return text.includes('状态: same binding, different source') && text.includes('chunks: 5')
     })
     await assertNoConsoleErrors(errors, 'Chinese home')
 

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useData } from 'vitepress'
-import { h, mount, stream, text } from '@qorejs/qore'
+import { h, list, mount, stream, text } from '@qorejs/qore'
 
 const { lang } = useData()
 const qoreRoot = ref<HTMLElement | null>(null)
@@ -10,12 +10,19 @@ const isZh = computed(() => lang.value.startsWith('zh'))
 
 type ProviderId = 'openai' | 'anthropic' | 'sse'
 
+type DemoEvent =
+  | { type: 'status'; label: string }
+  | { type: 'text'; text: string }
+  | { type: 'tool_call'; name: string; input: string }
+  | { type: 'tool_result'; name: string; output: string }
+  | { type: 'diff'; patch: string }
+
 type ProviderCopy = {
   id: ProviderId
   name: string
   env: string
   description: string
-  tokens: readonly string[]
+  events: readonly DemoEvent[]
 }
 
 const copy = {
@@ -45,14 +52,14 @@ return h('p', {}, text(() => answer()))`,
     surfacesLead: 'A QoreStream is deliberately more than a string. It exposes the three surfaces an AI interface actually needs.',
     surfacesTakeaway: 'One primitive. Three ways to consume it. No adapter changes in your UI.',
     streamPath: ['provider event', 'QoreStream', 'readonly signal', 'text node'],
-    demoPipeline: ['token', 'QoreStream', 'signal', 'text node'],
+    demoPipeline: ['event', 'QoreStream', 'selector', 'UI surface'],
     surfaces: [
       ['Signal', 'Bind current accumulated value directly into UI.', `answer()`],
       ['AsyncIterable', 'Observe every token, tool call, or event in control flow.', `for await (const event of events) {}`],
       ['Lifecycle', 'Read status, errors, chunks, timing, and cancellation state.', `answer.status()\nanswer.error()\nanswer.chunkCount()`]
     ],
     demoEyebrow: 'Live primitive',
-    demoTitle: 'One stream driving one text node.',
+    demoTitle: 'One event stream. Four UI surfaces.',
     providerLabel: 'Provider',
     demoPromptLabel: 'Prompt',
     demoButton: 'Stream',
@@ -119,11 +126,13 @@ return h('p', {}, text(() => answer()))`,
         name: 'OpenAI',
         env: 'OPENAI_API_KEY',
         description: 'Server-side OpenAI stream, one browser-side QoreStream signal.',
-        tokens: [
-          'status: routing request\n',
-          'tool.search: reading provider notes\n',
-          'token: stream = signal\n',
-          'done: text node updated without transcript rewrite'
+        events: [
+          { type: 'status', label: 'routing request' },
+          { type: 'tool_call', name: 'search_docs', input: 'stream runtime notes' },
+          { type: 'tool_result', name: 'search_docs', output: 'provider event -> signal -> UI' },
+          { type: 'text', text: 'stream = signal\n' },
+          { type: 'diff', patch: '+ bind only the text surface\n' },
+          { type: 'status', label: 'done without transcript rewrite' }
         ]
       },
       {
@@ -131,11 +140,12 @@ return h('p', {}, text(() => answer()))`,
         name: 'Anthropic',
         env: 'ANTHROPIC_API_KEY',
         description: 'Swap Anthropic into the same reactive stream runtime.',
-        tokens: [
-          'status: connecting to Claude\n',
-          'tool.plan: composing answer shape\n',
-          'token: provider changed, UI model did not\n',
-          'done: QoreStream completed'
+        events: [
+          { type: 'status', label: 'connecting to Claude' },
+          { type: 'tool_call', name: 'plan_answer', input: 'compare provider paths' },
+          { type: 'text', text: 'provider changed, UI model did not\n' },
+          { type: 'diff', patch: '+ keep selectors stable\n' },
+          { type: 'status', label: 'QoreStream completed' }
         ]
       },
       {
@@ -143,11 +153,12 @@ return h('p', {}, text(() => answer()))`,
         name: 'Generic SSE',
         env: 'CUSTOM_AI_API_KEY',
         description: 'Wrap any SSE endpoint once and keep the UI primitive unchanged.',
-        tokens: [
-          'status: consuming custom SSE\n',
-          'tool.call: vendor event normalized\n',
-          'token: your endpoint becomes a signal\n',
-          'done: same binding, different source'
+        events: [
+          { type: 'status', label: 'consuming custom SSE' },
+          { type: 'tool_call', name: 'normalize_event', input: 'vendor payload' },
+          { type: 'tool_result', name: 'normalize_event', output: 'typed DemoEvent' },
+          { type: 'text', text: 'your endpoint becomes a signal\n' },
+          { type: 'status', label: 'same binding, different source' }
         ]
       }
     ] satisfies readonly ProviderCopy[]
@@ -178,14 +189,14 @@ return h('p', {}, text(() => answer()))`,
     surfacesLead: 'QoreStream 不只是字符串。它暴露 AI interface 真正需要的三种表面。',
     surfacesTakeaway: '一个 primitive，三种消费方式，UI 不需要随着 adapter 改。',
     streamPath: ['provider event', 'QoreStream', 'readonly signal', 'text node'],
-    demoPipeline: ['token', 'QoreStream', 'signal', 'text node'],
+    demoPipeline: ['event', 'QoreStream', 'selector', 'UI surface'],
     surfaces: [
       ['Signal', '把当前累积值直接绑定到 UI。', `answer()`],
       ['AsyncIterable', '在控制流里观察每个 token、tool call 或事件。', `for await (const event of events) {}`],
       ['Lifecycle', '读取 status、error、chunks、timing 和取消状态。', `answer.status()\nanswer.error()\nanswer.chunkCount()`]
     ],
     demoEyebrow: 'Live primitive',
-    demoTitle: '一条 stream 驱动一个 text node。',
+    demoTitle: '一条 event stream，驱动四个 UI surface。',
     providerLabel: 'Provider',
     demoPromptLabel: '提示词',
     demoButton: 'Stream',
@@ -252,11 +263,13 @@ return h('p', {}, text(() => answer()))`,
         name: 'OpenAI',
         env: 'OPENAI_API_KEY',
         description: 'OpenAI 留在服务端，浏览器拿到一条 QoreStream signal。',
-        tokens: [
-          'status: routing request\n',
-          'tool.search: reading provider notes\n',
-          'token: stream = signal\n',
-          'done: text node updated without transcript rewrite'
+        events: [
+          { type: 'status', label: 'routing request' },
+          { type: 'tool_call', name: 'search_docs', input: 'stream runtime notes' },
+          { type: 'tool_result', name: 'search_docs', output: 'provider event -> signal -> UI' },
+          { type: 'text', text: 'stream = signal\n' },
+          { type: 'diff', patch: '+ bind only the text surface\n' },
+          { type: 'status', label: 'done without transcript rewrite' }
         ]
       },
       {
@@ -264,11 +277,12 @@ return h('p', {}, text(() => answer()))`,
         name: 'Anthropic',
         env: 'ANTHROPIC_API_KEY',
         description: '切到 Anthropic，也不改变 UI 更新模型。',
-        tokens: [
-          'status: connecting to Claude\n',
-          'tool.plan: composing answer shape\n',
-          'token: provider changed, UI model did not\n',
-          'done: QoreStream completed'
+        events: [
+          { type: 'status', label: 'connecting to Claude' },
+          { type: 'tool_call', name: 'plan_answer', input: 'compare provider paths' },
+          { type: 'text', text: 'provider changed, UI model did not\n' },
+          { type: 'diff', patch: '+ keep selectors stable\n' },
+          { type: 'status', label: 'QoreStream completed' }
         ]
       },
       {
@@ -276,11 +290,12 @@ return h('p', {}, text(() => answer()))`,
         name: 'Generic SSE',
         env: 'CUSTOM_AI_API_KEY',
         description: '把任意 SSE endpoint 包装一次，UI 原语保持不变。',
-        tokens: [
-          'status: consuming custom SSE\n',
-          'tool.call: vendor event normalized\n',
-          'token: your endpoint becomes a signal\n',
-          'done: same binding, different source'
+        events: [
+          { type: 'status', label: 'consuming custom SSE' },
+          { type: 'tool_call', name: 'normalize_event', input: 'vendor payload' },
+          { type: 'tool_result', name: 'normalize_event', output: 'typed DemoEvent' },
+          { type: 'text', text: 'your endpoint becomes a signal\n' },
+          { type: 'status', label: 'same binding, different source' }
         ]
       }
     ] satisfies readonly ProviderCopy[]
@@ -296,10 +311,10 @@ const quickStartLink = computed(() => isZh.value ? '/zh/guide/quick-start.html' 
 const demoLink = computed(() => isZh.value ? '/zh/#surfaces' : '/#surfaces')
 const providerGuideLink = computed(() => isZh.value ? '/zh/guide/ai-native.html' : '/guide/ai-native.html')
 let disposeQore: (() => Element) | null = null
-let activeAnswer: ReturnType<(typeof stream)['paced']> | null = null
+let activeAnswer: { abort(reason?: unknown): unknown } | null = null
 
-function makeDemoTokens() {
-  return [...activeProvider.value.tokens]
+function makeDemoEvents() {
+  return [...activeProvider.value.events]
 }
 
 function renderDemo(value = activePrompt.value) {
@@ -310,13 +325,24 @@ function renderDemo(value = activePrompt.value) {
   activeAnswer?.abort()
   disposeQore?.()
 
-  const answer = stream.paced(makeDemoTokens(), 42)
-  activeAnswer = answer
+  const events = stream.events<DemoEvent>(stream.paced<DemoEvent>(makeDemoEvents(), 42))
+  const markdown = events.select('text', {
+    seed: '',
+    reduce: (currentValue, event) => currentValue + event.text
+  })
+  const statuses = events.select('status')
+  const toolCalls = events.select('tool_call')
+  const toolResults = events.select('tool_result')
+  const diff = events.select('diff', {
+    seed: '',
+    reduce: (currentValue, event) => currentValue + event.patch
+  })
+  activeAnswer = events
 
-  disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell' },
+  disposeQore = mount(qoreRoot.value, () => h('section', { class: 'runtime-shell runtime-agent-shell' },
     h('div', { class: 'runtime-topline' },
       h('div', { class: 'runtime-provider' }, activeProvider.value.name),
-      h('div', { class: 'runtime-meta runtime-meta-inline' }, text(() => `${t.value.statusPrefix}: ${answer.status()}`))
+      h('div', { class: 'runtime-meta runtime-meta-inline' }, text(() => `${t.value.statusPrefix}: ${statuses().at(-1)?.label ?? events.status()}`))
     ),
     h('div', { class: 'runtime-thread' },
       h('article', { class: 'runtime-bubble runtime-bubble-user' },
@@ -324,16 +350,30 @@ function renderDemo(value = activePrompt.value) {
         h('p', { class: 'runtime-prompt' }, `${t.value.promptPrefix}: ${value}`)
       ),
       h('article', { class: 'runtime-bubble runtime-bubble-assistant' },
-        h('span', { class: 'runtime-bubble-label' }, activeProvider.value.name),
-        h('pre', { class: 'runtime-output' }, text(() => answer() || t.value.waiting))
+        h('span', { class: 'runtime-bubble-label' }, 'markdown surface'),
+        h('pre', { class: 'runtime-output' }, text(() => markdown() || t.value.waiting))
+      )
+    ),
+    h('div', { class: 'runtime-surfaces' },
+      h('article', null,
+        h('span', null, 'timeline'),
+        h('ol', null, list(() => events(), (event) => h('li', { class: `event-${event.type}` }, event.type)))
+      ),
+      h('article', null,
+        h('span', null, 'tools'),
+        h('ol', null, list(() => [...toolCalls(), ...toolResults()], (event) => h('li', null, event.type === 'tool_call' ? `${event.name}: ${event.input}` : `${event.name}: ${event.output}`)))
+      ),
+      h('article', null,
+        h('span', null, 'diff'),
+        h('pre', null, text(() => diff() || '+ waiting for patch'))
       )
     ),
     h('div', { class: 'runtime-footer' },
-      h('div', { class: 'runtime-meta' }, text(() => `${t.value.chunksPrefix}: ${answer.chunkCount()}`)),
-      h('div', { class: 'runtime-meta' }, 'QoreStream')
+      h('div', { class: 'runtime-meta' }, text(() => `${t.value.chunksPrefix}: ${events.chunkCount()}`)),
+      h('div', { class: 'runtime-meta' }, 'QoreEventStream')
     ),
     h('div', { class: 'runtime-lens' },
-      ...t.value.demoPipeline.map((step, index) => h('span', { class: index === 1 ? 'active' : '' }, step))
+      ...t.value.demoPipeline.map((step, index) => h('span', { class: index === 1 || index === 2 ? 'active' : '' }, step))
     )
   ))
 }
@@ -688,12 +728,12 @@ onBeforeUnmount(() => {
 .home-page {
   --font-display: 'Space Grotesk', 'Avenir Next', 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
-  --text: #f8fffc;
-  --muted: rgba(248, 255, 252, 0.74);
-  --soft: rgba(248, 255, 252, 0.52);
+  --text: #ffffff;
+  --muted: rgba(248, 255, 252, 0.88);
+  --soft: rgba(248, 255, 252, 0.68);
   --line: rgba(102, 247, 223, 0.22);
-  --panel: rgba(246, 255, 252, 0.062);
-  --panel-strong: rgba(246, 255, 252, 0.092);
+  --panel: rgba(246, 255, 252, 0.085);
+  --panel-strong: rgba(246, 255, 252, 0.13);
   --accent: #66f7df;
   --accent-strong: #31d9ff;
   --accent-glow: rgba(49, 217, 255, 0.26);
@@ -707,7 +747,7 @@ onBeforeUnmount(() => {
   background:
     radial-gradient(circle at 20% 0%, rgba(49, 217, 255, 0.22), transparent 30%),
     radial-gradient(circle at 83% 13%, rgba(102, 247, 223, 0.2), transparent 28%),
-    linear-gradient(180deg, #06110f 0%, #09211c 42%, #06110f 100%);
+    linear-gradient(180deg, #071713 0%, #0b2721 42%, #06110f 100%);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 360ms ease, transform 360ms ease;
@@ -809,11 +849,11 @@ h1 {
   font-weight: 800;
   line-height: 0.9;
   letter-spacing: -0.076em;
-  background: linear-gradient(112deg, #ffffff 0%, #eafff8 48%, var(--accent) 78%, var(--accent-strong) 100%);
+  background: linear-gradient(112deg, #ffffff 0%, #ffffff 36%, #dffff8 58%, var(--accent) 82%, var(--accent-strong) 100%);
   -webkit-background-clip: text;
   background-clip: text;
   text-wrap: balance;
-  text-shadow: 0 0 44px rgba(102, 247, 223, 0.12);
+  text-shadow: 0 0 44px rgba(102, 247, 223, 0.2);
 }
 
 .hero-copy h1 span {
@@ -853,7 +893,7 @@ pre,
 
 .summary {
   max-width: 720px;
-  color: rgba(248, 255, 252, 0.82);
+  color: rgba(255, 255, 255, 0.92);
   font-size: clamp(21px, 2vw, 27px);
   font-weight: 700;
   line-height: 1.32;
@@ -864,7 +904,7 @@ pre,
   max-width: 710px;
   padding-left: 18px;
   border-left: 2px solid rgba(49, 217, 255, 0.72);
-  color: rgba(208, 255, 247, 0.82);
+  color: rgba(226, 255, 250, 0.9);
   font-size: clamp(15px, 1.45vw, 18px);
   font-weight: 760;
   line-height: 1.55;
@@ -919,8 +959,8 @@ pre,
   padding: 8px 10px;
   border: 1px solid rgba(102, 247, 223, 0.18);
   border-radius: 999px;
-  color: rgba(248, 255, 252, 0.7);
-  background: rgba(246, 255, 252, 0.04);
+  color: rgba(248, 255, 252, 0.82);
+  background: rgba(246, 255, 252, 0.058);
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.01em;
@@ -980,7 +1020,7 @@ pre,
   border-color: rgba(102, 247, 223, 0.28);
   background:
     radial-gradient(circle at 78% 0%, rgba(49, 217, 255, 0.2), transparent 34%),
-    linear-gradient(180deg, rgba(246, 255, 252, 0.09), rgba(246, 255, 252, 0.046));
+    linear-gradient(180deg, rgba(246, 255, 252, 0.13), rgba(246, 255, 252, 0.066));
   box-shadow:
     0 34px 120px rgba(0, 0, 0, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -989,6 +1029,7 @@ pre,
 .why-card h2,
 .section-copy h2,
 .final-section h2 {
+  color: #ffffff;
   font-size: clamp(30px, 4vw, 58px);
   line-height: 0.98;
   letter-spacing: -0.062em;
@@ -1195,7 +1236,7 @@ pre,
 
 .demo-note {
   max-width: 42ch;
-  color: rgba(244, 251, 247, 0.64);
+  color: rgba(244, 251, 247, 0.78);
   font-size: 15px;
   line-height: 1.7;
 }
@@ -1365,6 +1406,68 @@ pre,
   letter-spacing: -0.012em;
 }
 
+:deep(.runtime-surfaces) {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr 1fr;
+  gap: 10px;
+}
+
+:deep(.runtime-surfaces article) {
+  min-width: 0;
+  padding: 12px;
+  border: 1px solid rgba(102, 247, 223, 0.14);
+  border-radius: 16px;
+  background: rgba(246, 255, 252, 0.058);
+}
+
+:deep(.runtime-surfaces span) {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--accent);
+  font: 900 10px/1 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+:deep(.runtime-surfaces ol) {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+:deep(.runtime-surfaces li),
+:deep(.runtime-surfaces pre) {
+  margin: 0;
+  color: rgba(248, 255, 252, 0.72);
+  font: 800 11px/1.45 var(--font-mono);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:deep(.runtime-surfaces li) {
+  position: relative;
+  padding-left: 12px;
+}
+
+:deep(.runtime-surfaces li::before) {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.58em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(49, 217, 255, 0.7);
+  box-shadow: 0 0 12px rgba(49, 217, 255, 0.38);
+}
+
+:deep(.runtime-surfaces .event-text::before),
+:deep(.runtime-surfaces .event-diff::before) {
+  background: var(--accent);
+}
+
 .comparison-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.82fr);
@@ -1429,7 +1532,7 @@ pre,
   padding: 0 10px;
   border: 1px solid rgba(102, 247, 223, 0.14);
   border-radius: 999px;
-  color: rgba(248, 255, 252, 0.58);
+  color: rgba(248, 255, 252, 0.72);
   background: rgba(0, 0, 0, 0.18);
   font: 850 11px/1 var(--font-mono);
   letter-spacing: 0.01em;
@@ -1913,7 +2016,8 @@ pre,
   .prompt-row,
   .benchmark-grid,
   .scope-board article,
-  :deep(.runtime-lens) {
+  :deep(.runtime-lens),
+  :deep(.runtime-surfaces) {
     grid-template-columns: 1fr;
   }
 
