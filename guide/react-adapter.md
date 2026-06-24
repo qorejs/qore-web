@@ -2,7 +2,7 @@
 
 Qore is a stream runtime first. The React adapter lets existing React apps subscribe to Qore streams without making every token a component-state update.
 
-> Status: published package. Install `@qorejs/react` next to `@qorejs/qore` and keep Qore as the streaming state layer under React.
+> Status: release-ready adapter in the Qore repository. The package is prepared as `@qorejs/react`; npm publishing is waiting on scope access.
 
 ## Mental Model
 

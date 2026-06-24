@@ -2,7 +2,7 @@
 
 Qore 首先是 stream runtime。React adapter 让已有 React 应用订阅 Qore stream，而不是把每个 token 都变成组件 state update。
 
-> 状态：已发布为 npm package。把 `@qorejs/react` 和 `@qorejs/qore` 一起安装，让 Qore 成为 React 下方的 streaming state layer。
+> 状态：React adapter 已经 release-ready。包名准备为 `@qorejs/react`；npm 发布正在等待 scope 权限打通。
 
 ## 心智模型
 
