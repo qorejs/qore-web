@@ -30,9 +30,9 @@ const copy = {
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'Build streaming AI chat, agent, and realtime UIs without transcript rewrites or rerender loops.',
-    categoryLine: 'Qore turns provider events into readonly signals that update exactly the UI nodes that read them.',
-    installLabel: 'Install Qore',
+    summary: 'Build streaming AI chat, agent, and realtime UIs without transcript rewrites, rerender loops, or framework lock-in.',
+    categoryLine: 'Qore turns provider events into readonly signals. Use the runtime with Qore DOM today, or bridge it into React through the preview adapter.',
+    installLabel: 'Core package',
     installCommand: 'pnpm add @qorejs/qore',
     useCases: ['AI chat', 'agent workspaces', 'realtime logs', 'copilot UI'],
     primaryAction: 'Start in 5 minutes',
@@ -46,7 +46,7 @@ return h('p', {}, text(() => answer()))`,
     whyPoints: [
       ['No transcript rewrites', 'The bound text node updates as chunks arrive.'],
       ['No state glue', 'The stream already is the signal your UI reads.'],
-      ['No framework lock-in', 'Use the runtime from Qore DOM today, or from framework adapters tomorrow.']
+      ['No framework lock-in', 'Qore DOM is one surface. The React adapter is the bridge for existing apps.']
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'A QoreStream is deliberately more than a string. It exposes the three surfaces an AI interface actually needs.',
@@ -75,17 +75,26 @@ return h('p', {}, text(() => answer()))`,
       'Show an agent event stream',
       'Why avoid transcript rewrites?'
     ],
-    comparisonTitle: 'React vs Qore',
-    comparisonLead: 'React treats streaming as state synchronization. Qore treats streaming as the state source.',
-    comparisonTakeaway: 'Token -> signal -> DOM is the shorter path.',
+    comparisonTitle: 'React with Qore',
+    comparisonLead: 'React can stay your view layer. Qore becomes the streaming state layer underneath it.',
+    comparisonTakeaway: 'The point is not replacing React. The point is removing token-by-token state glue.',
     reactTitle: 'React / AI SDK path',
-    qoreTitle: 'Qore path',
+    qoreTitle: 'React + Qore path',
     reactSteps: ['token', 'hook state', 'component render', 'reconcile', 'DOM'],
-    qoreSteps: ['token', 'stream signal', 'DOM'],
+    qoreSteps: ['token', 'QoreStream', 'external store', 'React view'],
     reactWork: ['state glue', 'render pass', 'reconcile pass', 'transcript rewrite'],
-    qoreWork: ['stream signal', 'text node'],
+    qoreWork: ['readonly stream', 'external store', 'view update'],
     reactCaption: 'Every token re-enters component state.',
-    qoreCaption: 'Every token updates the bound node.',
+    qoreCaption: 'The stream remains the source of truth; React subscribes to snapshots.',
+    adapterTitle: 'Use Qore inside React',
+    adapterLead: 'The preview adapter lives in packages/react and uses React external store contract instead of copying chunks into component state.',
+    adapterCode: `const answer = useQoreStream(
+  () => stream(fetch('/api/chat').then((r) => r.body)),
+  [prompt],
+  { initialValue: '' }
+)`,
+    adapterStatus: 'Preview adapter in repo',
+    adapterPills: ['useSyncExternalStore', 'abort on unmount', 'readonly snapshots'],
     architectureTitle: 'Architecture',
     architectureLead: 'Providers are inputs. The runtime is the product.',
     architectureTakeaway: 'Providers can change. Runtime semantics stay stable.',
@@ -99,7 +108,7 @@ return h('p', {}, text(() => answer()))`,
       ['UI', 'DOM binding, framework adapters, or your own renderer.']
     ],
     benchmarkTitle: 'Benchmark',
-    benchmarkLead: 'The honest comparison is not Qore versus React as brands. It is update model versus update model.',
+    benchmarkLead: 'The honest comparison is not Qore versus React as brands. It is streaming state model versus snapshot rewrite model.',
     benchmarkTakeaway: 'Measure rewritten work, not brand names.',
     benchmarkLines: ['Fine-grained stream updates', 'vs', 'snapshot transcript rewrites'],
     benchmarkDetails: [
@@ -119,7 +128,7 @@ return h('p', {}, text(() => answer()))`,
     providerBoundaryLabel: 'Server boundary',
     providerBoundary: ['Browser UI', 'Your SSE / NDJSON endpoint', 'Provider adapter', 'QoreStream signal'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
-    finalLead: 'Reactive Stream Runtime for AI-native interfaces. stream = signal.',
+    finalLead: '把 Qore 作为 stream runtime。保留你的 UI surface。让 stream = signal。',
     providers: [
       {
         id: 'openai',
@@ -167,9 +176,9 @@ return h('p', {}, text(() => answer()))`,
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: '用 Qore 构建 streaming AI chat、agent workspace 和 realtime UI，不再重写 transcript，也不再把 token 搬进组件状态。',
-    categoryLine: 'Qore 把 provider event 转成 readonly signal，只更新真正读取它的 UI node。',
-    installLabel: '安装 Qore',
+    summary: '用 Qore 构建 streaming AI chat、agent workspace 和 realtime UI，不重写 transcript，不把 token 搬进组件状态，也不锁定 framework。',
+    categoryLine: 'Qore 把 provider event 转成 readonly signal。今天可以用 Qore DOM，已有 React 应用也可以通过 preview adapter 接入。',
+    installLabel: '核心包',
     installCommand: 'pnpm add @qorejs/qore',
     useCases: ['AI chat', 'agent workspace', 'realtime logs', 'copilot UI'],
     primaryAction: '5 分钟上手',
@@ -183,7 +192,7 @@ return h('p', {}, text(() => answer()))`,
     whyPoints: [
       ['不重写 transcript', 'chunk 到达时，只更新绑定的 text node。'],
       ['不搬运状态', 'stream 本身就是 UI 读取的 signal。'],
-      ['不锁定 framework', '今天用 Qore DOM，明天也可以接 framework adapter。']
+      ['不锁定 framework', 'Qore DOM 是一种 surface，React adapter 让已有应用也能接入。']
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'QoreStream 不只是字符串。它暴露 AI interface 真正需要的三种表面。',
@@ -212,17 +221,26 @@ return h('p', {}, text(() => answer()))`,
       '展示 agent event stream',
       '为什么避免 transcript rewrite？'
     ],
-    comparisonTitle: 'React vs Qore',
-    comparisonLead: 'React 把 streaming 变成状态同步问题。Qore 把 streaming 作为状态源。',
-    comparisonTakeaway: 'Token -> signal -> DOM 是更短的路径。',
+    comparisonTitle: 'React with Qore',
+    comparisonLead: 'React 可以继续做 view layer。Qore 在下面接管 streaming state layer。',
+    comparisonTakeaway: '重点不是替代 React，而是移除 token-by-token state glue。',
     reactTitle: 'React / AI SDK path',
-    qoreTitle: 'Qore path',
+    qoreTitle: 'React + Qore path',
     reactSteps: ['token', 'hook state', 'component render', 'reconcile', 'DOM'],
-    qoreSteps: ['token', 'stream signal', 'DOM'],
+    qoreSteps: ['token', 'QoreStream', 'external store', 'React view'],
     reactWork: ['state glue', 'render pass', 'reconcile pass', 'transcript rewrite'],
-    qoreWork: ['stream signal', 'text node'],
+    qoreWork: ['readonly stream', 'external store', 'view update'],
     reactCaption: '每个 token 都重新进入 component state。',
-    qoreCaption: '每个 token 只更新绑定节点。',
+    qoreCaption: 'stream 仍然是 truth source，React 只订阅 snapshot。',
+    adapterTitle: '在 React 中使用 Qore',
+    adapterLead: 'Preview adapter 位于 packages/react，使用 React external store contract，不再把 chunk 手动复制进组件状态。',
+    adapterCode: `const answer = useQoreStream(
+  () => stream(fetch('/api/chat').then((r) => r.body)),
+  [prompt],
+  { initialValue: '' }
+)`,
+    adapterStatus: 'Preview adapter in repo',
+    adapterPills: ['useSyncExternalStore', 'abort on unmount', 'readonly snapshots'],
     architectureTitle: 'Architecture',
     architectureLead: 'Provider 是入口。Runtime 才是产品。',
     architectureTakeaway: 'Provider 可以换，runtime 语义保持稳定。',
@@ -236,7 +254,7 @@ return h('p', {}, text(() => answer()))`,
       ['UI', 'DOM binding、framework adapter 或你自己的 renderer。']
     ],
     benchmarkTitle: 'Benchmark',
-    benchmarkLead: '诚实的比较不是 Qore 和 React 两个品牌，而是两种更新模型。',
+    benchmarkLead: '诚实的比较不是 Qore 和 React 两个品牌，而是 streaming state model 和 snapshot rewrite model。',
     benchmarkTakeaway: '衡量被重写的工作量，而不是比较品牌名。',
     benchmarkLines: ['Fine-grained stream updates', 'vs', 'snapshot transcript rewrites'],
     benchmarkDetails: [
@@ -256,7 +274,7 @@ return h('p', {}, text(() => answer()))`,
     providerBoundaryLabel: '服务端边界',
     providerBoundary: ['Browser UI', 'Your SSE / NDJSON endpoint', 'Provider adapter', 'QoreStream signal'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
-    finalLead: 'Reactive Stream Runtime for AI-native interfaces. stream = signal.',
+    finalLead: '把 Qore 作为 stream runtime。保留你的 UI surface。让 stream = signal。',
     providers: [
       {
         id: 'openai',
@@ -548,6 +566,18 @@ onBeforeUnmount(() => {
         </article>
       </div>
 
+      <article class="react-adapter-card" aria-label="Qore React adapter preview">
+        <div>
+          <span>{{ t.adapterStatus }}</span>
+          <h3>{{ t.adapterTitle }}</h3>
+          <p>{{ t.adapterLead }}</p>
+          <div class="adapter-pills">
+            <em v-for="pill in t.adapterPills" :key="pill">{{ pill }}</em>
+          </div>
+        </div>
+        <pre><code>{{ t.adapterCode }}</code></pre>
+      </article>
+
       <p class="takeaway">{{ t.comparisonTakeaway }}</p>
     </section>
 
@@ -729,11 +759,11 @@ onBeforeUnmount(() => {
   --font-display: 'Space Grotesk', 'Avenir Next', 'Helvetica Neue', sans-serif;
   --font-mono: 'JetBrains Mono', 'SFMono-Regular', Consolas, monospace;
   --text: #ffffff;
-  --muted: rgba(248, 255, 252, 0.88);
-  --soft: rgba(248, 255, 252, 0.68);
-  --line: rgba(102, 247, 223, 0.22);
-  --panel: rgba(246, 255, 252, 0.085);
-  --panel-strong: rgba(246, 255, 252, 0.13);
+  --muted: rgba(252, 255, 254, 0.94);
+  --soft: rgba(248, 255, 252, 0.78);
+  --line: rgba(102, 247, 223, 0.3);
+  --panel: rgba(246, 255, 252, 0.11);
+  --panel-strong: rgba(246, 255, 252, 0.17);
   --accent: #66f7df;
   --accent-strong: #31d9ff;
   --accent-glow: rgba(49, 217, 255, 0.26);
@@ -745,9 +775,9 @@ onBeforeUnmount(() => {
   padding: 118px clamp(18px, 4vw, 72px) 98px;
   color: var(--text);
   background:
-    radial-gradient(circle at 20% 0%, rgba(49, 217, 255, 0.22), transparent 30%),
-    radial-gradient(circle at 83% 13%, rgba(102, 247, 223, 0.2), transparent 28%),
-    linear-gradient(180deg, #071713 0%, #0b2721 42%, #06110f 100%);
+    radial-gradient(circle at 20% 0%, rgba(49, 217, 255, 0.26), transparent 30%),
+    radial-gradient(circle at 83% 13%, rgba(102, 247, 223, 0.24), transparent 28%),
+    linear-gradient(180deg, #081c18 0%, #0b2a24 42%, #06110f 100%);
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 360ms ease, transform 360ms ease;
@@ -761,8 +791,8 @@ onBeforeUnmount(() => {
   inset: 0;
   pointer-events: none;
   background-image:
-    linear-gradient(rgba(102, 247, 223, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(102, 247, 223, 0.045) 1px, transparent 1px);
+    linear-gradient(rgba(102, 247, 223, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(102, 247, 223, 0.06) 1px, transparent 1px);
   background-size: 86px 86px;
   mask-image: linear-gradient(to bottom, black 0%, transparent 70%);
 }
@@ -853,7 +883,8 @@ h1 {
   -webkit-background-clip: text;
   background-clip: text;
   text-wrap: balance;
-  text-shadow: 0 0 44px rgba(102, 247, 223, 0.2);
+  filter: drop-shadow(0 0 18px rgba(102, 247, 223, 0.16));
+  text-shadow: 0 0 38px rgba(102, 247, 223, 0.24);
 }
 
 .hero-copy h1 span {
@@ -893,7 +924,7 @@ pre,
 
 .summary {
   max-width: 720px;
-  color: rgba(255, 255, 255, 0.92);
+  color: rgba(255, 255, 255, 0.97);
   font-size: clamp(21px, 2vw, 27px);
   font-weight: 700;
   line-height: 1.32;
@@ -904,7 +935,7 @@ pre,
   max-width: 710px;
   padding-left: 18px;
   border-left: 2px solid rgba(49, 217, 255, 0.72);
-  color: rgba(226, 255, 250, 0.9);
+  color: rgba(238, 255, 252, 0.96);
   font-size: clamp(15px, 1.45vw, 18px);
   font-weight: 760;
   line-height: 1.55;
@@ -1017,10 +1048,10 @@ pre,
   gap: 18px;
   padding: clamp(20px, 2.7vw, 32px);
   border-radius: 32px;
-  border-color: rgba(102, 247, 223, 0.28);
+  border-color: rgba(102, 247, 223, 0.42);
   background:
-    radial-gradient(circle at 78% 0%, rgba(49, 217, 255, 0.2), transparent 34%),
-    linear-gradient(180deg, rgba(246, 255, 252, 0.13), rgba(246, 255, 252, 0.066));
+    radial-gradient(circle at 78% 0%, rgba(49, 217, 255, 0.24), transparent 34%),
+    linear-gradient(180deg, rgba(246, 255, 252, 0.17), rgba(246, 255, 252, 0.09));
   box-shadow:
     0 34px 120px rgba(0, 0, 0, 0.42),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
@@ -1564,6 +1595,83 @@ pre,
     linear-gradient(180deg, rgba(102, 247, 223, 0.12), rgba(246, 255, 252, 0.052));
 }
 
+.react-adapter-card {
+  display: grid;
+  grid-template-columns: minmax(0, 0.84fr) minmax(360px, 0.7fr);
+  gap: clamp(18px, 3vw, 36px);
+  align-items: stretch;
+  margin-top: 18px;
+  padding: clamp(22px, 3vw, 34px);
+  border: 1px solid rgba(102, 247, 223, 0.34);
+  border-radius: 30px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(102, 247, 223, 0.16), transparent 36%),
+    linear-gradient(135deg, rgba(246, 255, 252, 0.12), rgba(49, 217, 255, 0.052));
+  box-shadow: 0 30px 110px rgba(0, 0, 0, 0.3);
+}
+
+.react-adapter-card > div {
+  display: grid;
+  gap: 12px;
+  align-content: center;
+}
+
+.react-adapter-card span {
+  width: fit-content;
+  padding: 8px 10px;
+  border: 1px solid rgba(102, 247, 223, 0.28);
+  border-radius: 999px;
+  color: var(--accent);
+  background: rgba(0, 0, 0, 0.2);
+  font: 900 11px/1 var(--font-mono);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.react-adapter-card h3 {
+  color: var(--text);
+  font-size: clamp(26px, 3vw, 42px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+
+.react-adapter-card p {
+  color: var(--muted);
+  font-size: 16px;
+  font-weight: 760;
+  line-height: 1.68;
+  letter-spacing: -0.025em;
+}
+
+.react-adapter-card pre {
+  margin: 0;
+  overflow: auto;
+  padding: 20px;
+  border: 1px solid rgba(102, 247, 223, 0.2);
+  border-radius: 22px;
+  color: var(--text);
+  background:
+    linear-gradient(90deg, rgba(49, 217, 255, 0.12), transparent 44%),
+    rgba(0, 0, 0, 0.32);
+  font: 850 12px/1.72 var(--font-mono);
+  box-shadow: inset 3px 0 0 rgba(102, 247, 223, 0.5);
+}
+
+.adapter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.adapter-pills em {
+  padding: 8px 10px;
+  border: 1px solid rgba(102, 247, 223, 0.16);
+  border-radius: 999px;
+  color: rgba(248, 255, 252, 0.78);
+  background: rgba(0, 0, 0, 0.18);
+  font: normal 850 11px/1 var(--font-mono);
+}
+
 .strong-path h3,
 .strong-path li:last-child {
   color: var(--accent);
@@ -1864,6 +1972,7 @@ pre,
 @media (max-width: 1180px) {
   .surfaces-layout,
   .comparison-grid,
+  .react-adapter-card,
   .architecture-rail,
   .providers-board {
     grid-template-columns: 1fr;
@@ -2089,10 +2198,15 @@ pre,
   .surface-card,
   .demo-panel,
   .path-panel,
+  .react-adapter-card,
   .benchmark-board,
   .provider-card,
   .final-section {
     border-radius: 24px;
+  }
+
+  .react-adapter-card {
+    grid-template-columns: 1fr;
   }
 
   .stream-strip {
