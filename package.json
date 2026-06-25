@@ -15,7 +15,7 @@
     "docs:core": "node scripts/validate-core-docs.mjs"
   },
   "dependencies": {
-    "@qorejs/qore": "^1.0.1",
+    "@qorejs/qore": "^1.0.2",
     "vitepress": "^1.6.4",
     "vue": "^3.5.0"
   },
