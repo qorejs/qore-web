@@ -38,7 +38,21 @@ export function Answer({ prompt }: { prompt: string }) {
 }
 ```
 
-`useQoreStream` 会在 mount 后启动 stream，通过 `useSyncExternalStore` 订阅，并在依赖变化或组件卸载时 abort 上一个 stream。
+`useQoreStream` 会在 mount 后启动 stream，通过 `useSyncExternalStore` 订阅，并在依赖变化或组件卸载时 abort 上一个 stream。传入 `{ enabled: false }` 可以保持 idle snapshot，而不启动网络请求。
+
+## Selector Hook
+
+如果组件只需要 stream 的某个切片，使用 `useQoreSignalSelector`，避免把完整 snapshot 变成 React render 的触发面。
+
+```tsx
+import type { QoreStream } from '@qorejs/qore'
+import { useQoreSignalSelector } from '@qorejs/react'
+
+export function TokenCounter({ answer }: { answer: QoreStream<string, string> }) {
+  const tokenCount = useQoreSignalSelector(answer.chunks, (chunks) => chunks.length)
+  return <span>{tokenCount}</span>
+}
+```
 
 ## 你会得到什么
 

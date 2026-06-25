@@ -10,3 +10,5 @@ node_modules/
 /assets/
 /hashmap.json
 /vp-icons.css
+
+.DS_Store

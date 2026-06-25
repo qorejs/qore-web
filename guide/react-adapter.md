@@ -38,7 +38,21 @@ export function Answer({ prompt }: { prompt: string }) {
 }
 ```
 
-`useQoreStream` starts after mount, subscribes with `useSyncExternalStore`, and aborts the previous stream when dependencies change or the component unmounts.
+`useQoreStream` starts after mount, subscribes with `useSyncExternalStore`, and aborts the previous stream when dependencies change or the component unmounts. Pass `{ enabled: false }` to keep an idle snapshot without starting network work.
+
+## Selector Hook
+
+If a component only needs one slice of stream state, use `useQoreSignalSelector` so React subscribes to the value that component actually reads.
+
+```tsx
+import type { QoreStream } from '@qorejs/qore'
+import { useQoreSignalSelector } from '@qorejs/react'
+
+export function TokenCounter({ answer }: { answer: QoreStream<string, string> }) {
+  const tokenCount = useQoreSignalSelector(answer.chunks, (chunks) => chunks.length)
+  return <span>{tokenCount}</span>
+}
+```
 
 ## What You Get
 
