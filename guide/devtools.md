@@ -12,15 +12,33 @@ const inspector = createStreamInspector({
 })
 
 const answer = stream(model.chat('hello'), { name: 'answer' })
+const trace = inspector.stream('answer')
 await answer.ready
 
 console.table(inspector.streams())
-console.log(inspector.events())
+console.log(trace()?.firstChunkLatencyMs, trace()?.chunksPerSecond)
 
 inspector.dispose()
 ```
 
-`inspector.events()` is a readonly signal for recent raw lifecycle events. `inspector.streams()` is a readonly signal that summarizes each stream by `id`, `name`, `status`, `chunkCount`, timestamps, and latest value.
+`inspector.events()` is a readonly signal for recent raw lifecycle events. `inspector.streams()` is a readonly signal that summarizes each stream by `id`, `name`, `status`, `chunkCount`, timestamps, latest value, and runtime metrics.
+
+The summary includes:
+
+- `firstChunkLatencyMs`: time from stream creation to first chunk
+- `durationMs`: time from stream creation to terminal state, or latest update while active
+- `chunksPerSecond`: observed chunk throughput
+- `terminal`: whether the stream completed, errored, or aborted
+
+Use `inspector.stream(idOrName)` when a panel only needs one stream:
+
+```ts
+const answerTrace = inspector.stream('answer')
+
+answerTrace.subscribe((summary) => {
+  console.log(summary?.status, summary?.durationMs)
+})
+```
 
 Use metadata-only capture when you want timing without retaining token payloads:
 

@@ -12,15 +12,33 @@ const inspector = createStreamInspector({
 })
 
 const answer = stream(model.chat('hello'), { name: 'answer' })
+const trace = inspector.stream('answer')
 await answer.ready
 
 console.table(inspector.streams())
-console.log(inspector.events())
+console.log(trace()?.firstChunkLatencyMs, trace()?.chunksPerSecond)
 
 inspector.dispose()
 ```
 
-`inspector.events()` 是最近原始 lifecycle events 的 readonly signal。`inspector.streams()` 是 stream summary 的 readonly signal，包含 `id`、`name`、`status`、`chunkCount`、时间戳和最新值。
+`inspector.events()` 是最近原始 lifecycle events 的 readonly signal。`inspector.streams()` 是 stream summary 的 readonly signal，包含 `id`、`name`、`status`、`chunkCount`、时间戳、最新值和运行时指标。
+
+summary 包含：
+
+- `firstChunkLatencyMs`：从 stream 创建到第一个 chunk 的耗时
+- `durationMs`：从 stream 创建到终态的耗时；active 状态下是最新更新时间
+- `chunksPerSecond`：观察到的 chunk 吞吐
+- `terminal`：stream 是否已经 completed、errored 或 aborted
+
+如果面板只关心一个 stream，可以用 `inspector.stream(idOrName)`：
+
+```ts
+const answerTrace = inspector.stream('answer')
+
+answerTrace.subscribe((summary) => {
+  console.log(summary?.status, summary?.durationMs)
+})
+```
 
 如果只想看时序、不想保留 token payload，可以关闭 payload capture：
 
