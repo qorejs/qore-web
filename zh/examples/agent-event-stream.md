@@ -80,12 +80,14 @@ Agent 只需要 emit 一条 event stream。Qore 把它投射成多个细粒度 U
 ## DevTools Trace
 
 ```ts
-globalThis.__QORE_DEVTOOLS__ = { events: [] }
+const inspector = createStreamInspector({ maxEvents: 200 })
 
 const events = stream.events(agent.run(task), { name: 'agent-events' })
+
+console.table(inspector.streams())
 ```
 
-现在你可以从 DevTools hook 看到每个 stream 的 `create`、`chunk`、`complete`、`error` 和 `abort`。
+现在可以从一个 readonly timeline 里检查每个命名 stream 的 `create`、`chunk`、`complete`、`error` 和 `abort` 事件。如果 trace 不应该保留 token 内容，可以使用 `capturePayloads: false`。
 
 ## 为什么重要
 

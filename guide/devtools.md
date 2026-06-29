@@ -1,6 +1,39 @@
 # DevTools Hook
 
-Qore exposes a tiny development hook for stream inspection. It is inert by default. When you install `globalThis.__QORE_DEVTOOLS__`, every named stream can emit lifecycle and chunk events.
+Qore exposes a tiny development hook for stream inspection. It is inert by default. For most apps, start with the built-in stream inspector instead of wiring the global hook by hand.
+
+## Stream Inspector
+
+```ts
+import { createStreamInspector, stream } from '@qorejs/qore'
+
+const inspector = createStreamInspector({
+  maxEvents: 200,
+})
+
+const answer = stream(model.chat('hello'), { name: 'answer' })
+await answer.ready
+
+console.table(inspector.streams())
+console.log(inspector.events())
+
+inspector.dispose()
+```
+
+`inspector.events()` is a readonly signal for recent raw lifecycle events. `inspector.streams()` is a readonly signal that summarizes each stream by `id`, `name`, `status`, `chunkCount`, timestamps, and latest value.
+
+Use metadata-only capture when you want timing without retaining token payloads:
+
+```ts
+const inspector = createStreamInspector({
+  maxEvents: 500,
+  capturePayloads: false,
+})
+```
+
+## Raw Hook
+
+When you install `globalThis.__QORE_DEVTOOLS__`, every named stream can emit lifecycle and chunk events.
 
 ```ts
 globalThis.__QORE_DEVTOOLS__ = {

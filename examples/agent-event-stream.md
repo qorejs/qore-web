@@ -80,12 +80,14 @@ The agent emits one event stream. Qore turns it into multiple fine-grained UI su
 ## DevTools Trace
 
 ```ts
-globalThis.__QORE_DEVTOOLS__ = { events: [] }
+const inspector = createStreamInspector({ maxEvents: 200 })
 
 const events = stream.events(agent.run(task), { name: 'agent-events' })
+
+console.table(inspector.streams())
 ```
 
-You can now inspect `create`, `chunk`, `complete`, `error`, and `abort` events for every named stream from the DevTools hook.
+You can now inspect `create`, `chunk`, `complete`, `error`, and `abort` events for every named stream from one readonly timeline. Use `capturePayloads: false` when the trace should avoid retaining token content.
 
 ## Why This Matters
 

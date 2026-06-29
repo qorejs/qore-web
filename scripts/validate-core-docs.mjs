@@ -34,6 +34,7 @@ const allowedQoreExports = new Set([
   'createResponse',
   'createSSEResponse',
   'createSSEAdapter',
+  'createStreamInspector',
   'dynamic',
   'effect',
   'fragment',
