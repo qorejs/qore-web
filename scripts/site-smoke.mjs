@@ -224,7 +224,7 @@ async function main() {
     await page.goto(`${baseUrl}/examples/agent-event-stream.html`, { waitUntil: 'networkidle' })
     await waitForText(page, 'Agent Event Stream')
     await waitForText(page, 'agent events -> QoreEventStream -> selectors -> UI surfaces')
-    await waitForText(page, "const events = stream.events<AgentEvent>(agent.run(task))")
+    await waitForText(page, "const events = stream.events<AgentEvent>(agent.run(task), { name: 'agent-events' })")
 
     await page.goto(`${baseUrl}/guide/react-adapter.html`, { waitUntil: 'networkidle' })
     await waitForText(page, 'React Adapter')
@@ -303,7 +303,7 @@ async function main() {
     await page.goto(`${baseUrl}/zh/examples/agent-event-stream.html`, { waitUntil: 'networkidle' })
     await waitForText(page, 'Agent Event Stream')
     await waitForText(page, 'agent events -> QoreEventStream -> selectors -> UI surfaces')
-    await waitForText(page, "const events = stream.events<AgentEvent>(agent.run(task))")
+    await waitForText(page, "const events = stream.events<AgentEvent>(agent.run(task), { name: 'agent-events' })")
 
     await page.goto(`${baseUrl}/zh/guide/react-adapter.html`, { waitUntil: 'networkidle' })
     await waitForText(page, 'React Adapter')

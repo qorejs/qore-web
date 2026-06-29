@@ -23,6 +23,7 @@ const englishSidebar = {
         { text: '5-Minute Quick Start', link: '/guide/quick-start' },
         { text: 'Getting Started', link: '/guide/getting-started' },
         { text: 'React Adapter', link: '/guide/react-adapter' },
+        { text: 'DevTools Hook', link: '/guide/devtools' },
       ],
     },
     {
@@ -97,6 +98,7 @@ const chineseSidebar = {
         { text: '5 分钟快速入门', link: '/zh/guide/quick-start' },
         { text: '快速开始', link: '/zh/guide/getting-started' },
         { text: 'React Adapter', link: '/zh/guide/react-adapter' },
+        { text: 'DevTools Hook', link: '/zh/guide/devtools' },
       ],
     },
     {

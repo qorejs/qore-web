@@ -13,6 +13,9 @@ type AgentEvent =
   | { type: 'tool_call'; name: string; input: string }
   | { type: 'tool_result'; name: string; output: string }
   | { type: 'diff'; patch: string }
+  | { type: 'artifact'; title: string; content: string }
+  | { type: 'retry'; attempt: number; reason: string }
+  | { type: 'error'; message: string; recoverable: boolean }
 ```
 
 ## Runtime
@@ -20,7 +23,7 @@ type AgentEvent =
 ```ts
 import { stream } from '@qorejs/qore'
 
-const events = stream.events<AgentEvent>(agent.run(task))
+const events = stream.events<AgentEvent>(agent.run(task), { name: 'agent-events' })
 
 const markdown = events.select('text', {
   seed: '',
@@ -30,6 +33,9 @@ const markdown = events.select('text', {
 const tools = events.select('tool_call')
 const results = events.select('tool_result')
 const statuses = events.select('status')
+const retries = events.select('retry')
+const errors = events.select('error')
+const artifacts = events.select('artifact')
 
 const diff = events.select('diff', {
   seed: '',
@@ -69,6 +75,17 @@ mount('#app', () => h('main', {},
 ```
 
 Agent 只需要 emit 一条 event stream。Qore 把它投射成多个细粒度 UI surface，不需要额外状态仓库。
+
+
+## DevTools Trace
+
+```ts
+globalThis.__QORE_DEVTOOLS__ = { events: [] }
+
+const events = stream.events(agent.run(task), { name: 'agent-events' })
+```
+
+现在你可以从 DevTools hook 看到每个 stream 的 `create`、`chunk`、`complete`、`error` 和 `abort`。
 
 ## 为什么重要
 
