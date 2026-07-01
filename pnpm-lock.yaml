@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@qorejs/qore':
-        specifier: ^1.0.5
-        version: 1.0.5
+        specifier: ^1.0.6
+        version: 1.0.6
       vitepress:
         specifier: ^1.6.4
         version: 1.6.4(@algolia/client-search@5.50.2)(postcss@8.5.9)(search-insights@2.17.3)
@@ -451,8 +451,8 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
-  '@qorejs/qore@1.0.5':
-    resolution: {integrity: sha512-Rv2r+n2/kVPJ8CAT1IzSYDX4bTTRutZ/9oX4P8GAxq9Ho0+wxw3fuOXpd8bOTQ6fbunYnBTNTmG0axgqshtJ+Q==}
+  '@qorejs/qore@1.0.6':
+    resolution: {integrity: sha512-rNCw1mTtJlMDDt5D8XqCGChH2Q5T5jXWub7i+OvJBv5NSYor4/X3nLiXH/10m2UJc00m2D9VgR8ZFE7RztkQQw==}
     engines: {node: '>=18.0.0'}
 
   '@rollup/rollup-android-arm-eabi@4.60.1':
@@ -1315,7 +1315,7 @@ snapshots:
     dependencies:
       playwright: 1.60.0
 
-  '@qorejs/qore@1.0.5': {}
+  '@qorejs/qore@1.0.6': {}
 
   '@rollup/rollup-android-arm-eabi@4.60.1':
     optional: true
