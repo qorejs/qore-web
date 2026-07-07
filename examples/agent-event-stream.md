@@ -32,7 +32,7 @@ const markdown = events.select('text', {
 
 const tools = events.select('tool_call')
 const results = events.select('tool_result')
-const statuses = events.select('status')
+const statuses = events.select('status', { maxItems: 20 })
 const retries = events.select('retry')
 const errors = events.select('error')
 const artifacts = events.select('artifact')
@@ -100,3 +100,16 @@ agent events -> QoreEventStream -> selectors -> UI surfaces
 ```
 
 That is the runtime difference: streaming is not a special case. Streaming is the state model.
+
+
+## Long-running Agent UI
+
+Agent timelines can keep running for minutes. Keep the full event stream useful while giving each UI pane its own bounded window:
+
+```ts
+const events = stream.events(agent.run(task), { maxItems: 500 })
+const statuses = events.select('status', { maxItems: 20 })
+const tools = events.select('tool_call', { maxItems: 50 })
+```
+
+`maxItems` limits the current signal array only. It does not hide chunks from async iteration or lifecycle counters.

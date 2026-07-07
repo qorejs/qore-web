@@ -30,8 +30,8 @@ const copy = {
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: 'Build streaming AI chat, agent, and realtime UIs without transcript rewrites, rerender loops, or framework lock-in.',
-    categoryLine: 'Qore turns provider events into readonly signals. Use the runtime with Qore DOM today, or bridge it into React through the release-ready adapter.',
+    summary: 'Make streams first-class state for AI-native interfaces. No transcript rewrites, no state glue, no framework lock-in.',
+    categoryLine: 'Provider events become readonly signals. UI surfaces subscribe to the stream instead of copying chunks into local state.',
     installLabel: 'Core package',
     installCommand: 'pnpm add @qorejs/qore',
     useCases: ['AI chat', 'agent workspaces', 'realtime logs', 'copilot UI'],
@@ -50,7 +50,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'A QoreStream is deliberately more than a string. It exposes the three surfaces an AI interface actually needs.',
-    surfacesTakeaway: 'One primitive. Three ways to consume it. No adapter changes in your UI.',
+    surfacesTakeaway: 'One stream. Three surfaces. One runtime contract.',
     streamPath: ['provider event', 'QoreStream', 'readonly signal', 'text node'],
     demoPipeline: ['event', 'QoreStream', 'selector', 'UI surface'],
     surfaces: [
@@ -75,8 +75,8 @@ return h('p', {}, text(() => answer()))`,
       'Show an agent event stream',
       'Why avoid transcript rewrites?'
     ],
-    comparisonTitle: 'React with Qore',
-    comparisonLead: 'React can stay your view layer. Qore becomes the streaming state layer underneath it.',
+    comparisonTitle: 'React vs Qore',
+    comparisonLead: 'React can stay your view layer. Qore changes the path tokens take before they touch UI.',
     comparisonTakeaway: 'The point is not replacing React. The point is removing token-by-token state glue.',
     reactTitle: 'React / AI SDK path',
     qoreTitle: 'React + Qore path',
@@ -128,7 +128,7 @@ return h('p', {}, text(() => answer()))`,
     providerBoundaryLabel: 'Server boundary',
     providerBoundary: ['Browser UI', 'Your SSE / NDJSON endpoint', 'Provider adapter', 'QoreStream signal'],
     finalTitle: 'Make streams first-class state for AI-native interfaces.',
-    finalLead: '把 Qore 作为 stream runtime。保留你的 UI surface。让 stream = signal。',
+    finalLead: 'Use Qore as the stream runtime. Keep your UI surface. Let stream = signal.',
     providers: [
       {
         id: 'openai',
@@ -176,8 +176,8 @@ return h('p', {}, text(() => answer()))`,
     headlineTop: 'Reactive Stream Runtime',
     headlineBottom: 'for AI-native interfaces',
     tagline: 'stream = signal',
-    summary: '用 Qore 构建 streaming AI chat、agent workspace 和 realtime UI，不重写 transcript，不把 token 搬进组件状态，也不锁定 framework。',
-    categoryLine: 'Qore 把 provider event 转成 readonly signal。今天可以用 Qore DOM，已有 React 应用也可以通过 release-ready adapter 接入。',
+    summary: '让 stream 成为 AI-native interface 的一等状态。不重写 transcript，不搬运状态，不锁定 framework。',
+    categoryLine: 'Provider event 变成 readonly signal。UI surface 订阅 stream，而不是把 chunk 复制进本地状态。',
     installLabel: '核心包',
     installCommand: 'pnpm add @qorejs/qore',
     useCases: ['AI chat', 'agent workspace', 'realtime logs', 'copilot UI'],
@@ -196,7 +196,7 @@ return h('p', {}, text(() => answer()))`,
     ],
     surfacesTitle: 'One Stream Three Surfaces',
     surfacesLead: 'QoreStream 不只是字符串。它暴露 AI interface 真正需要的三种表面。',
-    surfacesTakeaway: '一个 primitive，三种消费方式，UI 不需要随着 adapter 改。',
+    surfacesTakeaway: '一条 stream，三种 surface，一个稳定 runtime contract。',
     streamPath: ['provider event', 'QoreStream', 'readonly signal', 'text node'],
     demoPipeline: ['event', 'QoreStream', 'selector', 'UI surface'],
     surfaces: [
@@ -221,8 +221,8 @@ return h('p', {}, text(() => answer()))`,
       '展示 agent event stream',
       '为什么避免 transcript rewrite？'
     ],
-    comparisonTitle: 'React with Qore',
-    comparisonLead: 'React 可以继续做 view layer。Qore 在下面接管 streaming state layer。',
+    comparisonTitle: 'React vs Qore',
+    comparisonLead: 'React 可以继续做 view layer。Qore 改变 token 进入 UI 之前的路径。',
     comparisonTakeaway: '重点不是替代 React，而是移除 token-by-token state glue。',
     reactTitle: 'React / AI SDK path',
     qoreTitle: 'React + Qore path',
@@ -442,16 +442,6 @@ onBeforeUnmount(() => {
         </h1>
         <p class="tagline"><code>{{ t.tagline }}</code></p>
         <p class="summary">{{ t.summary }}</p>
-        <p class="category-line">{{ t.categoryLine }}</p>
-
-        <div class="install-card" aria-label="Install Qore">
-          <span>{{ t.installLabel }}</span>
-          <code>{{ t.installCommand }}</code>
-        </div>
-
-        <div class="use-case-row" aria-label="Qore use cases">
-          <span v-for="item in t.useCases" :key="item">{{ item }}</span>
-        </div>
 
         <div class="hero-actions">
           <a class="primary-action" :href="quickStartLink">{{ t.primaryAction }}</a>

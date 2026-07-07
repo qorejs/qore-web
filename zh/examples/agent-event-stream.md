@@ -32,7 +32,7 @@ const markdown = events.select('text', {
 
 const tools = events.select('tool_call')
 const results = events.select('tool_result')
-const statuses = events.select('status')
+const statuses = events.select('status', { maxItems: 20 })
 const retries = events.select('retry')
 const errors = events.select('error')
 const artifacts = events.select('artifact')
@@ -100,3 +100,16 @@ agent events -> QoreEventStream -> selectors -> UI surfaces
 ```
 
 这就是 runtime 差异：streaming 不是特殊情况。Streaming 本身就是状态模型。
+
+
+## 长时间运行的 Agent
+
+Agent timeline 可以持续几分钟。完整事件流可以保留足够的上下文，而 UI 面板应该有自己的窗口：
+
+```ts
+const events = stream.events(agent.run(task), { maxItems: 500 })
+const statuses = events.select('status', { maxItems: 20 })
+const tools = events.select('tool_call', { maxItems: 50 })
+```
+
+`maxItems` 只限制当前 signal 数组，不会影响 async iteration 和 lifecycle counters。

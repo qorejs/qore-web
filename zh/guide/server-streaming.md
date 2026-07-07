@@ -65,3 +65,16 @@ export async function GET() {
 - [Provider 集成](/zh/guide/ai-native)
 - [流式响应](/zh/guide/streaming)
 - [Streaming API](/zh/api/streaming)
+
+
+## 安全边界
+
+Provider adapter 应运行在服务端或可信运行时。不要把 OpenAI、Anthropic 或其他模型服务的 API key 放进浏览器代码。
+
+推荐路径：
+
+```text
+Browser UI -> your SSE / NDJSON endpoint -> provider adapter -> model provider
+```
+
+浏览器只消费你自己的 endpoint，并把它交给 Qore stream。

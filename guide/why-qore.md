@@ -6,7 +6,9 @@ keywords: [Qore, streaming response, signal, AI UI]
 
 # Why Qore
 
-Qore is not trying to be another general-purpose UI framework. It focuses on a sharper problem: **AI and realtime applications produce streams, not snapshots.**
+**Reactive Stream Runtime for AI-native interfaces.**
+
+Qore is not another AI SDK and it is not trying to replace React or Vue. It focuses on a lower-level problem: **AI and realtime applications produce streams, not snapshots.**
 
 ## The Core Primitive
 

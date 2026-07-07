@@ -65,3 +65,16 @@ export async function GET() {
 - [Provider Integration](/guide/ai-native)
 - [Streaming Response](/guide/streaming)
 - [Streaming API](/api/streaming)
+
+
+## Security Boundary
+
+Provider adapter should run on the server or in another trusted runtime. Do not ship OpenAI, Anthropic, or other provider API keys to browser code.
+
+Recommended path:
+
+```text
+Browser UI -> your SSE / NDJSON endpoint -> provider adapter -> model provider
+```
+
+The browser consumes your endpoint and turns it into a Qore stream.
