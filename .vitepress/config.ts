@@ -1,17 +1,15 @@
 import { defineConfig } from 'vitepress'
 
 const englishNav = [
-  { text: 'Why', link: '/guide/why-qore' },
-  { text: 'Demo', link: '/#live-demo' },
   { text: 'Docs', link: '/guide/quick-start' },
-  { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
+  { text: 'Examples', link: '/examples/agent-event-stream' },
+  { text: 'API', link: '/api/streaming' },
 ]
 
 const chineseNav = [
-  { text: '为什么', link: '/zh/guide/why-qore' },
-  { text: 'Demo', link: '/zh/#live-demo' },
   { text: '文档', link: '/zh/guide/quick-start' },
-  { text: 'GitHub', link: 'https://github.com/qorejs/qore' },
+  { text: '示例', link: '/zh/examples/agent-event-stream' },
+  { text: 'API', link: '/zh/api/streaming' },
 ]
 
 const englishSidebar = {
@@ -169,14 +167,12 @@ export default defineConfig({
   title: 'Qore',
   description: 'Qore is the reactive stream runtime for AI-native interfaces.',
   base: '/',
+  appearance: true,
 
   head: [
-    ['link', { rel: 'preconnect', href: 'https://fonts.googleapis.com' }],
-    ['link', { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' }],
-    ['link', { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700;800&family=Space+Grotesk:wght@500;600;700;800&display=swap' }],
     ['link', { rel: 'icon', href: '/logo.svg', type: 'image/svg+xml' }],
     ['meta', { name: 'viewport', content: 'width=device-width,initial-scale=1' }],
-    ['meta', { name: 'theme-color', content: '#07110f' }],
+    ['meta', { name: 'theme-color', content: '#087f5b' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:locale', content: 'en_US' }],
     ['meta', { property: 'og:title', content: 'Qore - Reactive Stream Runtime' }],
@@ -270,7 +266,7 @@ export default defineConfig({
       label: '简体中文',
       lang: 'zh-CN',
       title: 'Qore',
-      description: 'Qore 是面向 AI-native interface 的 reactive stream runtime.',
+      description: 'Qore 是面向 AI 界面的响应式流运行时，让流式数据自然成为状态。',
       themeConfig: {
         nav: chineseNav,
         sidebar: chineseSidebar,
