@@ -2,13 +2,13 @@ import { defineConfig } from 'vitepress'
 
 const englishNav = [
   { text: 'Docs', link: '/guide/quick-start' },
-  { text: 'Examples', link: '/examples/agent-event-stream' },
+  { text: 'Examples', link: '/examples/' },
   { text: 'API', link: '/api/streaming' },
 ]
 
 const chineseNav = [
   { text: '文档', link: '/zh/guide/quick-start' },
-  { text: '示例', link: '/zh/examples/agent-event-stream' },
+  { text: '示例', link: '/zh/examples/' },
   { text: 'API', link: '/zh/api/streaming' },
 ]
 
@@ -77,6 +77,7 @@ const englishSidebar = {
     {
       text: 'Examples',
       items: [
+        { text: '22 Runnable Examples', link: '/examples/' },
         { text: 'Agent Event Stream', link: '/examples/agent-event-stream' },
         { text: 'AI Integration', link: '/examples/ai-integration' },
         { text: 'Basic', link: '/examples/basic' },
@@ -152,6 +153,7 @@ const chineseSidebar = {
     {
       text: '示例',
       items: [
+        { text: '22 个可运行示例', link: '/zh/examples/' },
         { text: 'Agent Event Stream', link: '/zh/examples/agent-event-stream' },
         { text: 'AI 集成', link: '/zh/examples/ai-integration' },
         { text: '基础示例', link: '/zh/examples/basic' },

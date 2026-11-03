@@ -2,6 +2,7 @@
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { stream } from '@qorejs/qore'
+import { examples } from '../examples/catalog'
 
 const { lang } = useData()
 const isZh = computed(() => lang.value.startsWith('zh'))
@@ -46,6 +47,7 @@ const copy = computed(() => isZh.value ? {
   status: { idle: 'Ready', pending: 'Waiting', streaming: 'Streaming', completed: 'Completed', aborted: 'Stopped', error: 'Error' },
 })
 
+const featuredExamples = examples.filter(item => ['text-stream', 'tool-selector', 'json-output', 'merge', 'retry', 'cancellation'].includes(item.id))
 const activeTab = ref(0)
 const status = ref('idle')
 const output = ref('')
@@ -246,6 +248,11 @@ onBeforeUnmount(() => { mounted = false; ++generation; ++copyGeneration; dispose
     <section class="source-section" :aria-label="isZh ? '数据源' : 'Sources'">
       <p>{{ copy.sources }}</p>
       <div class="source-list"><span>OpenAI</span><span>Anthropic</span><span>DeepSeek</span><span>Ollama</span><span class="source-divider" aria-hidden="true"/><a :href="link('/guide/server-streaming')">SSE <span aria-hidden="true">↗</span></a><a :href="link('/api/streaming')">NDJSON <span aria-hidden="true">↗</span></a></div>
+    </section>
+
+    <section class="home-examples" aria-labelledby="home-examples-title">
+      <div class="home-examples-heading"><div><span class="section-label">LEARN BY RUNNING</span><h2 id="home-examples-title">{{ isZh ? '更多场景，直接运行。' : 'More patterns. Ready to run.' }}</h2><p>{{ isZh ? '22 个可运行示例，覆盖数据接入、Agent 事件、流组合与生命周期。' : '22 runnable examples covering sources, agent events, composition, and lifecycle.' }}</p></div><a :href="link('/examples/')">{{ isZh ? '浏览全部 22 个示例' : 'Explore all 22 examples' }} →</a></div>
+      <div class="home-example-grid"><a v-for="item in featuredExamples" :key="item.id" :href="link(`/examples/#${item.id}`)"><span>{{ item.category }}</span><h3>{{ item.title[isZh ? 'zh' : 'en'] }} <span aria-hidden="true">↗</span></h3><p>{{ item.description[isZh ? 'zh' : 'en'] }}</p></a></div>
     </section>
 
     <section class="next-section" aria-labelledby="next-title">

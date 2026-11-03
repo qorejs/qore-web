@@ -191,6 +191,41 @@ async function main() {
       }
     }
 
+    for (const locale of ['', '/zh']) {
+      const chinese = locale === '/zh'
+      await page.goto(`${baseUrl}${locale}/examples/`, { waitUntil: 'networkidle' })
+      assert(await page.locator('[data-example]').count() === 22, 'All 22 examples should be discoverable.')
+      const ids = await page.locator('[data-example]').evaluateAll(elements => elements.map(el => el.getAttribute('data-example')))
+      for (const id of ids) {
+        await page.locator(`[data-example="${id}"]`).click()
+        const terminal = id === 'error-handling' ? 'error' : id === 'cancellation' ? 'aborted' : 'completed'
+        await page.locator(`[data-example-status="${terminal}"]`).waitFor()
+        assert((await page.locator('[data-example-output]').textContent()).trim().length > 0, `${id}: output should be visible.`)
+      }
+      await page.getByRole('button', { name: chinese ? '流的组合 5' : 'Composition 5', exact: true }).click()
+      assert(await page.locator('[data-example]').count() === 5, 'Category should filter the example list.')
+      await page.getByRole('button', { name: chinese ? '全部 22' : 'All 22', exact: true }).click()
+      await page.getByRole('searchbox', { name: chinese ? '搜索示例' : 'Search examples' }).fill('not-a-real-example')
+      assert(await page.locator('[data-example]').count() === 0, 'Unmatched search should show empty state.')
+      await page.getByRole('button', { name: chinese ? '清除筛选' : 'Clear filters', exact: true }).click()
+      await page.locator('[data-example="text-stream"]').click()
+      await page.getByRole('button', { name: chinese ? '停止' : 'Stop', exact: true }).click()
+      await page.locator('[data-example-status="aborted"]').waitFor()
+      await page.getByRole('button', { name: chinese ? '重新运行' : 'Run again', exact: true }).click()
+      await page.locator('[data-example-status="completed"]').waitFor()
+      await page.getByRole('button', { name: chinese ? '复制代码' : 'Copy code', exact: true }).click()
+      const clipboard = await page.evaluate(() => navigator.clipboard.readText())
+      assert(clipboard.includes('export function createExample') && clipboard.includes('await example.stream.ready'), 'Copied sample must include the runnable setup and usage.')
+      await page.goto(`${baseUrl}${locale}/examples/#tool-selector`, { waitUntil: 'networkidle' })
+      await page.locator('[data-example-status="completed"]').waitFor()
+      assert(await page.locator('[data-example="tool-selector"]').getAttribute('aria-pressed') === 'true', 'Deep links must select their example.')
+      await page.locator('[data-example="retry"]').click()
+      await page.goBack()
+      await page.locator('[data-example-status="completed"]').waitFor()
+      assert(await page.locator('[data-example="tool-selector"]').getAttribute('aria-pressed') === 'true', 'Back navigation must restore the previous example.')
+      await assertNoConsoleErrors(errors, 'Examples gallery')
+    }
+
     await page.goto(baseUrl, { waitUntil: 'networkidle' })
     await page.getByRole('button', { name: 'Search docs', exact: true }).click()
     await page.locator('#localsearch-input').fill('streaming')
@@ -210,6 +245,15 @@ async function main() {
       await page.locator('.VPNavScreen').waitFor({ state: 'visible' })
       await page.locator('.VPNavScreen a').first().click()
       await page.locator('.vp-doc h1').waitFor()
+    }
+    for (const width of [390, 320]) {
+      await page.setViewportSize({ width, height: 844 })
+      await page.goto(`${baseUrl}/zh/examples/#running-total`, { waitUntil: 'networkidle' })
+      await page.locator('[data-example-status="completed"]').waitFor()
+      assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `Example gallery overflows at ${width}px.`)
+      await page.getByRole('searchbox', { name: '搜索示例' }).fill('retry')
+      await page.locator('[data-example="retry"]').click()
+      await page.locator('[data-example-status="completed"]').waitFor()
     }
     await assertNoConsoleErrors(errors, 'Theme, search and mobile navigation')
 
