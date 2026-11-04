@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, shallowRef } from 'vue'
 import { useData, withBase } from 'vitepress'
 import { examples } from '../examples/catalog'
 import { usage } from '../examples/usage'
 import { exampleCode, formatValue, loadExample, type ExampleSession } from '../examples/runtime'
+import ExamplePreview from './ExamplePreview.vue'
 import '../theme/examples.css'
 
 const { lang } = useData()
@@ -33,6 +34,9 @@ const highlighted = computed(() => source.value.split(/('[^'\n]*'|\/\/[^\n]*|\b(
 })))
 const status = ref('idle')
 const output = ref('')
+const liveValue = shallowRef<unknown>(null)
+const received = shallowRef<unknown[]>([])
+const demoSpeed = ref(320)
 const error = ref('')
 const chunks = ref(0)
 const copyState = ref('')
@@ -60,17 +64,22 @@ async function run() {
   const token = generation
   status.value = 'loading'
   output.value = ''
+  liveValue.value = null
+  received.value = []
   error.value = ''
   chunks.value = 0
   try {
     const module = await loadExample(selected.value.id)
     if (!mounted || token !== generation) return
-    const interval = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : 160
+    const interval = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 1 : Number(demoSpeed.value)
     const session: ExampleSession = module.createExample(interval)
     const answer = session.stream
     const update = () => {
       if (token !== generation) return
-      output.value = formatValue(answer())
+      const value = answer()
+      liveValue.value = value
+      received.value = answer.chunks()
+      output.value = formatValue(value)
       status.value = answer.status()
       chunks.value = answer.chunkCount()
       error.value = answer.error()?.message ?? ''
@@ -130,7 +139,7 @@ onBeforeUnmount(() => { mounted = false; resetRun(); ++copyGeneration; clearTime
     <header class="examples-heading">
       <span class="section-label">QORE EXAMPLES</span>
       <h1>{{ zh ? '从一条流，开始构建。' : 'Start with a stream. Build from here.' }}</h1>
-      <p>{{ zh ? '22 个可运行示例，从接收第一个 token 到管理完整的 Agent 事件流。选择示例，查看代码，直接运行。' : '22 runnable examples, from your first token to a complete agent event stream. Pick a pattern, read the code, and run it.' }}</p>
+      <p>{{ zh ? '22 个可运行示例，从接收第一个 token 到管理完整的 Agent 事件流。选择示例，观看效果，查看代码。' : '22 runnable examples, from your first token to a complete agent event stream. Pick a pattern, watch it run, and explore the code.' }}</p>
       <span class="examples-local-note">{{ zh ? '全部在本地运行 · 无需 API Key · 代码与实际执行内容一致' : 'Runs locally · No API key needed · The code you see is the code that runs' }}</span>
     </header>
     <div class="example-filters">
@@ -149,16 +158,18 @@ onBeforeUnmount(() => { mounted = false; resetRun(); ++copyGeneration; clearTime
       </aside>
       <section id="example-workbench" class="example-workbench" :aria-label="zh ? '示例运行区' : 'Example playground'">
         <div class="example-intro"><h2>{{ selected.title[locale] }}</h2><p>{{ selected.description[locale] }}</p><a :href="link(selected.guide)">{{ zh ? '阅读相关文档' : 'Read the guide' }} ↗</a></div>
+        <div class="example-result example-live-result">
+          <div class="example-result-toolbar"><strong>{{ zh ? '效果演示' : 'Live demo' }}</strong><span role="status" :data-example-status="status">{{ statusLabel }} · {{ chunks }} chunks</span><label class="demo-speed-label"><span class="sr-only">{{ zh ? '演示速度' : 'Demo speed' }}</span><select v-model="demoSpeed" @change="run()"><option :value="700">{{ zh ? '慢速' : 'Slow' }}</option><option :value="320">{{ zh ? '标准' : 'Normal' }}</option><option :value="80">{{ zh ? '快速' : 'Fast' }}</option></select></label><button type="button" @click="busy ? stop() : run()">{{ busy ? (zh ? '停止' : 'Stop') : (zh ? '重新运行' : 'Run again') }}</button></div>
+          <ExamplePreview :id="selected.id" :value="liveValue" :received="received" :status="status" :zh="zh" />
+          <p v-if="error" class="example-error" role="status">{{ error }}</p>
+          <p v-if="['error-handling', 'cancellation'].includes(selected.id)" class="example-explanation">{{ zh ? '这个示例会主动触发错误或取消，用于展示对应的终止状态。' : 'This example deliberately triggers an error or cancellation to demonstrate its terminal state.' }}</p>
+          <details class="example-raw"><summary>{{ zh ? '查看原始输出' : 'Inspect raw output' }}</summary><pre data-example-output tabindex="0">{{ output || (zh ? '等待输出…' : 'Waiting for output…') }}</pre></details>
+        </div>
+        <div class="example-source-label">{{ zh ? '产生演示数据的源代码' : 'Source code powering this demo' }}</div>
         <div class="example-editor">
           <div class="example-editor-toolbar"><span>{{ selected.id }}.ts</span><button type="button" @click="copyCode">{{ zh ? '复制代码' : 'Copy code' }}</button></div>
           <pre tabindex="0" :aria-label="zh ? '示例源代码' : 'Example source code'"><code><span v-for="(token, index) in highlighted" :key="index" :class="token.kind">{{ token.text }}</span></code></pre>
           <p v-if="copyState" class="example-copy-feedback" role="status">{{ copyState }}</p>
-        </div>
-        <div class="example-result">
-          <div class="example-result-toolbar"><strong>{{ zh ? '运行结果' : 'Output' }}</strong><span role="status" :data-example-status="status">{{ statusLabel }} · {{ chunks }} chunks</span><button type="button" @click="busy ? stop() : run()">{{ busy ? (zh ? '停止' : 'Stop') : (zh ? '重新运行' : 'Run again') }}</button></div>
-          <pre data-example-output tabindex="0">{{ output || (zh ? '等待输出…' : 'Waiting for output…') }}</pre>
-          <p v-if="error" class="example-error" role="status">{{ error }}</p>
-          <p v-if="['error-handling', 'cancellation'].includes(selected.id)" class="example-explanation">{{ zh ? '这个示例会主动触发错误或取消，用于展示对应的终止状态。' : 'This example deliberately triggers an error or cancellation to demonstrate its terminal state.' }}</p>
         </div>
         <details class="example-usage"><summary>{{ zh ? '在自己的项目中运行' : 'Run in your own project' }}</summary><p>{{ zh ? '安装 npm i @qorejs/qore，将示例保存为 ESM 文件 example.mts，然后在文件末尾添加以下代码。可以用 npx tsx example.mts 运行。复制按钮已包含这段运行代码。' : 'Install npm i @qorejs/qore, save the sample as an ESM file named example.mts, and append the code below. Run it with npx tsx example.mts. The copy button includes this runner.' }}</p><pre tabindex="0"><code>{{ usage }}</code></pre></details>
       </section>

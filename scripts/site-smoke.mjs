@@ -195,12 +195,24 @@ async function main() {
       const chinese = locale === '/zh'
       await page.goto(`${baseUrl}${locale}/examples/`, { waitUntil: 'networkidle' })
       assert(await page.locator('[data-example]').count() === 22, 'All 22 examples should be discoverable.')
+      await page.getByLabel(chinese ? '演示速度' : 'Demo speed').selectOption('80')
       const ids = await page.locator('[data-example]').evaluateAll(elements => elements.map(el => el.getAttribute('data-example')))
       for (const id of ids) {
         await page.locator(`[data-example="${id}"]`).click()
         const terminal = id === 'error-handling' ? 'error' : id === 'cancellation' ? 'aborted' : 'completed'
         await page.locator(`[data-example-status="${terminal}"]`).waitFor()
         assert((await page.locator('[data-example-output]').textContent()).trim().length > 0, `${id}: output should be visible.`)
+        await page.locator(`[data-preview="${id}"]`).waitFor({ state: 'visible' })
+        if (id === 'latest') assert(await page.getByRole('progressbar').getAttribute('aria-valuenow') === '100', 'Progress preview should reach the real final value.')
+        if (id === 'switch-latest') assert((await page.locator('.preview-search-query').textContent()).includes(chinese ? '示例输入' : 'Example inputs'), 'Unobserved source queries must be labeled as example inputs, not live state.')
+        if (id === 'running-total') assert(await page.locator('[data-preview-total]').textContent() === '42', 'Counter preview must reflect the reducer result.')
+        if (id === 'json-output') {
+          assert(await page.locator('[data-preview-title]').textContent() === 'Qore', 'JSON preview must render the parsed title.')
+          assert(await page.locator('[data-preview-item]').count() === 2, 'JSON preview must render both parsed items.')
+        }
+        const itemCounts = { list: 3, 'agent-events': 3, 'tool-selector': 2, 'bounded-logs': 3, backpressure: 5, merge: 4 }
+        if (id in itemCounts) assert(await page.locator('[data-preview-item]').count() === itemCounts[id], `${id}: preview must reflect actual received items.`)
+        if (id === 'error-handling') assert((await page.locator('[data-preview="error-handling"]').textContent()).includes('Partial response.'), 'Error preview must retain the partial response.')
       }
       await page.getByRole('button', { name: chinese ? '流的组合 5' : 'Composition 5', exact: true }).click()
       assert(await page.locator('[data-example]').count() === 5, 'Category should filter the example list.')
@@ -225,6 +237,20 @@ async function main() {
       assert(await page.locator('[data-example="tool-selector"]').getAttribute('aria-pressed') === 'true', 'Back navigation must restore the previous example.')
       await assertNoConsoleErrors(errors, 'Examples gallery')
     }
+
+    await page.goto(`${baseUrl}/examples/#latest`, { waitUntil: 'networkidle' })
+    await page.getByLabel('Demo speed').selectOption('700')
+    await page.waitForFunction(() => {
+      const value = Number(document.querySelector('[role="progressbar"]')?.getAttribute('aria-valuenow'))
+      return value > 0 && value < 100
+    })
+    await page.getByRole('button', { name: 'Stop', exact: true }).click()
+    const stoppedProgress = await page.getByRole('progressbar').getAttribute('aria-valuenow')
+    await page.waitForTimeout(900)
+    assert(await page.getByRole('progressbar').getAttribute('aria-valuenow') === stoppedProgress, 'Stopped visual preview must remain frozen.')
+    await page.getByLabel('Demo speed').selectOption('80')
+    await page.locator('[data-example-status="completed"]').waitFor()
+    assert(await page.getByRole('progressbar').getAttribute('aria-valuenow') === '100', 'Replay must restart and finish the visual preview.')
 
     await page.goto(baseUrl, { waitUntil: 'networkidle' })
     await page.getByRole('button', { name: 'Search docs', exact: true }).click()
